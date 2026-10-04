@@ -1,77 +1,85 @@
 # steam-tracker
 
-Consolida la biblioteca de **varias cuentas de Steam** en un solo archivo:
+Consolida la biblioteca de **varias cuentas de Steam** (y de tu **Steam Families**)
+en un único dataset, más una web con filtros.
 
-- `steam_games.md` → resumen + tabla, legible por humanos.
-- `steam_games.json` → fuente de verdad estructurada, para que el agente consulte.
+- `steam_games.json` → **fuente de verdad** estructurada (para tu agente).
+- `steam_games.md` → resumen legible + tabla.
+- `steam_games.html` → web autocontenida con filtros (se abre sin servidor).
 
-## Requisito único
+## ⚠️ Seguridad (leer)
 
-En cada cuenta: **Perfil → Editar perfil → Privacidad → "Detalles de juego" = Público**.
-Si está en *Privado* o *Solo amigos*, Steam no entrega la lista (la API/XML devuelven vacío).
+- `accounts.json` contiene tu **API key** y tu **access_token**. **NUNCA lo subas** a Git.
+  Ya está en `.gitignore`, y `subir_a_github.ps1` aborta si detecta secretos.
+- Los archivos publicados (`steam_games.json`, `.html`) **no** incluyen secretos: los
+  scripts los sanitizan. Si algún día ves `access_token` o `api_key` ahí, algo salió mal.
+- En GitHub, tus secretos van como **secreto** `STEAM_ACCOUNTS_JSON`, no en el código.
+
+## Requisitos de privacidad de Steam
+
+En cada cuenta, para que la API dé datos:
+
+- **Perfil → Editar perfil → Privacidad → "Detalles de juego" = Público** (lista y horas).
+- Para logros: **"Estado de los logros" = Público**. Si está privado, la API devuelve 403
+  y ese juego simplemente queda sin logros (no falla).
 
 ## 1. Rellena `accounts.json`
 
 ```json
 {
-  "api_key": "",
+  "api_key": "TU_API_KEY",
   "accounts": [
-    { "alias": "main", "steamid": "7656119XXXXXXXXXX" },
-    { "alias": "alt1", "steamid": "7656119YYYYYYYYYY" },
-    { "alias": "alt2", "steamid": "7656119ZZZZZZZZZZ" }
+    { "alias": "main", "steamid": "7656119..." },
+    { "alias": "alt1", "steamid": "7656119...", "access_token": "eyA..." }
+  ],
+  "family_members": [
+    { "alias": "L@u", "steamid": "7656119...", "country": "cr" }
   ]
 }
 ```
 
-- **SteamID64**: ábrelo en el perfil → la URL es
-  `steamcommunity.com/profiles/<AQUI_VA_EL_ID>`. También sirve el nombre de usuario,
-  pero el ID es más seguro.
-- Los `XXXX/YYYY/ZZZZ` son placeholders; el script los salta.
+- **SteamID64**: en el perfil, la URL es `steamcommunity.com/profiles/<ID>`.
+- **`access_token`**: solo si quieres juegos de familia. Se saca logueado en Steam desde
+  `https://store.steampowered.com/pointssummary/ajaxgetasyncconfig` (campo `webapi_token`).
+  **Caduca**: si el script de familia deja de traer datos, genéralo de nuevo.
+- **`family_members`**: opcional; solo para poner alias/país bonitos a los dueños.
 
-## 2. API key (opcional pero recomendada)
+## 2. API key (recomendada)
 
-**Una sola key sirve para TODAS las cuentas.** La key es tuya como desarrollador,
-no de la cuenta que consultas.
-
-1. Entra a <https://steamcommunity.com/dev/apikey> con **cualquiera** de tus cuentas.
-2. Copia la key en `accounts.json` (`api_key`) o pásala por parámetro.
-
-> La cuenta que pide la key debe haber gastado al menos ~5 USD alguna vez.
+Una sola key sirve para **todas** las cuentas. Se pide en
+<https://steamcommunity.com/dev/apikey> (la cuenta debe haber comprado algo alguna vez).
 
 ## 3. Ejecuta
 
-Windows PowerShell (sin instalar nada):
-
 ```powershell
 cd steam-tracker
-.\fetch_steam.ps1                 # usa API si hay key, si no XML público
-.\fetch_steam.ps1 -Mode xml       # fuerza el modo sin key
-.\fetch_steam.ps1 -Key "TU_KEY"   # key puntual
+.\fetch_steam.ps1     # biblioteca de tus cuentas -> json + md + web
+.\fetch_family.ps1    # Steam Families: juegos compartidos, horas reales y fecha de compra
+.\fetch_meta.ps1      # precios (USD), costo por hora y logros
 ```
 
-Si algún día instalas Python: `python fetch_steam.py` (mismos archivos de salida).
+Los tres regeneran la web automáticamente al terminar. `fetch_meta.ps1` y `fetch_genres.ps1`
+usan **caché** (`meta_cache.json`, `genres_cache.json`) y pausas para respetar el rate limit
+de Steam (si ves 429, sube `-SleepMs`).
 
-## 4. Automatizar (opcional)
+`fetch_genres.ps1` queda **opcional**: la web actual no muestra géneros, pero los guarda en el JSON.
 
-Programador de tareas → tarea diaria que ejecute:
+## 4. Publicar (GitHub Pages)
 
+```powershell
+.\subir_a_github.ps1
 ```
-powershell -NoProfile -ExecutionPolicy Bypass -File "C:\ruta\steam-tracker\fetch_steam.ps1"
-```
 
-Así el `.md`/`.json` siempre están frescos.
+Luego, en GitHub: secreto `STEAM_ACCOUNTS_JSON` (contenido de `accounts.json`) y
+Pages con Source "GitHub Actions". El workflow `.github/workflows/update.yml` corre a diario
+y con cada push de código; publica en `https://TU_USUARIO.github.io/steam-tracker/`.
 
 ## Problemas típicos
 
 | Síntoma | Causa |
 |---|---|
 | `perfil no publico ... pagina de login` | "Detalles de juego" en Privado/Amigos |
-| `la API no devolvio juegos` | Perfil privado, SteamID mal, o cuenta sin juegos públicos |
-| Solo aparece una cuenta | Las demás fallaron; revisa el log por alias |
-
-## Alternativas si prefieres no programar
-
-- **Playnite**: importa varias cuentas de Steam y otros launchers, unifica horas y exporta.
-- **Obsidian + Dataview**: mete `steam_games.json` y consulta con tablas vivas.
-- **MCP server**: si tu agente soporta MCP, exponer `steam_buscar` / `steam_backlog`
-  da consultas en vivo en vez de un archivo estático.
+| Horas en 0 en una cuenta | Esa cuenta tiene el tiempo de juego privado |
+| Logros en 0 / 403 | "Estado de los logros" privado |
+| Familia sin datos | `access_token` caducado: genéralo de nuevo |
+| 429 Too Many Requests | Sube `-SleepMs` en `fetch_meta`/`fetch_genres` |

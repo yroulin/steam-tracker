@@ -109,10 +109,19 @@ foreach ($g in $games) {
     }
 }
 
+# SANITIZADO: nunca exponer api_key ni access_token en el JSON publico.
+$safeAccounts = @()
+foreach ($a in @($data.accounts)) {
+    $safeAccounts += [pscustomobject]@{
+        alias       = [string]$a.alias
+        steamid     = [string]$a.steamid
+        personaname = if ($a.PSObject.Properties.Name -contains 'personaname') { [string]$a.personaname } else { '' }
+    }
+}
 $outObj = [pscustomobject]@{
     generated          = $data.generated
     source             = $data.source
-    accounts           = $data.accounts
+    accounts           = $safeAccounts
     total_unique_games = $games.Count
     total_hours        = $data.total_hours
     games              = $games

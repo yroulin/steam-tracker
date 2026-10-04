@@ -196,10 +196,20 @@ if ($cfg.PSObject.Properties.Name -contains 'family_members') {
     }
 }
 
+# Cuentas SANITIZADAS: nunca exponer api_key ni access_token en el JSON publico.
+$safeAccounts = @()
+foreach ($a in $cfg.accounts) {
+    $safeAccounts += [pscustomobject]@{
+        alias       = [string]$a.alias
+        steamid     = [string]$a.steamid
+        personaname = if ($a.PSObject.Properties.Name -contains 'personaname') { [string]$a.personaname } else { '' }
+    }
+}
+
 $out = [pscustomobject]@{
     generated          = $data.generated
     source             = $data.source
-    accounts           = $data.accounts
+    accounts           = $safeAccounts
     family_members     = $familyMembers
     total_unique_games = $sorted.Count
     total_hours        = [math]::Round((@($sorted | Measure-Object -Property total_hours -Sum).Sum), 1)

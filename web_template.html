@@ -63,6 +63,8 @@
     border-radius:999px;padding:1px 8px;margin:1px 3px 1px 0;font-size:11px;color:var(--muted)}
   .badge.multi{border-color:var(--amber);color:var(--amber)}
   .badge.fam{border-color:#9b6ef3;color:#c9a8ff}
+  .cph{color:#f0b400;font-weight:600}
+  .pct{color:var(--muted);font-size:11px}
   .flag{width:15px;height:11px;object-fit:cover;border-radius:2px;vertical-align:middle}
   .muted{color:var(--muted)}
   .empty{text-align:center;color:var(--muted);padding:40px}
@@ -87,6 +89,9 @@
     <label class="chk"><input type="checkbox" id="backlog"> Solo backlog</label>
     <label class="chk"><input type="checkbox" id="multi"> En varias cuentas</label>
     <label class="chk"><input type="checkbox" id="family"> De familia</label>
+    <label class="chk"><input type="checkbox" id="wasted" title="Pagados, con precio, y 0 horas"> Sin jugar (pagados)</label>
+    <label class="chk"><input type="checkbox" id="pending" title="Con logros por conseguir"> Logros pendientes</label>
+    <label class="chk"><input type="checkbox" id="done" title="100% de logros"> 100% logros</label>
     <label class="chk">Min horas <input type="number" id="minh" min="0" step="1" style="width:64px"></label>
     <button class="btn" id="csv">Exportar CSV</button>
   </div>
@@ -99,6 +104,9 @@
         <th data-sort="name">Juego</th>
         <th>Cuentas</th>
         <th class="num" data-sort="hours">Horas</th>
+        <th class="num" data-sort="price">Precio</th>
+        <th class="num" data-sort="cph" title="Precio actual dividido por horas jugadas">$/h</th>
+        <th class="num" data-sort="ach" title="Logros conseguidos / totales">Logros</th>
         <th class="num" data-sort="acquired">Comprado</th>
         <th class="num" data-sort="last">Ultima vez</th>
       </tr>
@@ -137,7 +145,7 @@ const flagCC = cc => cc
   ? '<img class="flag" alt="' + esc(cc) + '" loading="lazy" src="https://flagcdn.com/' + esc(String(cc).toLowerCase()) + '.svg">'
   : '';
 
-const state = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false, family: false, minh: 0 };
+const state = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false, family: false, wasted: false, pending: false, done: false, minh: 0 };
 
 $('#meta').textContent =
   GAMES.length + ' juegos unicos | ' + ACCOUNTS.length + ' cuentas | actualizado ' +
@@ -149,6 +157,8 @@ $('#stats').innerHTML = [
   ['Backlog', GAMES.filter(g => !g.total_hours).length],
   ['En varias cuentas', GAMES.filter(g => g.owned_count > 1).length],
   ['De familia', GAMES.filter(g => g.family).length],
+  ['Valor biblioteca', '$' + fmtH(GAMES.reduce((a, g) => a + (g.price_usd || 0), 0))],
+  ['Dinero parado', '$' + fmtH(GAMES.reduce((a, g) => a + ((g.price_usd > 0 && !g.total_hours) ? g.price_usd : 0), 0))],
 ].map(p => '<div class="stat"><b>' + p[1] + '</b><small>' + p[0] + '</small></div>').join('');
 
 const FAMILY = DATA.family_members || [];
@@ -176,6 +186,9 @@ function current() {
     if (state.backlog && g.total_hours !== 0) return false;
     if (state.multi && !(g.owned_count > 1)) return false;
     if (state.family && !g.family) return false;
+    if (state.wasted && !((g.price_usd > 0) && g.total_hours === 0)) return false;
+    if (state.pending && !(g.achievements_total > 0 && g.achievements_got < g.achievements_total)) return false;
+    if (state.done && !(g.achievements_total > 0 && g.achievements_got === g.achievements_total)) return false;
     if (state.minh && (g.total_hours || 0) < state.minh) return false;
     if (qn && norm(g.name).indexOf(qn) === -1) return false;
     return true;
@@ -187,6 +200,9 @@ function current() {
     if (key === 'name') return a.name.localeCompare(b.name, 'es') * mul;
     if (key === 'last') return ((a.last_played || 0) - (b.last_played || 0)) * mul;
     if (key === 'acquired') return String(a.acquired || '').localeCompare(String(b.acquired || '')) * mul;
+    if (key === 'price') return ((a.price_usd == null ? -1 : a.price_usd) - (b.price_usd == null ? -1 : b.price_usd)) * mul;
+    if (key === 'cph') return ((a.cost_per_hour == null ? -1 : a.cost_per_hour) - (b.cost_per_hour == null ? -1 : b.cost_per_hour)) * mul;
+    if (key === 'ach') return ((a.achievements_total > 0 ? a.achievements_got / a.achievements_total : -1) - (b.achievements_total > 0 ? b.achievements_got / b.achievements_total : -1)) * mul;
     return ((a.total_hours || 0) - (b.total_hours || 0)) * mul;
   });
   return list;
@@ -217,12 +233,22 @@ function render() {
       ? '<img class="cover" loading="lazy" alt="" src="' + header + '" onerror="this.onerror=null;this.src=\'' + icon + '\';this.classList.add(\'icon\')">'
       : '<img class="cover" loading="lazy" alt="" src="' + header + '" onerror="this.replaceWith(document.createRange().createContextualFragment(this.dataset.ph))" data-ph="' + ph.replace(/"/g, '&quot;') + '">';
 
+    const priceTxt = g.price_usd == null ? '<span class="muted">-</span>'
+      : (g.is_free ? '<span class="muted">Gratis</span>' : '$' + fmtH(g.price_usd));
+    const cphTxt = g.cost_per_hour == null ? '<span class="muted">-</span>' : '$' + fmtH(g.cost_per_hour);
+    const achTxt = (g.achievements_total > 0)
+      ? (g.achievements_got + '/' + g.achievements_total + ' <span class="pct">' + (g.achievements_pct || 0) + '%</span>')
+      : '<span class="muted">-</span>';
+
     html += '<tr>' +
       '<td class="gameCell">' + cover +
         '<span class="gmeta"><a class="game" target="_blank" rel="noopener" href="https://store.steampowered.com/app/' + id + '/">' + esc(g.name) + '</a>' +
         '<div class="appid">' + id + '</div></span></td>' +
       '<td>' + badges + '</td>' +
       '<td class="num ' + (g.total_hours ? 'hours' : 'zero') + '">' + fmtH(g.total_hours) + '</td>' +
+      '<td class="num">' + priceTxt + '</td>' +
+      '<td class="num ' + (g.cost_per_hour != null ? 'cph' : 'muted') + '">' + cphTxt + '</td>' +
+      '<td class="num ' + (g.achievements_total > 0 ? '' : 'muted') + '">' + achTxt + '</td>' +
       '<td class="num ' + (g.acquired ? '' : 'muted') + '">' + (g.acquired || '-') + '</td>' +
       '<td class="num ' + (g.last_played_iso ? '' : 'muted') + '">' + (g.last_played_iso || 'Nunca') + '</td>' +
       '</tr>';
@@ -233,10 +259,10 @@ function render() {
 function exportCsv() {
   const list = current();
   const e2 = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-  const lines = [['appid','nombre','horas_total','cuentas','horas_por_cuenta','de_familia','dueno_familia','comprado','ultima_vez'].map(e2).join(',')];
+  const lines = [['appid','nombre','horas_total','cuentas','horas_por_cuenta','de_familia','dueno_familia','precio_usd','costo_por_hora','logros_obtenidos','logros_totales','logros_pct','comprado','ultima_vez'].map(e2).join(',')];
   for (const g of list) {
     const per = Object.entries(g.accounts || {}).map(e => e[0] + '=' + e[1] + 'h').join(' | ');
-    lines.push([g.appid, g.name, g.total_hours, Object.keys(g.accounts || {}).length, per, g.family ? 'si' : 'no', g.family_owner || '', g.acquired || '', g.last_played_iso || ''].map(e2).join(','));
+    lines.push([g.appid, g.name, g.total_hours, Object.keys(g.accounts || {}).length, per, g.family ? 'si' : 'no', g.family_owner || '', (g.price_usd == null ? '' : g.price_usd), (g.cost_per_hour == null ? '' : g.cost_per_hour), g.achievements_got || '', g.achievements_total || '', (g.achievements_pct == null ? '' : g.achievements_pct), g.acquired || '', g.last_played_iso || ''].map(e2).join(','));
   }
   const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');
@@ -253,6 +279,9 @@ on($('#sort'), 'change', e => { state.sort = e.target.value; render(); });
 on($('#backlog'), 'change', e => { state.backlog = e.target.checked; render(); });
 on($('#multi'), 'change', e => { state.multi = e.target.checked; render(); });
 on($('#family'), 'change', e => { state.family = e.target.checked; render(); });
+on($('#wasted'), 'change', e => { state.wasted = e.target.checked; render(); });
+on($('#pending'), 'change', e => { state.pending = e.target.checked; render(); });
+on($('#done'), 'change', e => { state.done = e.target.checked; render(); });
 on($('#minh'), 'input', e => { state.minh = Number(e.target.value) || 0; render(); });
 on($('#csv'), 'click', exportCsv);
 document.querySelectorAll('th[data-sort]').forEach(th => on(th, 'click', () => {

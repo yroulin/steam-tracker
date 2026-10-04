@@ -241,10 +241,20 @@ if (-not (Test-Path -LiteralPath $OutDir)) { New-Item -ItemType Directory -Path 
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText((Join-Path $OutDir 'steam_games.md'), $md.ToString(), $utf8)
 
+# Sanitizar cuentas: nunca exponer api_key ni access_token en el JSON publico.
+$safeAccounts = @()
+foreach ($a in $accounts) {
+    $safeAccounts += [pscustomobject]@{
+        alias       = [string]$a.alias
+        steamid     = [string]$a.steamid
+        personaname = if ($a.PSObject.Properties.Name -contains 'personaname') { [string]$a.personaname } else { '' }
+    }
+}
+
 $jsonObj = [pscustomobject]@{
     generated          = [DateTime]::UtcNow.ToString('o')
     source             = $effectiveMode
-    accounts           = $accounts
+    accounts           = $safeAccounts
     total_unique_games = $games.Count
     total_hours        = $totalHours
     games              = $games
