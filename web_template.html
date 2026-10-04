@@ -35,13 +35,27 @@
   .events-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 9px}
   .events-heading h2{margin:0;font-size:14px}
   .event-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .event-card{min-width:0;padding:10px 11px;background:#101822;border:1px solid #2d4050;border-radius:2px}
-  .event-card h3{margin:4px 0 3px;font-size:13px;line-height:1.3}
+  .event-card{display:grid;grid-template-columns:54px minmax(0,1fr);align-items:center;gap:10px;min-width:0;padding:10px;background:#101822;border:1px solid #2d4050;border-radius:2px}
+  .event-art{position:relative;display:grid;place-items:center;width:54px;height:54px;overflow:hidden;border:1px solid #52728b;background:linear-gradient(145deg,#315778,#172b3b);color:#b8e5ff}
+  .event-art svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .event-art-cooking{background:linear-gradient(145deg,#895c37,#382a2b);color:#ffdc9b;border-color:#9d7550}
+  .event-art-nextfest{background:linear-gradient(145deg,#55467f,#1d2c52);color:#d4c5ff;border-color:#72649d}
+  .event-art-halloween{background:linear-gradient(145deg,#6e4736,#28213b);color:#ffd08d;border-color:#8d654c}
+  .event-art-racing{background:linear-gradient(145deg,#287078,#183442);color:#a8ece1;border-color:#477f86}
+  .event-art-sale{background:linear-gradient(145deg,#805a2f,#3a2d24);color:#ffdc9b;border-color:#967540}
+  .event-art-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .event-copy{min-width:0}
+  .event-card h3{margin:3px 0 4px;font-size:13px;line-height:1.3;overflow-wrap:anywhere}
   .event-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
   .event-card.sale{border-color:#6e5836}
   .event-card.sale .event-kind{color:var(--gold)}
   .event-card.active{border-color:#34769a;background:#14232c}
   .event-card.active .event-kind{color:var(--green)}
+  .back-to-top{position:fixed;z-index:30;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:48px;min-height:48px;padding:0 15px;border:1px solid #7ac7ec;background:#1b4d68;color:#f1f7fc;font:inherit;font-size:13px;font-weight:700;box-shadow:0 4px 16px #0008;cursor:pointer}
+  .back-to-top:hover{background:#286987}
+  .back-to-top:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .back-to-top svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .back-to-top[hidden]{display:none}
   .events-more{margin-top:8px}
   .events-more summary{width:max-content;min-height:40px;display:flex;align-items:center;cursor:pointer;color:var(--blue);font-size:12px;font-weight:650}
   .events-more .event-grid{margin-top:6px}
@@ -90,7 +104,7 @@
   .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.hours{color:var(--green);font-weight:700}.zero{color:var(--muted)}
   .badge{display:inline-flex;align-items:center;gap:5px;background:#202a34;border:1px solid #35424e;border-radius:999px;padding:4px 9px;margin:2px 3px 2px 0;font-size:11px;color:#c1ccd5;white-space:nowrap}
   .badge.multi{border-color:#967540;color:var(--gold)}.badge.fam{border-color:#735a9c;color:var(--violet)}
-  .cph{color:var(--gold);font-weight:700}.pct{color:var(--muted);font-size:11px}.flag{width:15px;height:11px;object-fit:cover;border-radius:2px;vertical-align:middle}.muted{color:var(--muted)}
+  .pct{color:var(--muted);font-size:11px}.flag{width:15px;height:11px;object-fit:cover;border-radius:2px;vertical-align:middle}.muted{color:var(--muted)}
   .empty{text-align:center;color:var(--muted);padding:40px}
   .mobile-games{display:none}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -102,7 +116,7 @@
   .card-facts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:7px 0 0}.card-facts div{min-width:0;padding:9px 10px;background:#101822;border:1px solid #263746;border-radius:2px}
   .card-facts dt{color:#96a6b4;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.card-facts dd{margin:4px 0 0;font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
   @media(max-width:860px){.primary-controls{grid-template-columns:1fr 1fr}.primary-controls input[type=search]{grid-column:1/-1}.primary-controls .btn{width:100%}}
-  @media(max-width:620px){header{padding-top:14px}.steam-brand{margin-bottom:9px}.steam-brand img{width:92px}.steam-hero{aspect-ratio:10/7;min-height:210px}.steam-hero::before{background-image:var(--steam-hero-art-mobile,var(--steam-hero-art));background-position:center top}.library-summary{padding:11px 13px 1px;margin-bottom:12px}.meta{margin-bottom:14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.stat{padding:10px}.stat:last-child:nth-child(odd){grid-column:1/-1}.events-panel{grid-template-columns:1fr;gap:10px;padding:10px}.sale-countdown{min-height:0;padding:13px}.event-grid{grid-template-columns:1fr 1fr}.primary-controls{grid-template-columns:1fr}.primary-controls input[type=search]{grid-column:auto}.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}.wrap{padding-bottom:32px}table{display:none}.mobile-games{display:grid;gap:10px}.cover{width:80px;height:38px}}
+  @media(max-width:620px){header{padding-top:14px}.steam-brand{margin-bottom:9px}.steam-brand img{width:92px}.steam-hero{aspect-ratio:10/7;min-height:210px}.steam-hero::before{background-image:var(--steam-hero-art-mobile,var(--steam-hero-art));background-position:center top}.library-summary{padding:11px 13px 1px;margin-bottom:12px}.meta{margin-bottom:14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.stat{padding:10px}.stat:last-child:nth-child(odd){grid-column:1/-1}.events-panel{grid-template-columns:1fr;gap:10px;padding:10px}.sale-countdown{min-height:0;padding:13px}.event-grid{grid-template-columns:1fr 1fr;gap:7px}.event-card{grid-template-columns:40px minmax(0,1fr);gap:8px;padding:8px}.event-art{width:40px;height:40px}.event-art svg{width:23px;height:23px}.event-kind{font-size:8px!important;letter-spacing:.06em}.event-card h3{font-size:12px}.primary-controls{grid-template-columns:1fr}.primary-controls input[type=search]{grid-column:auto}.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}.wrap{padding-bottom:32px}table{display:none}.mobile-games{display:grid;gap:10px}.cover{width:80px;height:38px}}
   @media(max-width:380px){.event-grid{grid-template-columns:1fr}}
   @media(max-width:380px){.filter-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat small{font-size:9px}}
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
@@ -183,7 +197,6 @@ if (saleMobile) document.documentElement.style.setProperty('--steam-hero-art-mob
         <th scope="col">Cuentas</th>
         <th scope="col" class="num" data-sort="hours" title="Horas de tus cuentas; en juegos compartidos, horas informadas por Steam Families sin desglose personal"><button class="sort-button" type="button">Horas</button></th>
         <th scope="col" class="num" data-sort="price"><button class="sort-button" type="button">Precio</button></th>
-        <th scope="col" class="num" data-sort="cph" title="Precio actual dividido por horas jugadas"><button class="sort-button" type="button">$/h</button></th>
         <th scope="col" class="num" data-sort="ach" title="Logros conseguidos / totales"><button class="sort-button" type="button">Logros</button></th>
         <th scope="col" class="num" data-sort="first"><button class="sort-button" type="button">Visto por primera vez</button></th>
         <th scope="col" class="num" data-sort="acquired" title="Steam Families solo informa adquisición para juegos compartidos"><button class="sort-button" type="button">Adquirido · familia</button></th>
@@ -195,6 +208,10 @@ if (saleMobile) document.documentElement.style.setProperty('--steam-hero-art-mob
   <section class="mobile-games" id="mobileRows" aria-label="Juegos de la biblioteca"></section>
   <div class="empty" id="empty" hidden>Sin resultados con esos filtros.</div>
 </div>
+<button class="back-to-top" id="backToTop" type="button" aria-label="Volver arriba" title="Volver arriba" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+  <span>Arriba</span>
+</button>
 
 <script>
 const DATA = /*__STEAM_DATA__*/;
@@ -213,6 +230,12 @@ const FLAG_BY_ALIAS = {
 
 const $ = s => document.querySelector(s);
 const MOBILE_QUERY = window.matchMedia('(max-width: 620px)');
+const backToTop = $('#backToTop');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+function updateBackToTop() { backToTop.hidden = window.scrollY < 520; }
+window.addEventListener('scroll', updateBackToTop, {passive:true});
+backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:reducedMotion.matches ? 'auto' : 'smooth'}));
+updateBackToTop();
 const norm = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -223,6 +246,30 @@ const steamEventDate = value => new Intl.DateTimeFormat(navigator.language || 'e
 const steamEventRange = event => steamEventDate(event.start) + ' – ' + steamEventDate(event.end);
 const eventUrl = 'https://store.steampowered.com/specials/';
 const scheduleUrl = (STEAM_EVENTS.sources || []).slice(-1)[0] || 'https://partner.steamgames.com/doc/marketing/upcoming_events';
+const EVENT_ART = {
+  sale: '<svg viewBox="0 0 32 32"><path d="M18 4H7a3 3 0 0 0-3 3v11l11 10 13-13L18 4Z"/><circle cx="10" cy="10" r="1.5"/></svg>',
+  festival: '<svg viewBox="0 0 32 32"><path d="m16 3 3.4 8.1L28 14l-8.6 2.9L16 26l-3.4-9.1L4 14l8.6-2.9L16 3Z"/><path d="m25 22 1.4 3.1L30 26l-3.6 1.2L25 31l-1.4-3.8L20 26l3.6-.9L25 22Z"/></svg>',
+  cooking: '<svg viewBox="0 0 32 32"><path d="M5 14h19l-2 13H8L5 14Z"/><path d="M3 14h23M10 10c-2-2 2-3 0-6m7 6c-2-2 2-3 0-6m8 8 3-3"/></svg>',
+  nextfest: '<svg viewBox="0 0 32 32"><rect x="4" y="5" width="24" height="22" rx="3"/><path d="m13 11 9 5-9 5V11Z"/></svg>',
+  halloween: '<svg viewBox="0 0 32 32"><path d="M24 20a11 11 0 1 1-12-15 9 9 0 0 0 12 15Z"/><path d="m23 5 .8 2.2L26 8l-2.2.8L23 11l-.8-2.2L20 8l2.2-.8L23 5Zm5 8 .6 1.4L30 15l-1.4.6L28 17l-.6-1.4L26 15l1.4-.6L28 13Z"/></svg>',
+  racing: '<svg viewBox="0 0 32 32"><path d="M8 28V4m0 2h17l-4 5 4 5H8"/><path d="M8 6h8v5H8m8 0h9v5h-9"/></svg>'
+};
+function safeEventImage(value) {
+  try {
+    const url = new URL(value);
+    const steamHost = url.hostname === 'steamstatic.com' || url.hostname.endsWith('.steamstatic.com');
+    return url.protocol === 'https:' && steamHost && /^\/(store_item_assets|public)\//.test(url.pathname) ? url.href : '';
+  } catch { return ''; }
+}
+function eventArtTheme(event) {
+  const name = norm(event.name);
+  if (event.type === 'sale') return 'sale';
+  if (name.includes('cooking')) return 'cooking';
+  if (name.includes('next fest')) return 'nextfest';
+  if (name.includes('scream') || name.includes('halloween')) return 'halloween';
+  if (name.includes('racing')) return 'racing';
+  return 'festival';
+}
 $('#scheduleSource').href = scheduleUrl;
 $('#scheduleSource').target = '_blank';
 $('#scheduleSource').rel = 'noopener noreferrer';
@@ -230,11 +277,17 @@ $('#scheduleSource').title = 'Abrir el calendario oficial de eventos de Steamwor
 function eventCard(event, now) {
   const active = new Date(event.start) <= now && now < new Date(event.end);
   const sale = event.type === 'sale';
+  const theme = eventArtTheme(event);
+  const imageUrl = safeEventImage(event.image || (sale && active ? saleArtwork.desktop : ''));
+  const image = imageUrl ? '<img class="event-art-image" src="' + esc(imageUrl) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">' : '';
   return '<article class="event-card ' + (sale ? 'sale ' : '') + (active ? 'active' : '') + '">' +
+    '<div class="event-art event-art-' + theme + '" aria-hidden="true">' + EVENT_ART[theme] + image + '</div>' +
+    '<div class="event-copy">' +
     '<span class="event-kind">' + (active ? 'En curso' : sale ? 'Oferta estacional' : 'Festival temático') + '</span>' +
     '<h3>' + esc(event.name) + '</h3>' +
     '<p>' + esc(steamEventRange(event)) + '</p>' +
     '<p><a class="event-source" href="' + eventUrl + '" target="_blank" rel="noopener noreferrer">' + (sale ? 'Ver ofertas' : 'Ver eventos') + '</a></p>' +
+    '</div>' +
   '</article>';
 }
 function renderSteamEvents(now = new Date()) {
@@ -382,7 +435,6 @@ function current() {
     if (key === 'acquired') return String(a.acquired || '').localeCompare(String(b.acquired || '')) * mul;
     if (key === 'first') return String(a.first_seen || '').localeCompare(String(b.first_seen || '')) * mul;
     if (key === 'price') return ((a.price_usd == null ? -1 : a.price_usd) - (b.price_usd == null ? -1 : b.price_usd)) * mul;
-    if (key === 'cph') return ((a.cost_per_hour == null ? -1 : a.cost_per_hour) - (b.cost_per_hour == null ? -1 : b.cost_per_hour)) * mul;
     if (key === 'ach') return ((a.achievements_total > 0 ? a.achievements_got / a.achievements_total : -1) - (b.achievements_total > 0 ? b.achievements_got / b.achievements_total : -1)) * mul;
     return ((a.total_hours || 0) - (b.total_hours || 0)) * mul;
   });
@@ -428,7 +480,6 @@ function render() {
 
     const priceTxt = g.price_usd == null ? '<span class="muted">-</span>'
       : (g.is_free ? '<span class="muted">Gratis</span>' : '$' + fmtH(g.price_usd));
-    const cphTxt = g.cost_per_hour == null ? '<span class="muted">-</span>' : '$' + fmtH(g.cost_per_hour);
     const achTxt = (g.achievements_total > 0)
       ? (g.achievements_got + '/' + g.achievements_total + ' <span class="pct">' + (g.achievements_pct || 0) + '%</span>')
       : '<span class="muted">-</span>';
@@ -447,7 +498,6 @@ function render() {
         (g.hours_source === 'family' ? 'Steam Families: sin desglose por jugador' : 'Horas registradas por cuenta') + '">' +
         hoursText + '</td>' +
       '<td class="num" data-label="Precio">' + priceTxt + '</td>' +
-      '<td class="num ' + (g.cost_per_hour != null ? 'cph' : 'muted') + '" data-label="Costo por hora">' + cphTxt + '</td>' +
       '<td class="num ' + (g.achievements_total > 0 ? '' : 'muted') + '" data-label="Logros">' + achTxt + '</td>' +
       '<td class="num ' + (g.first_seen ? '' : 'muted') + '" data-label="Visto por primera vez">' + firstSeenText + '</td>' +
       '<td class="num ' + (g.acquired ? '' : 'muted') + '" data-label="Adquirido · familia">' + acquiredText + '</td>' +
@@ -470,10 +520,10 @@ function render() {
 function exportCsv() {
   const list = current();
   const e2 = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-  const lines = [['appid','nombre','horas_total','cuentas_propias','horas_por_cuenta','solo_compartido','duenos_familia','precio_usd','costo_por_hora','logros_obtenidos','logros_totales','logros_pct','primera_vez_visto','adquirido_familia','ultima_vez','fuente_horas'].map(e2).join(',')];
+  const lines = [['appid','nombre','horas_total','cuentas_propias','horas_por_cuenta','solo_compartido','duenos_familia','precio_usd','logros_obtenidos','logros_totales','logros_pct','primera_vez_visto','adquirido_familia','ultima_vez','fuente_horas'].map(e2).join(',')];
   for (const g of list) {
     const per = Object.entries(g.accounts || {}).map(e => e[0] + '=' + e[1] + 'h').join(' | ');
-    lines.push([g.appid, g.name, g.total_hours, g.owned_count, per, SCHEMA_V2 ? (g.family ? 'si' : 'no') : '', familyOwners(g).map(o => o.alias).join(' | '), (g.price_usd == null ? '' : g.price_usd), (g.cost_per_hour == null ? '' : g.cost_per_hour), g.achievements_got ?? '', g.achievements_total ?? '', (g.achievements_pct == null ? '' : g.achievements_pct), g.first_seen || '', g.acquired || '', g.last_played_iso || '', g.hours_source || ''].map(e2).join(','));
+    lines.push([g.appid, g.name, g.total_hours, g.owned_count, per, SCHEMA_V2 ? (g.family ? 'si' : 'no') : '', familyOwners(g).map(o => o.alias).join(' | '), (g.price_usd == null ? '' : g.price_usd), g.achievements_got ?? '', g.achievements_total ?? '', (g.achievements_pct == null ? '' : g.achievements_pct), g.first_seen || '', g.acquired || '', g.last_played_iso || '', g.hours_source || ''].map(e2).join(','));
   }
   const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');

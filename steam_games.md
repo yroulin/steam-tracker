@@ -1,5 +1,5 @@
 ---
-generated: 2026-10-04T20:51:51.505923+00:00
+generated: 2026-10-04T18:45:32.209128+00:00
 source: api
 accounts:
   - alias: aln024 - cr
@@ -15,7 +15,7 @@ accounts:
     steamid: "76561198377422221"
     personaname: "alain.roulin"
 total_unique_games: 795
-total_hours: 5118.8
+total_hours: 5117.4
 ---
 
 # Biblioteca Steam (consolidada)
@@ -24,7 +24,7 @@ total_hours: 5118.8
 - Juegos unicos: **795**
 - En mas de una cuenta: **31**
 - Nunca jugados (backlog): **606**
-- Horas totales: **5118.8**
+- Horas totales: **5117.4**
 
 ## Indice
 
@@ -38,8 +38,8 @@ total_hours: 5118.8
 | Monster Hunter: World | 582010 | aln024 - cr (89.7h) | - | 89.7 | 2018-08-22 | 2020-12-23 |
 | Path of Exile 2 | 2694490 | y.roulin.tk (83.8h) | - | 83.8 | - | - |
 | Hollow Knight: Silksong | 1030300 | y.roulin.tk (65.2h) | - | 65.2 | - | - |
-| Moonlighter 2: The Endless Vault | 2350790 | y.roulin.tk (51.1h) | - | 51.1 | - | - |
 | Dying Light | 239140 | aln024 - cr (50.3h), e]g[e > yves - cr (0h) | - | 50.3 | 2020-11-30 | 2016-03-08 |
+| Moonlighter 2: The Endless Vault | 2350790 | y.roulin.tk (49.7h) | - | 49.7 | - | - |
 | MECCHA CHAMELEON | 4704690 | y.roulin.tk (14.4h), alain.roulin - mx (30.1h) | - | 44.5 | - | - |
 | Megabonk | 3405340 | y.roulin.tk (43.7h) | - | 43.7 | - | - |
 | Assassin's Creed II | 33230 | aln024 - cr (36.9h) | - | 36.9 | - | 2018-05-16 |
