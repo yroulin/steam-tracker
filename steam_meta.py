@@ -1,4 +1,4 @@
-"""Precios USD, logros y géneros opcionales con caché de tienda de 24 horas."""
+"""Precios USD, logros y géneros opcionales con cachés configurables."""
 
 import json
 import time
@@ -7,8 +7,9 @@ from pathlib import Path
 from steam_common import SteamError, atomic_write, http_json
 
 
-def enrich_metadata(games, config, cache_path, *, sleep_ms=900, refresh=False,
-                    no_achievements=False, genres=False):
+def enrich_metadata(games, config, cache_path, *, sleep_ms=250, refresh=False,
+                    no_achievements=False, genres=False, price_cache_days=1,
+                    achievement_cache_days=0):
     cache_path = Path(cache_path)
     try:
         cache = json.loads(cache_path.read_text(encoding="utf-8"))
@@ -24,7 +25,8 @@ def enrich_metadata(games, config, cache_path, *, sleep_ms=900, refresh=False,
         entry = cache.get(appid, {})
         if not isinstance(entry, dict):
             entry = {}
-        fresh = time.time() - entry.get("fetched_at", 0) < 86400
+        now = time.time()
+        fresh = price_cache_days > 0 and now - entry.get("fetched_at", 0) < price_cache_days * 86400
         if refresh or not fresh:
             try:
                 response = http_json("https://store.steampowered.com/api/appdetails", {
@@ -36,9 +38,9 @@ def enrich_metadata(games, config, cache_path, *, sleep_ms=900, refresh=False,
                 price = details.get("price_overview", {})
                 free = bool(details.get("is_free", False))
                 usd = 0 if free else round(price["final"] / 100, 2) if price.get("currency") == "USD" and "final" in price else None
-                entry = {"price_usd": usd, "is_free": free, "fetched_at": time.time(),
-                         "genres": [g["description"] for g in details.get("genres", [])],
-                         "released": details.get("release_date", {}).get("date", "")}
+                entry.update({"price_usd": usd, "is_free": free, "fetched_at": time.time(),
+                              "genres": [g["description"] for g in details.get("genres", [])],
+                              "released": details.get("release_date", {}).get("date", "")})
                 cache[appid] = entry
             except SteamError:
                 warnings["prices"] += 1
@@ -54,8 +56,18 @@ def enrich_metadata(games, config, cache_path, *, sleep_ms=900, refresh=False,
             game["released"] = entry.get("released", "")
         achieved = {}
         if key and not no_achievements:
+            achievement_cache = entry.get("achievements_by_steamid", {})
+            if not isinstance(achievement_cache, dict):
+                achievement_cache = {}
             for alias in game["accounts"]:
                 if alias not in eligible:
+                    continue
+                steamid = str(eligible[alias]["steamid"])
+                cached = achievement_cache.get(steamid, {})
+                if (achievement_cache_days > 0 and isinstance(cached, dict) and
+                        time.time() - cached.get("fetched_at", 0) < achievement_cache_days * 86400):
+                    if cached.get("total", 0) > 0:
+                        achieved[alias] = {"got": cached.get("got", 0), "total": cached["total"]}
                     continue
                 try:
                     stats = http_json("https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/", {
@@ -65,12 +77,16 @@ def enrich_metadata(games, config, cache_path, *, sleep_ms=900, refresh=False,
                         warnings["achievements"] += 1
                         continue
                     achievements = stats.get("achievements", [])
+                    got = sum(a.get("achieved") == 1 for a in achievements)
+                    achievement_cache[steamid] = {"got": got, "total": len(achievements), "fetched_at": time.time()}
                     if achievements:
-                        achieved[alias] = {"got": sum(a.get("achieved") == 1 for a in achievements), "total": len(achievements)}
+                        achieved[alias] = {"got": got, "total": len(achievements)}
                 except SteamError:
                     warnings["achievements"] += 1
                 finally:
                     time.sleep(min(sleep_ms, 150) / 1000)
+            entry["achievements_by_steamid"] = achievement_cache
+            cache[appid] = entry
         got = sum(a["got"] for a in achieved.values())
         total = sum(a["total"] for a in achieved.values())
         game.update(achieved_by=achieved, achievements_got=got,

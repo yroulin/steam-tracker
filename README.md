@@ -51,7 +51,9 @@ python3 update.py --skip-family        # solo juegos propios, elimina familia de
 python3 update.py --no-achievements    # precios sin consultas de logros
 python3 update.py --genres             # añade géneros y lanzamiento al JSON
 python3 update.py --refresh            # vuelve a consultar los precios
-python3 update.py --sleep-ms 1500       # mayor pausa entre consultas
+python3 update.py --sleep-ms 250        # pausa entre consultas (por defecto)
+python3 update.py --price-cache-days 7  # reutilizar precios durante 7 días
+python3 update.py --achievement-cache-days 7  # reutilizar logros durante 7 días
 python3 update.py --config /ruta/accounts.json --out-dir /ruta/salida
 python3 update.py --history /ruta/steam_history.json
 python3 update.py --family-account main
@@ -63,7 +65,10 @@ consultan todas. Sin API key se intenta el XML público, que puede no estar
 accesible y no incluye última vez jugado ni logros.
 
 Si falla una biblioteca propia o una familia solicitada, el proceso sale con
-error antes de publicar datos, conservando las salidas anteriores. Un fallo de
+error antes de publicar datos, conservando las salidas anteriores. Precios y
+logros se reutilizan 7 días por defecto para reducir llamadas repetidas; usa
+`--refresh` para actualizar precios o `--achievement-cache-days 0` para consultar
+logros en cada ejecución. Un fallo de
 precios o logros se informa y no impide actualizar la biblioteca. Si falla la tienda,
 se conserva el precio en caché cuando existe; `price_updated` indica su antigüedad.
 Los logros no disponibles se muestran sin datos, no como cero logros conseguidos.
@@ -79,6 +84,13 @@ sin secretos ni consultas a Steam:
 ```sh
 python3 build_web.py
 ```
+
+El calendario visual de festivales temáticos y ofertas estacionales usa las fechas
+de `steam_events.json`, tomadas de los anuncios de Steamworks enlazados en ese
+archivo. Actualízalo cuando Valve publique nuevas fechas. Steam anuncia fechas, pero
+no siempre la hora; en esos casos se usa como referencia las 10:00 del Pacífico,
+y el sitio presenta la hora en la zona local del navegador. El contador solo sigue
+las ofertas estacionales; la lista también muestra los festivales.
 
 Esto conserva los datos y la fecha de la última consulta. No corrige datos antiguos:
 la clasificación nueva de propios y compartidos requiere ejecutar `update.py`.

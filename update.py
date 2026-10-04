@@ -43,10 +43,14 @@ def main(argv=None):
     parser.add_argument("--no-achievements", action="store_true")
     parser.add_argument("--genres", action="store_true", help="Incluir géneros y lanzamiento en JSON")
     parser.add_argument("--refresh", action="store_true", help="Ignorar la caché de tienda")
-    parser.add_argument("--sleep-ms", type=int, default=900, help="Pausa entre consultas de tienda")
+    parser.add_argument("--sleep-ms", type=int, default=250, help="Pausa entre consultas de Steam")
+    parser.add_argument("--price-cache-days", type=int, default=7, help="Días que se reutiliza cada precio")
+    parser.add_argument("--achievement-cache-days", type=int, default=7, help="Días que se reutilizan los logros; 0 los consulta siempre")
     args = parser.parse_args(argv)
     if args.sleep_ms < 0:
         parser.error("--sleep-ms debe ser positivo o cero")
+    if args.price_cache_days < 0 or args.achievement_cache_days < 0:
+        parser.error("los días de caché deben ser positivos o cero")
     try:
         config = load_config(args.config)
         # A configured family is required unless the caller explicitly opts out.
@@ -80,6 +84,8 @@ def main(argv=None):
             data["metadata_warnings"] = enrich_metadata(
                 data["games"], config, args.out_dir / "meta_cache.json", sleep_ms=args.sleep_ms,
                 refresh=args.refresh, no_achievements=args.no_achievements, genres=args.genres,
+                price_cache_days=args.price_cache_days,
+                achievement_cache_days=args.achievement_cache_days,
             )
         data["schema_version"] = 2
         publish(data, args.out_dir)

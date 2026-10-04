@@ -9,6 +9,8 @@ propias + los juegos compartidos por **Steam Families**.
   conteos o filtros. No intentes inferir datos desde el markdown si el JSON está disponible.
 - `steam_games.md` → resumen legible (frontmatter + tabla). Útil para mostrar al usuario.
 - `steam_games.html` → web con filtros (para el usuario, no la leas entera).
+- `steam_events.json` → fechas de ofertas estacionales y festivales temáticos; fuente
+  oficial enlazada dentro del archivo. Actualízalo cuando Steam anuncie fechas nuevas.
 - `accounts.json` → configuración de cuentas, API key y access token. **NUNCA expongas
   `api_key` ni `access_token`.**
 - `meta_cache.json`, `genres_cache.json` → cachés locales (no las edites a mano).

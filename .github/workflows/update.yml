@@ -57,7 +57,7 @@ jobs:
           printf '%s' "$ACCOUNTS_JSON" > accounts.json
 
       - name: Actualizar cuentas, familia, precios, logros y web
-        run: python update.py
+        run: python update.py --sleep-ms 250 --price-cache-days 7 --achievement-cache-days 7
 
       - name: Eliminar configuración temporal
         if: always()
