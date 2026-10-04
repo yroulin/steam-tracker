@@ -70,7 +70,7 @@
   label.chk input[type=number]{width:78px;min-height:38px}
   .wrap{padding-bottom:48px}
   .count{color:var(--muted);font-size:13px;margin:0 0 9px}
-  table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+  table{width:100%;border-collapse:separate;border-spacing:0;border-inline:1px solid #344b60;font-size:13px}
   thead th{background:#17212d;text-align:left;padding:11px 10px;border-block:1px solid var(--line);color:#aab8c4;font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;white-space:nowrap}
   thead th:first-child{border-radius:10px 0 0 0} thead th:last-child{border-radius:0 10px 0 0}
   thead th:hover{color:var(--blue)}
@@ -78,20 +78,24 @@
   th[aria-sort] .sort-button::after{margin-left:.35em;color:var(--blue)}
   th[aria-sort="ascending"] .sort-button::after{content:"↑"}
   th[aria-sort="descending"] .sort-button::after{content:"↓"}
-  tbody td{padding:11px 10px;border-bottom:1px solid #26313b;vertical-align:middle}
-  tbody tr:hover{background:#18222b}
-  td.gameCell{display:flex;align-items:center;gap:11px;min-width:215px}
+  tbody td{padding:13px 11px;border-bottom:1px solid #26313b;vertical-align:middle}
+  tbody tr:nth-child(odd){background:#192736}
+  tbody tr:nth-child(even){background:#141e28}
+  tbody tr:hover{background:#223d53}
+  td.gameCell{min-width:215px}
+  .game-cell-content{display:flex;align-items:center;gap:11px;min-width:215px}
   .cover{width:72px;height:34px;object-fit:cover;border-radius:5px;background:#222e39;border:1px solid var(--line);flex:0 0 auto}
   .cover.icon{object-fit:contain;padding:3px}.cover.ph{display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);font-size:15px;background:#222e39}
   .gmeta{min-width:0}.game{font-weight:650;color:var(--text);text-decoration:none}.game:hover{color:var(--blue);text-decoration:underline;text-underline-offset:3px}.gameCell a{font-weight:650;color:var(--text);text-decoration:none}.gameCell a:hover{color:var(--blue);text-decoration:underline;text-underline-offset:3px}.appid{color:#8796a3;font-size:11px;margin-top:2px}
   .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.hours{color:var(--green);font-weight:700}.zero{color:var(--muted)}
-  .badge{display:inline-flex;align-items:center;gap:5px;background:#202a34;border:1px solid #35424e;border-radius:999px;padding:3px 8px;margin:2px 3px 2px 0;font-size:11px;color:#c1ccd5;white-space:nowrap}
+  .badge{display:inline-flex;align-items:center;gap:5px;background:#202a34;border:1px solid #35424e;border-radius:999px;padding:4px 9px;margin:2px 3px 2px 0;font-size:11px;color:#c1ccd5;white-space:nowrap}
   .badge.multi{border-color:#967540;color:var(--gold)}.badge.fam{border-color:#735a9c;color:var(--violet)}
   .cph{color:var(--gold);font-weight:700}.pct{color:var(--muted);font-size:11px}.flag{width:15px;height:11px;object-fit:cover;border-radius:2px;vertical-align:middle}.muted{color:var(--muted)}
   .empty{text-align:center;color:var(--muted);padding:40px}
   .mobile-games{display:none}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   .game-card{min-width:0;background:#17212d;border:1px solid var(--line);border-left:3px solid #3d6179;border-radius:2px;padding:13px}
+  .game-card:nth-child(even){background:#141e28}
   .card-head{display:flex;align-items:center;gap:11px;padding-bottom:11px;border-bottom:1px solid #35424d}
   .card-title{margin:0;font-size:16px;line-height:1.3;font-weight:700;letter-spacing:-.015em}.card-title a{color:var(--text);text-decoration:none}.card-title a:hover{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
   .card-ownership{padding:9px 0 3px}.card-ownership-label{margin:0 0 5px;color:#96a6b4;font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
@@ -435,9 +439,9 @@ function render() {
     const acquiredText = g.acquired ? esc(g.acquired) : '<span class="muted">-</span>';
     const lastPlayedText = g.last_played_iso ? esc(g.last_played_iso) : 'Nunca';
     html += '<tr>' +
-      '<td class="gameCell" data-label="Juego">' + cover +
+      '<td class="gameCell" data-label="Juego"><div class="game-cell-content">' + cover +
         '<span class="gmeta"><span class="game">' + gameLink + '</span>' +
-        '<div class="appid">' + id + '</div></span></td>' +
+        '<div class="appid">' + id + '</div></span></div></td>' +
       '<td data-label="Cuentas">' + badges + '</td>' +
       '<td class="num ' + (g.total_hours ? 'hours' : 'zero') + '" data-label="Horas" title="' +
         (g.hours_source === 'family' ? 'Steam Families: sin desglose por jugador' : 'Horas registradas por cuenta') + '">' +
