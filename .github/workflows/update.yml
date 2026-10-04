@@ -1,0 +1,72 @@
+name: Actualizar biblioteca Steam
+
+on:
+  schedule:
+    # Todos los dias a las 15:00 UTC (~09:00 Costa Rica). Ajusta a tu gusto.
+    - cron: "0 15 * * *"
+  workflow_dispatch:   # permite ejecutarlo a mano desde la pestana Actions
+
+permissions:
+  contents: write      # para poder commitear los datos actualizados
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "steam-tracker"
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Escribir accounts.json desde el secreto
+        env:
+          ACCOUNTS_JSON: ${{ secrets.STEAM_ACCOUNTS_JSON }}
+        run: |
+          if [ -z "$ACCOUNTS_JSON" ]; then
+            echo "::error::Falta el secreto STEAM_ACCOUNTS_JSON en Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          printf '%s' "$ACCOUNTS_JSON" > accounts.json
+
+      - name: Actualizar biblioteca (md + json + web)
+        shell: pwsh
+        run: |
+          ./fetch_steam.ps1
+          # Genera/actualiza generos solo para juegos sin cache (respeta rate limit)
+          if (Test-Path ./fetch_genres.ps1) { ./fetch_genres.ps1 }
+          # Reconstruye la web con los datos finales
+          ./build_web.ps1
+
+      - name: Preparar sitio para Pages
+        run: |
+          mkdir -p _site
+          cp steam_games.html _site/index.html
+          cp steam_games.md   _site/
+          cp steam_games.json _site/
+
+      - name: Guardar cambios en el repo
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add steam_games.md steam_games.json steam_games.html
+          git diff --staged --quiet || git commit -m "Actualizar biblioteca Steam ($(date -u +%Y-%m-%d))"
+          git push || true
+
+      - name: Subir artefacto de Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

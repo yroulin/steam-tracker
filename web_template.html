@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biblioteca Steam</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#171d26; --panel2:#1e2632; --line:#2a3442;
+    --txt:#e6edf3; --muted:#8b98a9; --accent:#66c0f4; --accent2:#1b6a8f;
+    --green:#7ee787; --amber:#f0b400;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  header{padding:20px 22px 0;max-width:1280px;margin:0 auto}
+  h1{margin:0 0 4px;font-size:22px;letter-spacing:.3px}
+  h1 span{color:var(--accent)}
+  .meta{color:var(--muted);font-size:12px;margin-bottom:16px}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:10px 14px;min-width:110px}
+  .stat b{display:block;font-size:20px;color:var(--accent)}
+  .stat small{color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-size:10px}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:12px;margin-bottom:14px;position:sticky;top:0;z-index:5}
+  input[type=search],input[type=number],select{
+    background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+    border-radius:8px;padding:8px 10px;font-size:13px;outline:none}
+  input[type=search]{flex:1;min-width:180px}
+  input:focus,select:focus{border-color:var(--accent)}
+  label.chk{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--muted);
+    user-select:none;font-size:13px;white-space:nowrap}
+  label.chk input{accent-color:var(--accent)}
+  .btn{background:var(--accent2);color:#fff;border:0;border-radius:8px;
+    padding:8px 12px;cursor:pointer;font-size:13px}
+  .btn:hover{filter:brightness(1.15)}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 22px 40px}
+  .count{color:var(--muted);font-size:12px;margin:0 0 8px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{position:sticky;top:74px;background:var(--panel);text-align:left;
+    padding:10px 10px;border-bottom:1px solid var(--line);color:var(--muted);
+    font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;
+    cursor:pointer;white-space:nowrap}
+  thead th:hover{color:var(--accent)}
+  tbody td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:hover{background:var(--panel2)}
+  td.gameCell{display:flex;align-items:center;gap:10px;min-width:220px}
+  .cover{width:69px;height:32px;object-fit:cover;border-radius:4px;
+    background:var(--panel2);border:1px solid var(--line);flex:0 0 auto}
+  .cover.icon{object-fit:contain;padding:3px}
+  .cover.ph{display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:var(--muted);font-size:15px;background:var(--panel2)}
+  .gmeta{min-width:0}
+  .game{font-weight:600;color:var(--txt);text-decoration:none}
+  .game:hover{color:var(--accent);text-decoration:underline}
+  .appid{color:var(--muted);font-size:11px}
+  .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .hours{color:var(--green);font-weight:600}
+  .zero{color:var(--muted)}
+  .badge{display:inline-flex;align-items:center;gap:4px;background:var(--panel2);border:1px solid var(--line);
+    border-radius:999px;padding:1px 8px;margin:1px 3px 1px 0;font-size:11px;color:var(--muted)}
+  .badge.multi{border-color:var(--amber);color:var(--amber)}
+  .flag{width:15px;height:11px;object-fit:cover;border-radius:2px;vertical-align:middle}
+  .muted{color:var(--muted)}
+  .empty{text-align:center;color:var(--muted);padding:40px}
+  @media(max-width:640px){ thead th{top:132px} .stats .stat{flex:1} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Biblioteca <span>Steam</span></h1>
+  <div class="meta" id="meta"></div>
+  <div class="stats" id="stats"></div>
+  <div class="controls">
+    <input type="search" id="q" placeholder="Buscar juego...">
+    <select id="account"></select>
+    <select id="sort">
+      <option value="hours-desc">Horas (mayor)</option>
+      <option value="hours-asc">Horas (menor)</option>
+      <option value="name-asc">Nombre A-Z</option>
+      <option value="name-desc">Nombre Z-A</option>
+      <option value="last-desc">Ultima vez (reciente)</option>
+    </select>
+    <label class="chk"><input type="checkbox" id="backlog"> Solo backlog</label>
+    <label class="chk"><input type="checkbox" id="multi"> En varias cuentas</label>
+    <label class="chk">Min horas <input type="number" id="minh" min="0" step="1" style="width:64px"></label>
+    <button class="btn" id="csv">Exportar CSV</button>
+  </div>
+</header>
+<div class="wrap">
+  <div class="count" id="count"></div>
+  <table>
+    <thead>
+      <tr>
+        <th data-sort="name">Juego</th>
+        <th>Cuentas</th>
+        <th class="num" data-sort="hours">Horas</th>
+        <th class="num" data-sort="last">Ultima vez</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="empty" id="empty" hidden>Sin resultados con esos filtros.</div>
+</div>
+
+<script>
+const DATA = /*__STEAM_DATA__*/;
+const ACCOUNTS = DATA.accounts || [];
+const GAMES = DATA.games || [];
+
+// Bandera por cuenta (pais real) como SVG.
+const FLAG_BY_ALIAS = {
+  'y.roulin.tk': 'tr',
+  'alain.roulin - mx': 'mx',
+  'aln024 - cr': 'cr',
+  'e]g[e > yves - cr': 'cr',
+};
+
+const $ = s => document.querySelector(s);
+const norm = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtH = n => { const v = Math.round((Number(n) || 0) * 10) / 10; return Number.isInteger(v) ? String(v) : v.toFixed(1); };
+const flagFor = alias => FLAG_BY_ALIAS[alias] || '';
+const flagImg = alias => {
+  const cc = flagFor(alias);
+  if (!cc) return '';
+  return '<img class="flag" alt="' + esc(cc) + '" title="' + esc(alias) + '" loading="lazy" src="https://flagcdn.com/' + cc + '.svg">';
+};
+
+const state = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false, minh: 0 };
+
+$('#meta').textContent =
+  GAMES.length + ' juegos unicos | ' + ACCOUNTS.length + ' cuentas | actualizado ' +
+  String(DATA.generated || '').slice(0,10) + ' (fuente: ' + (DATA.source || '-') + ')';
+
+$('#stats').innerHTML = [
+  ['Juegos', GAMES.length],
+  ['Horas totales', fmtH(GAMES.reduce((a, g) => a + (g.total_hours || 0), 0))],
+  ['Backlog', GAMES.filter(g => !g.total_hours).length],
+  ['En varias cuentas', GAMES.filter(g => g.owned_count > 1).length],
+].map(p => '<div class="stat"><b>' + p[1] + '</b><small>' + p[0] + '</small></div>').join('');
+
+$('#account').innerHTML = '<option value="">Todas las cuentas</option>' +
+  ACCOUNTS.map(a => '<option value="' + esc(a.alias) + '">' + esc(a.personaname || a.alias) + ' (' + esc(a.alias) + ')</option>').join('');
+
+function current() {
+  const qn = norm(state.q);
+  let list = GAMES.filter(g => {
+    if (state.account && !(state.account in (g.accounts || {}))) return false;
+    if (state.backlog && g.total_hours !== 0) return false;
+    if (state.multi && !(g.owned_count > 1)) return false;
+    if (state.minh && (g.total_hours || 0) < state.minh) return false;
+    if (qn && norm(g.name).indexOf(qn) === -1) return false;
+    return true;
+  });
+  const parts = state.sort.split('-');
+  const key = parts[0], dir = parts[1];
+  const mul = dir === 'asc' ? 1 : -1;
+  list.sort((a, b) => {
+    if (key === 'name') return a.name.localeCompare(b.name, 'es') * mul;
+    if (key === 'last') return ((a.last_played || 0) - (b.last_played || 0)) * mul;
+    return ((a.total_hours || 0) - (b.total_hours || 0)) * mul;
+  });
+  return list;
+}
+
+function render() {
+  const list = current();
+  $('#count').textContent = list.length + ' de ' + GAMES.length + ' juegos';
+  $('#empty').hidden = list.length > 0;
+  let html = '';
+  for (const g of list) {
+    const entries = Object.entries(g.accounts || {}).sort((a, b) => b[1] - a[1]);
+    const badges = entries.map(function(e) {
+      return '<span class="badge' + (g.owned_count > 1 ? ' multi' : '') + '" title="' + esc(e[0]) + '">' +
+        flagImg(e[0]) + esc(e[0]) + ' &middot; ' + fmtH(e[1]) + 'h</span>';
+    }).join('');
+    const id = esc(g.appid);
+    const header = 'https://cdn.cloudflare.steamstatic.com/steam/apps/' + id + '/header.jpg';
+    const icon = 'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/' + id + '/' + esc(g.img_icon_url || '') + '.jpg';
+    const initial = esc((g.name || '?').trim().charAt(0).toUpperCase());
+    const ph = '<span class="cover ph" title="Sin caratula">' + initial + '</span>';
+    const cover = g.img_icon_url
+      ? '<img class="cover" loading="lazy" alt="" src="' + header + '" onerror="this.onerror=null;this.src=\'' + icon + '\';this.classList.add(\'icon\')">'
+      : '<img class="cover" loading="lazy" alt="" src="' + header + '" onerror="this.replaceWith(document.createRange().createContextualFragment(this.dataset.ph))" data-ph="' + ph.replace(/"/g, '&quot;') + '">';
+
+    html += '<tr>' +
+      '<td class="gameCell">' + cover +
+        '<span class="gmeta"><a class="game" target="_blank" rel="noopener" href="https://store.steampowered.com/app/' + id + '/">' + esc(g.name) + '</a>' +
+        '<div class="appid">' + id + '</div></span></td>' +
+      '<td>' + badges + '</td>' +
+      '<td class="num ' + (g.total_hours ? 'hours' : 'zero') + '">' + fmtH(g.total_hours) + '</td>' +
+      '<td class="num ' + (g.last_played_iso ? '' : 'muted') + '">' + (g.last_played_iso || 'Nunca') + '</td>' +
+      '</tr>';
+  }
+  $('#rows').innerHTML = html;
+}
+
+function exportCsv() {
+  const list = current();
+  const e2 = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const lines = [['appid','nombre','horas_total','cuentas','horas_por_cuenta','ultima_vez'].map(e2).join(',')];
+  for (const g of list) {
+    const per = Object.entries(g.accounts || {}).map(e => e[0] + '=' + e[1] + 'h').join(' | ');
+    lines.push([g.appid, g.name, g.total_hours, Object.keys(g.accounts || {}).length, per, g.last_played_iso || ''].map(e2).join(','));
+  }
+  const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'steam_filtrado.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+const on = (el, ev, fn) => el.addEventListener(ev, fn);
+on($('#q'), 'input', e => { state.q = e.target.value; render(); });
+on($('#account'), 'change', e => { state.account = e.target.value; render(); });
+on($('#sort'), 'change', e => { state.sort = e.target.value; render(); });
+on($('#backlog'), 'change', e => { state.backlog = e.target.checked; render(); });
+on($('#multi'), 'change', e => { state.multi = e.target.checked; render(); });
+on($('#minh'), 'input', e => { state.minh = Number(e.target.value) || 0; render(); });
+on($('#csv'), 'click', exportCsv);
+document.querySelectorAll('th[data-sort]').forEach(th => on(th, 'click', () => {
+  const k = th.dataset.sort;
+  state.sort = k === 'name' ? (state.sort === 'name-asc' ? 'name-desc' : 'name-asc')
+    : (state.sort === k + '-desc' ? k + '-asc' : k + '-desc');
+  $('#sort').value = state.sort;
+  render();
+}));
+
+render();
+</script>
+</body>
+</html>

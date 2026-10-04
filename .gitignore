@@ -1,0 +1,7 @@
+# Nunca subir la config con la API key ni los logs
+accounts.json
+steam-tracker.log
+*.csv
+
+# Cache local de generos (se regenera solo; no hace falta versionarla)
+genres_cache.json
