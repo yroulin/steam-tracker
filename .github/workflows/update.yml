@@ -34,11 +34,8 @@ jobs:
       - name: Actualizar biblioteca (md + json + web)
         shell: pwsh
         run: |
+          # fetch_steam.ps1 ya regenera la web (steam_games.html) al terminar.
           ./fetch_steam.ps1
-          # Genera/actualiza generos solo para juegos sin cache (respeta rate limit)
-          if (Test-Path ./fetch_genres.ps1) { ./fetch_genres.ps1 }
-          # Reconstruye la web con los datos finales
-          ./build_web.ps1
 
       - name: Preparar sitio para Pages
         run: |
