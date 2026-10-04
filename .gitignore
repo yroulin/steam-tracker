@@ -13,3 +13,4 @@ __pycache__/
 *.py[cod]
 .venv/
 _site/
+.superpowers/

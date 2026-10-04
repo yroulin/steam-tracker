@@ -7,20 +7,25 @@
 <meta name="description" content="Biblioteca de Steam para varias cuentas y Steam Families.">
 <title>Biblioteca Steam</title>
 <style>
-  :root{color-scheme:dark;--bg:#10151b;--panel:#171f28;--panel-hi:#1c2732;--line:#2c3945;--text:#edf3f8;--muted:#9baab8;--blue:#78c8f2;--blue-deep:#184b66;--green:#8ee1b1;--gold:#f4c46b;--violet:#c8a7ff}
+  :root{color-scheme:dark;--bg:#1b2838;--panel:#17212d;--panel-hi:#202f40;--line:#2a3f52;--text:#edf3f8;--muted:#a3b5c8;--blue:#66c0f4;--blue-deep:#2a475e;--green:#8ee1b1;--gold:#f4c46b;--violet:#c8a7ff}
   *{box-sizing:border-box}
-  body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1c2a35 0,transparent 48%),var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
   header,.wrap{width:min(1440px,100%);margin-inline:auto;padding-inline:clamp(16px,3vw,40px)}
-  header{padding-top:32px}
+  header{padding-top:24px}
+  .steam-brand{display:flex;align-items:center;min-height:42px;margin-bottom:14px}
+  .steam-brand img{display:block;width:112px;height:auto;filter:brightness(0) invert(1)}
+  .steam-hero{position:relative;isolation:isolate;overflow:hidden;margin-bottom:0;aspect-ratio:10/3;min-height:185px;background:#1b2838;border:1px solid #344b60;border-bottom:0}
+  .steam-hero::before{content:"";position:absolute;z-index:-1;inset:0;background-image:var(--steam-hero-art);background-size:cover;background-position:center top}
+  .library-summary{padding:14px clamp(16px,2.5vw,32px) 2px;background:#1b2838;border:1px solid #344b60;border-top:0;margin-bottom:16px}
   h1{margin:0;font-size:clamp(26px,4vw,38px);line-height:1.12;letter-spacing:-.035em;font-weight:750}
   h1 span{color:var(--blue)}
   .meta{color:var(--muted);font-size:13px;margin:8px 0 22px}
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-bottom:18px}
-  .stat{background:linear-gradient(145deg,var(--panel),#151c23);border:1px solid var(--line);border-radius:13px;padding:14px 16px;min-width:0}
+  .stat{background:rgba(23,33,45,.82);border:1px solid #486077;border-radius:3px;padding:12px 15px;min-width:0}
   .stat b{display:block;font-size:clamp(20px,2.5vw,25px);line-height:1.15;color:var(--blue);font-variant-numeric:tabular-nums}
   .stat small{display:block;margin-top:6px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em}
-  .events-panel{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(0,2fr);gap:14px;margin:0 0 16px;padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
-  .sale-countdown{display:flex;flex-direction:column;justify-content:center;min-height:150px;padding:16px;background:#111820;border:1px solid #364653;border-radius:11px}
+  .events-panel{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(0,2fr);gap:14px;margin:0 0 16px;padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:3px}
+  .sale-countdown{display:flex;flex-direction:column;justify-content:center;min-height:150px;padding:16px;background:#101822;border:1px solid #344b60;border-radius:2px}
   .sale-countdown .eyebrow,.event-kind{color:var(--muted);font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.09em}
   .sale-countdown h2{margin:8px 0 4px;font-size:18px;line-height:1.25}
   .sale-countdown p{margin:0;color:var(--blue);font-size:14px;font-variant-numeric:tabular-nums;font-weight:700}
@@ -30,7 +35,7 @@
   .events-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 9px}
   .events-heading h2{margin:0;font-size:14px}
   .event-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .event-card{min-width:0;padding:10px 11px;background:#111820;border:1px solid #2d3a45;border-radius:10px}
+  .event-card{min-width:0;padding:10px 11px;background:#101822;border:1px solid #2d4050;border-radius:2px}
   .event-card h3{margin:4px 0 3px;font-size:13px;line-height:1.3}
   .event-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
   .event-card.sale{border-color:#6e5836}
@@ -40,13 +45,22 @@
   .events-more{margin-top:8px}
   .events-more summary{width:max-content;min-height:40px;display:flex;align-items:center;cursor:pointer;color:var(--blue);font-size:12px;font-weight:650}
   .events-more .event-grid{margin-top:6px}
-  .controls{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px}
+  .controls{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:12px;margin-bottom:16px}
   .primary-controls{display:grid;grid-template-columns:minmax(200px,1fr) minmax(190px,.8fr) minmax(170px,.65fr) auto;gap:9px}
-  input[type=search],input[type=number],select{width:100%;min-height:44px;background:#111820;color:var(--text);border:1px solid #3a4956;border-radius:9px;padding:9px 12px;font:inherit;font-size:14px}
+  .account-legend{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px;padding-top:9px;border-top:1px solid var(--line)}
+  .account-legend-title{color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-right:2px}
+  .account-chip{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:4px 8px;background:#101822;border:1px solid #2c4051;color:#c6d4df;font-size:11px;line-height:1.2;border-radius:2px}
+  .account-chip.selected{border-color:var(--blue);background:#223b50;color:#fff}
+  .account-avatar-shell{display:inline-flex;width:18px;height:18px;flex:0 0 18px;align-items:center;justify-content:center;overflow:hidden;border-radius:50%;background:#30465a;vertical-align:middle}
+  .account-avatar{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .account-avatar-fallback{display:inline-flex;width:18px;height:18px;flex:0 0 18px;align-items:center;justify-content:center;border-radius:50%;background:#30465a;color:#d8e7f4;font-size:9px;font-weight:750;text-transform:uppercase}
+  .account-avatar[hidden],.account-avatar-fallback[hidden]{display:none}
+  .badge .account-avatar-shell,.badge .account-avatar-fallback{width:16px;height:16px;flex-basis:16px}
+  input[type=search],input[type=number],select{width:100%;min-height:44px;background:#101822;color:var(--text);border:1px solid #0b1118;border-radius:2px;padding:9px 12px;font:inherit;font-size:14px}
   input[type=search]::placeholder{color:#8393a0}
   input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-  .btn{background:var(--blue-deep);color:#f3fbff;border:1px solid #34769a;border-radius:9px;padding:9px 14px;min-height:44px;cursor:pointer;font-size:14px;font-weight:650}
-  .btn:hover{background:#205e7e}
+  .btn{background:#2a475e;color:#f3fbff;border:1px solid #66c0f455;border-radius:2px;padding:9px 14px;min-height:44px;cursor:pointer;font-size:14px;font-weight:650}
+  .btn:hover{background:#365b78}
   .advanced{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
   .advanced summary{cursor:pointer;color:var(--blue);font-weight:650;padding:6px 4px;min-height:44px;display:flex;align-items:center}
   .advanced summary::marker{color:var(--blue)}
@@ -57,7 +71,7 @@
   .wrap{padding-bottom:48px}
   .count{color:var(--muted);font-size:13px;margin:0 0 9px}
   table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
-  thead th{background:#19232c;text-align:left;padding:11px 10px;border-block:1px solid var(--line);color:#aab8c4;font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;white-space:nowrap}
+  thead th{background:#17212d;text-align:left;padding:11px 10px;border-block:1px solid var(--line);color:#aab8c4;font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;white-space:nowrap}
   thead th:first-child{border-radius:10px 0 0 0} thead th:last-child{border-radius:0 10px 0 0}
   thead th:hover{color:var(--blue)}
   .sort-button{display:block;width:100%;min-height:38px;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:inherit;text-transform:inherit;letter-spacing:inherit;cursor:pointer}
@@ -77,24 +91,43 @@
   .empty{text-align:center;color:var(--muted);padding:40px}
   .mobile-games{display:none}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  .game-card{min-width:0;background:linear-gradient(150deg,#19232c,#151d25);border:1px solid var(--line);border-radius:13px;padding:13px}
+  .game-card{min-width:0;background:#17212d;border:1px solid var(--line);border-left:3px solid #3d6179;border-radius:2px;padding:13px}
   .card-head{display:flex;align-items:center;gap:11px;padding-bottom:11px;border-bottom:1px solid #35424d}
   .card-title{margin:0;font-size:16px;line-height:1.3;font-weight:700;letter-spacing:-.015em}.card-title a{color:var(--text);text-decoration:none}.card-title a:hover{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
   .card-ownership{padding:9px 0 3px}.card-ownership-label{margin:0 0 5px;color:#96a6b4;font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
-  .card-facts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:7px 0 0}.card-facts div{min-width:0;padding:9px 10px;background:#111820;border:1px solid #2b3844;border-radius:9px}
+  .card-facts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:7px 0 0}.card-facts div{min-width:0;padding:9px 10px;background:#101822;border:1px solid #263746;border-radius:2px}
   .card-facts dt{color:#96a6b4;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.card-facts dd{margin:4px 0 0;font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
   @media(max-width:860px){.primary-controls{grid-template-columns:1fr 1fr}.primary-controls input[type=search]{grid-column:1/-1}.primary-controls .btn{width:100%}}
-  @media(max-width:620px){header{padding-top:22px}.meta{margin-bottom:16px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:12px}.stat:last-child:nth-child(odd){grid-column:1/-1}.events-panel{grid-template-columns:1fr;gap:10px;padding:11px}.sale-countdown{min-height:0;padding:13px}.event-grid{grid-template-columns:1fr 1fr}.primary-controls{grid-template-columns:1fr}.primary-controls input[type=search]{grid-column:auto}.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}.wrap{padding-bottom:32px}table{display:none}.mobile-games{display:grid;gap:10px}.cover{width:80px;height:38px}}
+  @media(max-width:620px){header{padding-top:14px}.steam-brand{margin-bottom:9px}.steam-brand img{width:92px}.steam-hero{aspect-ratio:10/7;min-height:210px}.steam-hero::before{background-image:var(--steam-hero-art-mobile,var(--steam-hero-art));background-position:center top}.library-summary{padding:11px 13px 1px;margin-bottom:12px}.meta{margin-bottom:14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.stat{padding:10px}.stat:last-child:nth-child(odd){grid-column:1/-1}.events-panel{grid-template-columns:1fr;gap:10px;padding:10px}.sale-countdown{min-height:0;padding:13px}.event-grid{grid-template-columns:1fr 1fr}.primary-controls{grid-template-columns:1fr}.primary-controls input[type=search]{grid-column:auto}.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}.wrap{padding-bottom:32px}table{display:none}.mobile-games{display:grid;gap:10px}.cover{width:80px;height:38px}}
   @media(max-width:380px){.event-grid{grid-template-columns:1fr}}
   @media(max-width:380px){.filter-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat small{font-size:9px}}
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
+<script>
+const STEAM_EVENTS = /*__STEAM_EVENTS__*/;
+const safeSteamImage = value => {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && url.hostname.endsWith('.steamstatic.com') &&
+      url.pathname.includes('/store_item_assets/steam/clusters/seasonalsales/') ? url.href : '';
+  } catch { return ''; }
+};
+const saleArtwork = STEAM_EVENTS.artwork || {};
+const saleDesktop = safeSteamImage(saleArtwork.desktop);
+const saleMobile = safeSteamImage(saleArtwork.mobile);
+if (saleDesktop) document.documentElement.style.setProperty('--steam-hero-art', 'url("' + saleDesktop.replace(/["\\]/g, '') + '")');
+if (saleMobile) document.documentElement.style.setProperty('--steam-hero-art-mobile', 'url("' + saleMobile.replace(/["\\]/g, '') + '")');
+</script>
 <header>
-  <h1>Biblioteca <span>Steam</span></h1>
-  <div class="meta" id="meta"></div>
-  <div class="stats" id="stats"></div>
+  <div class="steam-brand" aria-label="Steam"><img src="https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg" alt="Steam"></div>
+  <div class="steam-hero" role="img" aria-label="Arte de las ofertas estacionales actuales de Steam"></div>
+  <section class="library-summary" aria-label="Resumen de tu biblioteca">
+      <h1>Biblioteca <span>Steam</span></h1>
+      <div class="meta" id="meta"></div>
+      <div class="stats" id="stats"></div>
+  </section>
   <section class="events-panel" aria-label="Ofertas y eventos de Steam">
     <div class="sale-countdown" id="saleCountdown" role="timer" aria-live="off"></div>
     <div class="events-content">
@@ -121,6 +154,7 @@
       </select>
       <button class="btn" id="csv">Exportar CSV</button>
     </div>
+    <div class="account-legend" id="accountLegend" aria-label="Avatares de tus cuentas"></div>
     <details class="advanced">
       <summary>Filtros adicionales</summary>
       <div class="filter-grid">
@@ -160,7 +194,6 @@
 
 <script>
 const DATA = /*__STEAM_DATA__*/;
-const STEAM_EVENTS = /*__STEAM_EVENTS__*/;
 const ACCOUNTS = DATA.accounts || [];
 const GAMES = DATA.games || [];
 const SCHEMA_V2 = Number(DATA.schema_version) >= 2;
@@ -262,8 +295,36 @@ $('#stats').innerHTML = [
 ].map(p => '<div class="stat"><b>' + p[1] + '</b><small>' + p[0] + '</small></div>').join('');
 
 const FAMILY = DATA.family_members || [];
+const AVATAR_BY_ALIAS = Object.fromEntries(ACCOUNTS.map(account => [account.alias, safeSteamAvatar(account.avatar)]));
+function safeSteamAvatar(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && url.hostname.endsWith('.steamstatic.com') &&
+      /\.(jpe?g|png|webp)$/i.test(url.pathname) ? url.href : '';
+  } catch { return ''; }
+}
+function accountAvatar(alias) {
+  const avatar = AVATAR_BY_ALIAS[alias] || '';
+  const initial = esc((alias || '?').trim().charAt(0).toUpperCase());
+  const fallback = '<span class="account-avatar-fallback"' + (avatar ? ' hidden' : '') + ' aria-hidden="true">' + initial + '</span>';
+  const image = avatar
+    ? '<img class="account-avatar" src="' + esc(avatar) + '" alt="" loading="lazy" referrerpolicy="no-referrer">'
+    : '';
+  return '<span class="account-avatar-shell">' + image + fallback + '</span>';
+}
+document.addEventListener('error', event => {
+  const image = event.target;
+  if (image instanceof HTMLImageElement && image.classList.contains('account-avatar')) {
+    image.hidden = true;
+    const fallback = image.nextElementSibling;
+    if (fallback) fallback.hidden = false;
+  }
+}, true);
 ACCOUNTS.forEach(a => { if (a.country) FLAG_BY_ALIAS[a.alias] = String(a.country).toLowerCase(); });
 FAMILY.forEach(f => { if (f.country) FLAG_BY_ALIAS[f.alias] = String(f.country).toLowerCase(); });
+$('#accountLegend').innerHTML = '<span class="account-legend-title">Mis cuentas</span>' +
+  ACCOUNTS.map(account => '<span class="account-chip" data-account-alias="' + esc(account.alias) + '">' +
+    accountAvatar(account.alias) + '<span>' + esc(account.alias) + '</span></span>').join('');
 $('#account').innerHTML = '<option value="">Todas las cuentas</option>' +
   '<optgroup label="Mis cuentas">' +
     ACCOUNTS.map(a => '<option value="acc:' + esc(a.alias) + '">' + esc(a.personaname || a.alias) + ' (' + esc(a.alias) + ')</option>').join('') +
@@ -325,6 +386,9 @@ function current() {
 }
 
 function render() {
+  document.querySelectorAll('.account-chip').forEach(chip => {
+    chip.classList.toggle('selected', $('#account').value === 'acc:' + chip.dataset.accountAlias);
+  });
   const list = current();
   $('#count').textContent = list.length + ' de ' + GAMES.length + ' juegos';
   $('#empty').hidden = list.length > 0;
@@ -334,11 +398,11 @@ function render() {
     const entries = Object.entries(g.accounts || {}).sort((a, b) => b[1] - a[1]);
     let badges = entries.map(function(e) {
       return '<span class="badge' + (g.owned_count > 1 ? ' multi' : '') + '" title="' + esc(e[0]) + '">' +
-        flagImg(e[0]) + esc(e[0]) + ' &middot; ' + fmtH(e[1]) + 'h</span>';
+        accountAvatar(e[0]) + flagImg(e[0]) + esc(e[0]) + ' &middot; ' + fmtH(e[1]) + 'h</span>';
     }).join('');
     for (const alias of (g.owned_accounts || [])) {
       if (!(alias in (g.accounts || {}))) {
-        badges += '<span class="badge">' + esc(alias) + ' &middot; horas no disponibles</span>';
+        badges += '<span class="badge">' + accountAvatar(alias) + esc(alias) + ' &middot; horas no disponibles</span>';
       }
     }
     {

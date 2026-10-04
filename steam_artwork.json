@@ -1,0 +1,7 @@
+{
+  "source": "steam-store",
+  "artwork": {
+    "desktop": "https://shared.akamai.steamstatic.com/store_item_assets/steam/clusters/seasonalsales/586fc7dd791c9d03aef33ecf/f33f04a3a01a58a35b2659dab2b6b7fc739c0dca/page_bg_english.webp",
+    "mobile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/clusters/seasonalsales/586fc7dd791c9d03aef33ecf/add425e50c48fdc44c99ab49e09ee0036b21fdff/page_bg_mobile_english.webp"
+  }
+}

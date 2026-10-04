@@ -91,6 +91,9 @@ archivo. Actualízalo cuando Valve publique nuevas fechas. Steam anuncia fechas,
 no siempre la hora; en esos casos se usa como referencia las 10:00 del Pacífico,
 y el sitio presenta la hora en la zona local del navegador. El contador solo sigue
 las ofertas estacionales; la lista también muestra los festivales.
+El encabezado usa el arte estacional actual de la tienda de Steam, con variantes
+para escritorio y móvil. `update.py` refresca sus URLs una vez al día y conserva
+el último fondo disponible si Steam no responde.
 
 Esto conserva los datos y la fecha de la última consulta. No corrige datos antiguos:
 la clasificación nueva de propios y compartidos requiere ejecutar `update.py`.

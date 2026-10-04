@@ -20,6 +20,14 @@ def render_html(data, template):
     events_marker = "/*__STEAM_EVENTS__*/"
     if events_marker in html:
         events = json.loads((BASE / "steam_events.json").read_text(encoding="utf-8"))
+        artwork_path = BASE / "steam_artwork.json"
+        if artwork_path.exists():
+            try:
+                artwork_data = json.loads(artwork_path.read_text(encoding="utf-8"))
+                if isinstance(artwork_data, dict) and isinstance(artwork_data.get("artwork"), dict):
+                    events["artwork"] = artwork_data["artwork"]
+            except (OSError, ValueError):
+                pass
         serialized_events = json.dumps(events, ensure_ascii=False, separators=(",", ":"))
         serialized_events = serialized_events.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
         serialized_events = serialized_events.replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")

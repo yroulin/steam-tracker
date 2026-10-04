@@ -25,10 +25,12 @@ import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 BASE_DIR = Path(__file__).resolve().parent
 API_URL = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
 SUMMARIES_URL = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
+_PROFILE_SUMMARIES: dict[str, dict[str, str]] = {}
 from steam_common import SteamError, http_get, http_json, load_config, public_accounts, atomic_write
 from steam_history import load_history, record_first_seen, render_history
 
@@ -90,14 +92,31 @@ def owned_via_xml(steamid: str) -> dict[str, dict]:
 
 
 def profile_name(key: str, steamid: str) -> str:
+    _PROFILE_SUMMARIES.pop(steamid, None)
     try:
         data = http_json(SUMMARIES_URL, {"key": key, "steamids": steamid})
         players = data.get("response", {}).get("players") or []
         if players:
-            return players[0].get("personaname", "") or ""
+            player = players[0]
+            avatar = str(player.get("avatarfull", "") or "")
+            avatar_url = urlsplit(avatar)
+            if (avatar_url.scheme != "https" or avatar_url.username or avatar_url.password
+                    or not (avatar_url.hostname or "").endswith(".steamstatic.com")
+                    or not avatar_url.path.lower().endswith((".jpg", ".jpeg", ".png", ".webp"))):
+                avatar = ""
+            _PROFILE_SUMMARIES[steamid] = {
+                "personaname": str(player.get("personaname", "") or ""),
+                "avatar": avatar,
+            }
+            return _PROFILE_SUMMARIES[steamid]["personaname"]
     except Exception:
         pass
     return ""
+
+
+def profile_avatar(steamid: str) -> str:
+    """Return the public avatar from the summary request, if Steam supplied one."""
+    return _PROFILE_SUMMARIES.get(steamid, {}).get("avatar", "")
 
 
 def iso_from_unix(ts: int) -> str | None:
@@ -205,6 +224,7 @@ def fetch_owned(config, mode="auto"):
             if mode == "api":
                 libraries[alias] = owned_via_api(key, sid)
                 account["personaname"] = profile_name(key, sid)
+                account["avatar"] = profile_avatar(sid)
             else:
                 libraries[alias] = owned_via_xml(sid)
         except Exception:

@@ -12,6 +12,7 @@ from steam_common import SteamError, atomic_write, load_config, without_secrets
 from steam_family import fetch_family, merge_family
 from steam_meta import enrich_metadata
 from steam_history import load_history, record_first_seen, render_history
+from steam_artwork import refresh_sale_artwork
 
 BASE = Path(__file__).resolve().parent
 
@@ -87,6 +88,10 @@ def main(argv=None):
                 price_cache_days=args.price_cache_days,
                 achievement_cache_days=args.achievement_cache_days,
             )
+        if refresh_sale_artwork(BASE / "steam_artwork.json"):
+            print("[i] Arte de la campaña de Steam actualizado.")
+        else:
+            print("[i] Se conserva el último arte de Steam disponible.")
         data["schema_version"] = 2
         publish(data, args.out_dir)
         atomic_write(history_path, render_history(history))
