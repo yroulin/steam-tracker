@@ -1,5 +1,5 @@
 ---
-generated: 2026-10-04 10:00 UTC
+generated: 2026-10-04 18:18 UTC
 source: api
 accounts:
   - alias: aln024 - cr
@@ -30,7 +30,7 @@ total_hours: 5110.6
 
 | Juego | AppID | Cuentas | Horas totales | Ult. vez |
 |---|---|---|---|---|
-| Dota 2 | 570 | e]g[e > yves - cr (0h), aln024 - cr (2176.6h) | 2176.6 | 2026-03-20 |
+| Dota 2 | 570 | aln024 - cr (2176.6h), e]g[e > yves - cr (0h) | 2176.6 | 2026-03-20 |
 | Counter-Strike 2 | 730 | y.roulin.tk (1.3h), aln024 - cr (670.6h) | 671.9 | 2026-03-21 |
 | PUBG: BATTLEGROUNDS | 578080 | aln024 - cr (518.3h) | 518.3 | 2026-09-27 |
 | Deep Rock Galactic: Survivor | 2321470 | aln024 - cr (179.6h) | 179.6 | 2026-09-18 |
@@ -38,7 +38,7 @@ total_hours: 5110.6
 | Monster Hunter: World | 582010 | aln024 - cr (89.7h) | 89.7 | 2020-12-23 |
 | Path of Exile 2 | 2694490 | y.roulin.tk (83.8h) | 83.8 | - |
 | Hollow Knight: Silksong | 1030300 | y.roulin.tk (65.2h) | 65.2 | - |
-| Dying Light | 239140 | e]g[e > yves - cr (0h), aln024 - cr (50.3h) | 50.3 | 2016-03-08 |
+| Dying Light | 239140 | aln024 - cr (50.3h), e]g[e > yves - cr (0h) | 50.3 | 2016-03-08 |
 | Moonlighter 2: The Endless Vault | 2350790 | y.roulin.tk (49.7h) | 49.7 | - |
 | MECCHA CHAMELEON | 4704690 | y.roulin.tk (14.4h), alain.roulin - mx (30.1h) | 44.5 | - |
 | Megabonk | 3405340 | y.roulin.tk (43.7h) | 43.7 | - |
@@ -49,23 +49,23 @@ total_hours: 5110.6
 | Wallpaper Engine | 431960 | aln024 - cr (28.8h) | 28.8 | 2026-06-19 |
 | FOR HONOR | 304390 | aln024 - cr (28.5h) | 28.5 | 2019-12-06 |
 | PEAK | 3527290 | y.roulin.tk (23.1h) | 23.1 | - |
-| Tomb Raider | 203160 | e]g[e > yves - cr (0h), aln024 - cr (22.6h) | 22.6 | 2017-11-04 |
+| Tomb Raider | 203160 | aln024 - cr (22.6h), e]g[e > yves - cr (0h) | 22.6 | 2017-11-04 |
 | The Witcher 2: Assassins of Kings Enhanced Edition | 20920 | aln024 - cr (22.4h) | 22.4 | 2016-12-23 |
 | Grand Theft Auto V Legacy | 271590 | aln024 - cr (22.3h) | 22.3 | 2019-07-08 |
 | Metro 2033 Redux | 286690 | aln024 - cr (22.2h) | 22.2 | 2017-04-28 |
 | SWORN | 1763250 | y.roulin.tk (15.2h), alain.roulin - mx (6.9h) | 22.1 | - |
-| Temtem: Swarm | 2510960 | e]g[e > yves - cr (0h), y.roulin.tk (21h) | 21 | - |
+| Temtem: Swarm | 2510960 | y.roulin.tk (21h), e]g[e > yves - cr (0h) | 21 | - |
 | Trine 2 | 35720 | aln024 - cr (21h) | 21 | 2023-04-16 |
 | Portal 2 | 620 | y.roulin.tk (11.2h), aln024 - cr (8.1h) | 19.3 | 2026-09-03 |
 | Ryse: Son of Rome | 302510 | aln024 - cr (19.2h) | 19.2 | 2019-11-07 |
 | BioShock Remastered | 409710 | aln024 - cr (18.9h) | 18.9 | 2018-03-09 |
 | Rise of the Tomb Raider | 391220 | aln024 - cr (18.6h) | 18.6 | 2021-01-30 |
 | Cuphead | 268910 | aln024 - cr (17.5h) | 17.5 | 2026-06-22 |
-| Lossless Scaling | 993090 | e]g[e > yves - cr (0h), y.roulin.tk (17.1h) | 17.1 | - |
+| Lossless Scaling | 993090 | y.roulin.tk (17.1h), e]g[e > yves - cr (0h) | 17.1 | - |
 | Assassin's Creed IV Black Flag | 242050 | aln024 - cr (16.6h) | 16.6 | 2022-09-02 |
 | Stardew Valley | 413150 | aln024 - cr (16.4h) | 16.4 | 2025-02-05 |
 | ASTRONEER | 361420 | aln024 - cr (16.3h) | 16.3 | 2021-01-01 |
-| Destiny 2 | 1085660 | e]g[e > yves - cr (0h), aln024 - cr (16.3h) | 16.3 | 2021-09-02 |
+| Destiny 2 | 1085660 | aln024 - cr (16.3h), e]g[e > yves - cr (0h) | 16.3 | 2021-09-02 |
 | NieR:Automata™ | 524220 | aln024 - cr (15h) | 15 | 2021-01-03 |
 | R.E.P.O. | 3241660 | y.roulin.tk (14.9h) | 14.9 | - |
 | Hades II | 1145350 | aln024 - cr (13.5h) | 13.5 | 2026-03-21 |
@@ -80,7 +80,7 @@ total_hours: 5110.6
 | ReStory: Chill Electronics Repairs | 3812600 | y.roulin.tk (10.5h) | 10.5 | - |
 | Risk of Rain 2 | 632360 | aln024 - cr (10.5h) | 10.5 | 2020-08-13 |
 | FINAL FANTASY VII (2013) | 39140 | aln024 - cr (9.8h) | 9.8 | 2014-08-27 |
-| Sonic Mania | 584400 | e]g[e > yves - cr (0h), aln024 - cr (9.8h) | 9.8 | 2023-12-16 |
+| Sonic Mania | 584400 | aln024 - cr (9.8h), e]g[e > yves - cr (0h) | 9.8 | 2023-12-16 |
 | Level Devil | 3242750 | y.roulin.tk (8.9h) | 8.9 | - |
 | Chained Together | 2567870 | y.roulin.tk (4.4h), alain.roulin - mx (4.4h) | 8.8 | - |
 | Dead Space (2008) | 17470 | aln024 - cr (7.9h) | 7.9 | 2019-04-12 |
@@ -93,7 +93,7 @@ total_hours: 5110.6
 | Tom Clancy's Splinter Cell Blacklist | 235600 | aln024 - cr (6.4h) | 6.4 | 2019-09-19 |
 | PAYDAY 2 | 218620 | aln024 - cr (6.3h) | 6.3 | 2014-07-02 |
 | Tree of Savior (English Ver.) | 372000 | aln024 - cr (5.9h) | 5.9 | 2016-05-24 |
-| Core Keeper | 1621690 | e]g[e > yves - cr (0h), y.roulin.tk (5.8h) | 5.8 | - |
+| Core Keeper | 1621690 | y.roulin.tk (5.8h), e]g[e > yves - cr (0h) | 5.8 | - |
 | Ultros | 2386310 | aln024 - cr (5.4h) | 5.4 | 2025-07-20 |
 | Rusty's Retirement | 2666510 | aln024 - cr (5.2h) | 5.2 | 2024-05-02 |
 | ELDEN RING NIGHTREIGN | 2622380 | y.roulin.tk (4.7h) | 4.7 | - |
@@ -111,14 +111,14 @@ total_hours: 5110.6
 | Sniper Elite 3 | 238090 | aln024 - cr (3.5h) | 3.5 | 2017-12-29 |
 | Overcooked | 448510 | aln024 - cr (3.4h) | 3.4 | 2019-12-09 |
 | Punch Club | 394310 | y.roulin.tk (3.4h) | 3.4 | - |
-| West Hunt | 1570330 | e]g[e > yves - cr (0h), alain.roulin - mx (3.4h) | 3.4 | - |
+| West Hunt | 1570330 | alain.roulin - mx (3.4h), e]g[e > yves - cr (0h) | 3.4 | - |
 | Bot Vice | 491040 | y.roulin.tk (3.3h) | 3.3 | - |
 | Marvel Rivals | 2767030 | y.roulin.tk (3.2h) | 3.2 | - |
 | METAL GEAR SOLID V: THE PHANTOM PAIN | 287700 | aln024 - cr (3.2h) | 3.2 | 2022-10-31 |
 | Rift Riff | 2800900 | y.roulin.tk (3.2h) | 3.2 | - |
 | Horizon Chase Turbo | 389140 | aln024 - cr (3h) | 3 | 2026-09-02 |
 | How to Fish | 4001890 | y.roulin.tk (3h) | 3 | - |
-| Left 4 Dead 2 | 550 | e]g[e > yves - cr (0h), aln024 - cr (3h) | 3 | 2020-05-31 |
+| Left 4 Dead 2 | 550 | aln024 - cr (3h), e]g[e > yves - cr (0h) | 3 | 2020-05-31 |
 | Marvel’s Spider-Man Remastered | 1817070 | y.roulin.tk (3h) | 3 | - |
 | Resident Evil 2 "1-Shot Demo" | 961440 | aln024 - cr (3h) | 3 | 2019-01-31 |
 | Intravenous | 1486630 | y.roulin.tk (2.8h) | 2.8 | - |
@@ -141,7 +141,7 @@ total_hours: 5110.6
 | Trine 3: The Artifacts of Power | 319910 | aln024 - cr (1.7h) | 1.7 | 2017-12-27 |
 | Batman: Arkham Asylum GOTY Edition | 35140 | aln024 - cr (1.6h) | 1.6 | 2015-08-27 |
 | METAL SLUG | 366250 | aln024 - cr (1.6h) | 1.6 | 2021-06-04 |
-| Raft | 648800 | e]g[e > yves - cr (0h), alain.roulin - mx (1.5h) | 1.5 | - |
+| Raft | 648800 | alain.roulin - mx (1.5h), e]g[e > yves - cr (0h) | 1.5 | - |
 | DuckTales Remastered | 237630 | aln024 - cr (1.4h) | 1.4 | 2019-05-31 |
 | Mina the Hollower | 1875580 | y.roulin.tk (1.4h) | 1.4 | - |
 | Outlast | 238320 | aln024 - cr (1.4h) | 1.4 | 2019-10-14 |
@@ -180,7 +180,7 @@ total_hours: 5110.6
 | Blasphemous | 774361 | aln024 - cr (0.4h) | 0.4 | 2020-09-10 |
 | Cairn | 1588550 | y.roulin.tk (0.4h) | 0.4 | - |
 | Cat Quest II | 914710 | y.roulin.tk (0.4h) | 0.4 | - |
-| Deep Rock Galactic | 548430 | e]g[e > yves - cr (0h), y.roulin.tk (0.4h) | 0.4 | - |
+| Deep Rock Galactic | 548430 | y.roulin.tk (0.4h), e]g[e > yves - cr (0h) | 0.4 | - |
 | Fallen Aces | 1411910 | y.roulin.tk (0.4h) | 0.4 | - |
 | LEGO® The Lord of the Rings™ | 214510 | aln024 - cr (0.4h) | 0.4 | 2021-10-24 |
 | Magicraft | 2103140 | y.roulin.tk (0.4h) | 0.4 | - |
@@ -191,7 +191,7 @@ total_hours: 5110.6
 | 3dSen | 1147940 | aln024 - cr (0.3h) | 0.3 | 2021-10-21 |
 | Brothers - A Tale of Two Sons | 225080 | aln024 - cr (0.3h) | 0.3 | 2013-12-29 |
 | Final Fantasy III (3D Remake) | 239120 | aln024 - cr (0.3h) | 0.3 | 2014-08-27 |
-| House Flipper | 613100 | e]g[e > yves - cr (0h), y.roulin.tk (0.3h) | 0.3 | - |
+| House Flipper | 613100 | y.roulin.tk (0.3h), e]g[e > yves - cr (0h) | 0.3 | - |
 | OlliOlli World | 1190170 | y.roulin.tk (0.3h) | 0.3 | - |
 | Terraria | 105600 | aln024 - cr (0.3h) | 0.3 | 2026-01-08 |
 | BioShock 2 Remastered | 409720 | aln024 - cr (0.2h) | 0.2 | 2018-06-05 |
@@ -309,7 +309,7 @@ total_hours: 5110.6
 | Gladiator Guild Manager | 1043260 | y.roulin.tk (0h) | 0 | - |
 | God of War | 1593500 | e]g[e > yves - cr (0h) | 0 | - |
 | Going Under | 1154810 | e]g[e > yves - cr (0h) | 0 | - |
-| Golf With Your Friends | 431240 | e]g[e > yves - cr (0h), alain.roulin - mx (0h) | 0 | - |
+| Golf With Your Friends | 431240 | alain.roulin - mx (0h), e]g[e > yves - cr (0h) | 0 | - |
 | Grand Theft Auto V Enhanced | 3240220 | aln024 - cr (0h) | 0 | - |
 | Gravity Circuit | 858710 | y.roulin.tk (0h) | 0 | - |
 | Griftlands | 601840 | e]g[e > yves - cr (0h) | 0 | - |
@@ -355,9 +355,9 @@ total_hours: 5110.6
 | Lost Castle | 434650 | e]g[e > yves - cr (0h) | 0 | - |
 | Machinarium | 40700 | e]g[e > yves - cr (0h) | 0 | - |
 | Mad Max | 234140 | aln024 - cr (0h) | 0 | - |
-| Mafia | 40990 | e]g[e > yves - cr (0h), aln024 - cr (0h) | 0 | - |
-| Mafia II (Classic) | 50130 | e]g[e > yves - cr (0h), aln024 - cr (0h) | 0 | - |
-| Mafia II: Definitive Edition | 1030830 | e]g[e > yves - cr (0h), aln024 - cr (0h) | 0 | - |
+| Mafia | 40990 | aln024 - cr (0h), e]g[e > yves - cr (0h) | 0 | - |
+| Mafia II (Classic) | 50130 | aln024 - cr (0h), e]g[e > yves - cr (0h) | 0 | - |
+| Mafia II: Definitive Edition | 1030830 | aln024 - cr (0h), e]g[e > yves - cr (0h) | 0 | - |
 | Mafia III: Definitive Edition | 360430 | aln024 - cr (0h) | 0 | - |
 | Mark of the Ninja: Remastered | 860950 | e]g[e > yves - cr (0h) | 0 | - |
 | Marvel's Spider-Man: Miles Morales | 1817190 | y.roulin.tk (0h) | 0 | - |
@@ -377,7 +377,7 @@ total_hours: 5110.6
 | Mirror's Edge | 17410 | aln024 - cr (0h) | 0 | - |
 | Monster Hunter Wilds | 2246340 | e]g[e > yves - cr (0h) | 0 | - |
 | Monster Train | 1102190 | y.roulin.tk (0h) | 0 | - |
-| Moonlighter | 606150 | alain.roulin - mx (0h), e]g[e > yves - cr (0h), aln024 - cr (0h), y.roulin.tk (0h) | 0 | 2020-05-31 |
+| Moonlighter | 606150 | alain.roulin - mx (0h), e]g[e > yves - cr (0h), y.roulin.tk (0h), aln024 - cr (0h) | 0 | 2020-05-31 |
 | Moonrise Fall | 1035110 | y.roulin.tk (0h) | 0 | - |
 | Moving Out | 996770 | e]g[e > yves - cr (0h) | 0 | - |
 | My Friend Pedro | 557340 | e]g[e > yves - cr (0h) | 0 | - |
@@ -421,16 +421,16 @@ total_hours: 5110.6
 | Rust | 252490 | aln024 - cr (0h) | 0 | - |
 | Rust - Staging Branch | 700580 | aln024 - cr (0h) | 0 | - |
 | Salt and Sanctuary | 283640 | e]g[e > yves - cr (0h) | 0 | - |
-| SANABI | 1562700 | e]g[e > yves - cr (0h), y.roulin.tk (0h) | 0 | - |
+| SANABI | 1562700 | y.roulin.tk (0h), e]g[e > yves - cr (0h) | 0 | - |
 | Scrap Mechanic | 387990 | e]g[e > yves - cr (0h) | 0 | - |
 | SCUM | 513710 | e]g[e > yves - cr (0h) | 0 | - |
 | Sea of Stars: Sunset Edition | 1244090 | e]g[e > yves - cr (0h) | 0 | - |
-| SEGA Mega Drive & Genesis Classics | 34270 | e]g[e > yves - cr (0h), aln024 - cr (0h) | 0 | 2017-09-13 |
+| SEGA Mega Drive & Genesis Classics | 34270 | aln024 - cr (0h), e]g[e > yves - cr (0h) | 0 | 2017-09-13 |
 | Serious Sam 4 | 257420 | e]g[e > yves - cr (0h) | 0 | - |
 | Serious Sam: Tormental | 640340 | e]g[e > yves - cr (0h) | 0 | - |
 | Serious Sam's Bogus Detour | 272620 | y.roulin.tk (0h) | 0 | - |
 | Severed Steel | 1227690 | y.roulin.tk (0h) | 0 | - |
-| Shadow of the Tomb Raider | 750920 | e]g[e > yves - cr (0h), aln024 - cr (0h) | 0 | - |
+| Shadow of the Tomb Raider | 750920 | aln024 - cr (0h), e]g[e > yves - cr (0h) | 0 | - |
 | Shenmue I & II | 758330 | e]g[e > yves - cr (0h) | 0 | - |
 | Shenmue III | 878670 | e]g[e > yves - cr (0h) | 0 | - |
 | Ship of Fools | 1286580 | y.roulin.tk (0h) | 0 | - |
@@ -481,7 +481,7 @@ total_hours: 5110.6
 | The Forest | 242760 | e]g[e > yves - cr (0h) | 0 | - |
 | The Last Stand: Aftermath | 1266840 | e]g[e > yves - cr (0h) | 0 | - |
 | The LEGO® Movie - Videogame | 267530 | aln024 - cr (0h) | 0 | - |
-| The LEGO® NINJAGO® Movie Video Game | 640590 | e]g[e > yves - cr (0h), aln024 - cr (0h) | 0 | - |
+| The LEGO® NINJAGO® Movie Video Game | 640590 | aln024 - cr (0h), e]g[e > yves - cr (0h) | 0 | - |
 | The Lord of the Rings: War in the North | 32800 | aln024 - cr (0h) | 0 | - |
 | The Mean Greens - Plastic Warfare | 360940 | e]g[e > yves - cr (0h) | 0 | - |
 | The Spell Brigade | 2904000 | y.roulin.tk (0h) | 0 | - |
