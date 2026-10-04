@@ -120,6 +120,7 @@ const FLAG_BY_ALIAS = {
   'aln024 - cr': 'cr',
   'e]g[e > yves - cr': 'cr',
 };
+// Banderas de miembros de familia (se completan desde DATA.family_members).
 
 const $ = s => document.querySelector(s);
 const norm = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -150,13 +151,28 @@ $('#stats').innerHTML = [
   ['De familia', GAMES.filter(g => g.family).length],
 ].map(p => '<div class="stat"><b>' + p[1] + '</b><small>' + p[0] + '</small></div>').join('');
 
+const FAMILY = DATA.family_members || [];
+FAMILY.forEach(f => { if (f.country) FLAG_BY_ALIAS[f.alias] = String(f.country).toLowerCase(); });
 $('#account').innerHTML = '<option value="">Todas las cuentas</option>' +
-  ACCOUNTS.map(a => '<option value="' + esc(a.alias) + '">' + esc(a.personaname || a.alias) + ' (' + esc(a.alias) + ')</option>').join('');
+  '<optgroup label="Mis cuentas">' +
+    ACCOUNTS.map(a => '<option value="acc:' + esc(a.alias) + '">' + esc(a.personaname || a.alias) + ' (' + esc(a.alias) + ')</option>').join('') +
+  '</optgroup>' +
+  (FAMILY.length
+    ? '<optgroup label="Familia (compartido)">' +
+        FAMILY.map(f => '<option value="fam:' + esc(f.alias) + '">' + esc(f.alias) + '</option>').join('') +
+      '</optgroup>'
+    : '');
 
 function current() {
   const qn = norm(state.q);
   let list = GAMES.filter(g => {
-    if (state.account && !(state.account in (g.accounts || {}))) return false;
+    if (state.account) {
+      if (state.account.indexOf('fam:') === 0) {
+        if (g.family_owner !== state.account.slice(4)) return false;
+      } else if (state.account.indexOf('acc:') === 0) {
+        if (!(state.account.slice(4) in (g.accounts || {}))) return false;
+      }
+    }
     if (state.backlog && g.total_hours !== 0) return false;
     if (state.multi && !(g.owned_count > 1)) return false;
     if (state.family && !g.family) return false;

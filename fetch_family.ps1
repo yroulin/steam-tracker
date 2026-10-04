@@ -183,10 +183,24 @@ foreach ($app in $apps) {
 }
 
 $sorted = @($data.games | Sort-Object @{ Expression = 'total_hours'; Descending = $true }, name)
+
+# Miembros de familia para el selector de la web (alias + pais), sin exponer token.
+$familyMembers = @()
+if ($cfg.PSObject.Properties.Name -contains 'family_members') {
+    foreach ($a in @($cfg.family_members)) {
+        $familyMembers += [pscustomobject]@{
+            alias   = [string]$a.alias
+            steamid = [string]$a.steamid
+            country = if ($a.country) { ([string]$a.country).ToLower() } else { '' }
+        }
+    }
+}
+
 $out = [pscustomobject]@{
     generated          = $data.generated
     source             = $data.source
     accounts           = $data.accounts
+    family_members     = $familyMembers
     total_unique_games = $sorted.Count
     total_hours        = [math]::Round((@($sorted | Measure-Object -Property total_hours -Sum).Sum), 1)
     games              = $sorted
