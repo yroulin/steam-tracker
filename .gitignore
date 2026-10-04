@@ -6,3 +6,10 @@ steam-tracker.log
 # Caches locales (se regeneran solas)
 genres_cache.json
 meta_cache.json
+steam_history.json
+
+# Python y salidas temporales
+__pycache__/
+*.py[cod]
+.venv/
+_site/

@@ -27,25 +27,29 @@ propias + los juegos compartidos por **Steam Families**.
     {
       "appid": "1245620",
       "name": "ELDEN RING",
-      "accounts": { "L@u": 126.3 },   // horas por cuenta (clave = alias)
+      "accounts": {},                 // solo horas de cuentas propias
+      "owned_accounts": [],          // cuentas propias que poseen el juego
+      "hours_source": "family",
+      "family_hours": 126.3,
       "total_hours": 126.3,
-      "owned_count": 1,
+      "owned_count": 0,
       "last_played": 1753037626,
       "last_played_iso": "2025-07-20",
+      "first_seen": "2026-10-04",   // primera detección local, no fecha de compra
       "img_icon_url": "b6e2...",
 
       // --- Steam Families ---
-      "family": true,                  // true si es compartido (no propio)
+      "family": true,                  // ninguna cuenta propia posee el juego
       "family_owner": "L@u",           // de quién es
       "family_country": "cr",
-      "acquired": "2025-03-16",        // FECHA DE COMPRA (unix convertido)
+      "acquired": "2025-03-16",        // adquisición informada por Families, UTC
 
-      // --- Precio / valor (fetch_meta.ps1) ---
+      // --- Precio / valor (steam_meta.py) ---
       "price_usd": 59.99,              // precio actual en USD; null si gratis/sin datos
       "is_free": false,
       "cost_per_hour": 0.47,           // price_usd / total_hours; null si 0 horas o gratis
 
-      // --- Logros (solo cuentas propias; fetch_meta.ps1) ---
+      // --- Logros (solo cuentas propias; steam_meta.py) ---
       "achieved_by": { "y.roulin.tk": { "got": 30, "total": 42 } },
       "achievements_got": 30,
       "achievements_total": 42,
@@ -74,7 +78,19 @@ propias + los juegos compartidos por **Steam Families**.
 
 - Los datos son de Steam y pueden estar **desactualizados**: revisa `generated`.
 - Si el usuario pregunta por "mi cuenta X", filtra `accounts.<alias>`.
-- Los juegos de familia NO tienen horas propias completas: su `.accounts` puede tener
-  solo al dueño. Para "cuántas horas jugué yo", mira juegos propios.
+- En datos `schema_version: 2`, `.accounts` contiene solo horas de cuentas propias.
+  `family_hours` no se atribuye al dueño; `hours_source` indica qué horas se muestran.
+  Los datos anteriores a la migración mezclan esos conceptos. No reinterpretarlos
+  ni corregirlos a mano; esperar a la siguiente consulta real con `update.py`.
 - El precio es **actual** (hoy), no lo que se pagó. `cost_per_hour` es una estimación.
-- No modifiques `steam_games.json` a mano; se regenera con los scripts `fetch_*.ps1`.
+- `first_seen` es la primera fecha UTC en que el tracker vio el juego. El historial
+  fuente está en `steam_history.json` (local/cache de Actions); no inferir compras.
+- No modifiques `steam_games.json` a mano; se regenera con los comando `python3 update.py`.
+
+## Desarrollo
+
+- Python 3.10+, solo biblioteca estándar. No reintroducir PowerShell.
+- Flujo completo: `python3 update.py`; HTML offline: `python3 build_web.py`.
+- Pruebas: `python3 -m unittest discover -s tests -v`, sin credenciales.
+- No publicar datos si falla una biblioteca requerida; no imprimir excepciones HTTP
+  crudas porque pueden contener URLs con credenciales.

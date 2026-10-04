@@ -1,0 +1,12 @@
+{
+  "api_key": "",
+  "accounts": [
+    {
+      "alias": "main",
+      "steamid": "STEAMID64_DE_17_DIGITOS",
+      "access_token": "",
+      "skip_achievements": false
+    }
+  ],
+  "family_members": []
+}

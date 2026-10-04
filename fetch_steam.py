@@ -12,7 +12,7 @@ Si es Privado/Amigos, la fuente no devuelve juegos y lo avisa.
 Uso:
     python fetch_steam.py                 # auto: API si hay key, si no XML
     python fetch_steam.py --mode xml      # forzar XML publico
-    python fetch_steam.py --mode api --key TU_KEY
+    python fetch_steam.py --mode api
     set STEAM_API_KEY=...  (Windows)      # o variable de entorno
 """
 
@@ -22,9 +22,6 @@ import argparse
 import json
 import os
 import sys
-import urllib.error
-import urllib.parse
-import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
@@ -32,19 +29,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 API_URL = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
 SUMMARIES_URL = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
-USER_AGENT = "steam-tracker/1.0 (+local)"
-
-
-def http_get(url: str, params: dict | None = None, timeout: int = 30) -> bytes:
-    if params:
-        url = f"{url}?{urllib.parse.urlencode(params)}"
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return resp.read()
-
-
-def http_json(url: str, params: dict | None = None) -> dict:
-    return json.loads(http_get(url, params).decode("utf-8", "replace"))
+from steam_common import SteamError, http_get, http_json, load_config, public_accounts, atomic_write
+from steam_history import load_history, record_first_seen, render_history
 
 
 def owned_via_api(key: str, steamid: str) -> dict[str, dict]:
@@ -60,8 +46,10 @@ def owned_via_api(key: str, steamid: str) -> dict[str, dict]:
         },
     )
     games = data.get("response", {}).get("games")
-    if games is None:
-        raise RuntimeError(
+    if games is None and data.get("response", {}).get("game_count") == 0:
+        games = []
+    if not isinstance(games, list):
+        raise SteamError(
             "la API no devolvio juegos: biblioteca privada / solo amigos, "
             "perfil invalido o cuenta sin juegos publicos"
         )
@@ -94,7 +82,7 @@ def owned_via_xml(steamid: str) -> dict[str, dict]:
             hours = 0.0
         out[appid] = {"name": name, "hours": round(hours, 1), "last_played": 0, "img_icon_url": ""}
     if not out:
-        raise RuntimeError(
+        raise SteamError(
             "el perfil no expone juegos: biblioteca privada / solo amigos "
             "o el XML no es accesible"
         )
@@ -144,6 +132,9 @@ def merge(accounts: list[dict], libraries: dict[str, dict]) -> list[dict]:
     for e in result:
         e["total_hours"] = round(sum(e["accounts"].values()), 1)
         e["owned_count"] = len(e["accounts"])
+        e["owned_accounts"] = sorted(e["accounts"])
+        e["family"] = False
+        e["hours_source"] = "accounts"
         e["last_played_iso"] = iso_from_unix(e["last_played"])
     result.sort(key=lambda g: (-g["total_hours"], g["name"].lower()))
     return result
@@ -153,8 +144,8 @@ def esc_pipe(text: str) -> str:
     return text.replace("|", "\\|")
 
 
-def render_md(accounts: list[dict], games: list[dict], mode: str) -> str:
-    generated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+def render_md(accounts: list[dict], games: list[dict], mode: str, generated=None) -> str:
+    generated = generated or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     multi = sum(1 for g in games if g["owned_count"] > 1)
     backlog = sum(1 for g in games if g["total_hours"] == 0)
     total_hours = round(sum(g["total_hours"] for g in games), 1)
@@ -183,15 +174,16 @@ def render_md(accounts: list[dict], games: list[dict], mode: str) -> str:
     lines.append("")
     lines.append("## Indice")
     lines.append("")
-    lines.append("| Juego | AppID | Cuentas | Horas totales | Ult. vez |")
-    lines.append("|---|---|---|---|---|")
+    lines.append("| Juego | AppID | Cuentas | Familia | Horas | Adquirido | Ult. vez |")
+    lines.append("|---|---|---|---|---|---|---|")
     for g in games:
         cuentas = ", ".join(
             f"{alias} ({hours:g}h)" for alias, hours in g["accounts"].items()
         )
         lines.append(
-            f"| {esc_pipe(g['name'])} | {g['appid']} | {cuentas} | "
-            f"{g['total_hours']:g} | {g['last_played_iso'] or '-'} |"
+            f"| {esc_pipe(g['name'])} | {g['appid']} | {esc_pipe(cuentas)} | "
+            f"{esc_pipe(g.get('family_owner', '')) if g.get('family') else '-'} | "
+            f"{g['total_hours']:g} | {g.get('acquired') or '-'} | {g['last_played_iso'] or '-'} |"
         )
     lines.append("")
     lines.append("> Fuente de verdad para consultas exactas: `steam_games.json`.")
@@ -199,77 +191,58 @@ def render_md(accounts: list[dict], games: list[dict], mode: str) -> str:
     return "\n".join(lines)
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Consolida varias cuentas de Steam.")
-    parser.add_argument("--config", default=str(BASE_DIR / "accounts.json"))
-    parser.add_argument("--mode", choices=["auto", "api", "xml"], default="auto")
-    parser.add_argument("--key", default="", help="Steam Web API key (1 sola para todas)")
-    parser.add_argument("--out-dir", default=str(BASE_DIR))
-    args = parser.parse_args()
-
-    config_path = Path(args.config)
-    if not config_path.exists():
-        print(f"[!] No existe {config_path}. Crea accounts.json primero.", file=sys.stderr)
-        return 1
-    config = json.loads(config_path.read_text(encoding="utf-8"))
-    accounts = config.get("accounts") or []
-    if not accounts:
-        print("[!] accounts.json no tiene cuentas.", file=sys.stderr)
-        return 1
-
-    key = args.key or os.environ.get("STEAM_API_KEY", "") or config.get("api_key", "")
-    mode = args.mode
-    if mode == "auto":
-        mode = "api" if key else "xml"
+def fetch_owned(config, mode="auto"):
+    """Fetch every configured account before replacing any output."""
+    key = config.get("api_key", "")
+    mode = ("api" if key else "xml") if mode == "auto" else mode
     if mode == "api" and not key:
-        print("[!] Falta la API key (--key, STEAM_API_KEY o accounts.json).", file=sys.stderr)
-        return 1
-
-    print(f"[i] Modo: {mode}. Cuentas: {len(accounts)}")
-    libraries: dict[str, dict] = {}
-    for acc in accounts:
-        alias, steamid = acc["alias"], acc["steamid"]
-        if "XXXX" in steamid or "YYYY" in steamid or "ZZZZ" in steamid:
-            print(f"    - {alias}: placeholder sin rellenar, se omite.")
-            continue
+        raise SteamError("Falta api_key o STEAM_API_KEY.")
+    accounts = public_accounts(config["accounts"])
+    libraries = {}
+    for account in accounts:
+        alias, sid = account["alias"], account["steamid"]
         try:
             if mode == "api":
-                acc["personaname"] = profile_name(key, steamid)
-                lib = owned_via_api(key, steamid)
+                libraries[alias] = owned_via_api(key, sid)
+                account["personaname"] = profile_name(key, sid)
             else:
-                lib = owned_via_xml(steamid)
-            libraries[alias] = lib
-            print(f"    - {alias}: {len(lib)} juegos")
-        except (urllib.error.URLError, RuntimeError, ET.ParseError) as exc:
-            print(f"    - {alias}: ERROR -> {exc}")
-
-    if not libraries:
-        print("[!] No se pudo leer ninguna cuenta. Revisa IDs, privacidad o conexion.", file=sys.stderr)
-        return 2
-
+                libraries[alias] = owned_via_xml(sid)
+        except Exception:
+            # Network exception messages can contain the authenticated URL.
+            raise SteamError(f"No se pudo leer la cuenta {alias}. Revisa privacidad, credenciales y conexión. No se actualizaron los archivos.") from None
+        print(f"[i] {alias}: {len(libraries[alias])} juegos")
     games = merge(accounts, libraries)
-    out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    return {
+        "generated": datetime.now(timezone.utc).isoformat(), "source": mode,
+        "accounts": accounts, "total_unique_games": len(games),
+        "total_hours": round(sum(g["total_hours"] for g in games), 1), "games": games,
+    }
 
-    md_path = out_dir / "steam_games.md"
-    json_path = out_dir / "steam_games.json"
-    md_path.write_text(render_md(accounts, games, mode), encoding="utf-8")
-    json_path.write_text(
-        json.dumps(
-            {
-                "generated": datetime.now(timezone.utc).isoformat(),
-                "source": mode,
-                "accounts": accounts,
-                "total_unique_games": len(games),
-                "games": games,
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
 
-    print(f"[ok] {len(games)} juegos unicos -> {md_path.name} + {json_path.name}")
+def main():
+    parser = argparse.ArgumentParser(description="Solo bibliotecas propias. Para el flujo completo usa update.py.")
+    parser.add_argument("--config", type=Path, default=BASE_DIR / "accounts.json")
+    parser.add_argument("--mode", choices=["auto", "api", "xml"], default="auto")
+    parser.add_argument("--out-dir", type=Path, default=BASE_DIR)
+    parser.add_argument("--history", type=Path, help="Ruta del historial local de primeras detecciones")
+    args = parser.parse_args()
+    try:
+        data = fetch_owned(load_config(args.config), args.mode)
+        history_path = args.history or args.out_dir / "steam_history.json"
+        history = record_first_seen(
+            load_history(history_path),
+            (game["appid"] for game in data["games"]),
+            data["generated"][:10],
+        )
+        for game in data["games"]:
+            game["first_seen"] = history[str(game["appid"])]
+        from update import publish
+        publish(data, args.out_dir)
+        atomic_write(history_path, render_history(history))
+    except SteamError as exc:
+        print(f"[!] {exc}", file=sys.stderr)
+        return 1
+    print(f"[ok] {len(data['games'])} juegos propios. Usa update.py para incluir familia y metadatos.")
     return 0
 
 

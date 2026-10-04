@@ -1,0 +1,30 @@
+name: Pruebas Python
+
+on:
+  push:
+    paths-ignore:
+      - 'steam_games.json'
+      - 'steam_games.md'
+      - 'steam_games.html'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ['3.10']
+        include:
+          - os: ubuntu-latest
+            python: '3.14'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m unittest discover -s tests -v

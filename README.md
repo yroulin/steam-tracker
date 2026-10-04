@@ -1,85 +1,128 @@
 # steam-tracker
 
-Consolida la biblioteca de **varias cuentas de Steam** (y de tu **Steam Families**)
-en un único dataset, más una web con filtros.
+Biblioteca de Steam consolidada de varias cuentas propias y Steam Families.
+Python 3.10 o posterior, sin paquetes externos. Funciona en Windows, macOS y Linux.
+La web es un HTML estático que se puede abrir sin servidor.
 
-- `steam_games.json` → **fuente de verdad** estructurada (para tu agente).
-- `steam_games.md` → resumen legible + tabla.
-- `steam_games.html` → web autocontenida con filtros (se abre sin servidor).
+## Configuración
 
-## ⚠️ Seguridad (leer)
+Copia tu `accounts.json` de la otra PC a esta carpeta. El formato sigue siendo el
+mismo; `accounts.example.json` sirve como referencia si necesitas reconstruirlo.
+Incluye `api_key`, una lista `accounts` con `alias` y `steamid`, y un
+`access_token` en la cuenta que pertenece a la familia. `family_members` permite
+asignar alias y país a los propietarios compartidos.
 
-- `accounts.json` contiene tu **API key** y tu **access_token**. **NUNCA lo subas** a Git.
-  Ya está en `.gitignore`, y `subir_a_github.ps1` aborta si detecta secretos.
-- Los archivos publicados (`steam_games.json`, `.html`) **no** incluyen secretos: los
-  scripts los sanitizan. Si algún día ves `access_token` o `api_key` ahí, algo salió mal.
-- En GitHub, tus secretos van como **secreto** `STEAM_ACCOUNTS_JSON`, no en el código.
+`accounts.json` está excluido de Git. No lo publiques ni pegues sus valores en
+issues, capturas o logs. La API key también puede venir de `STEAM_API_KEY`.
+Los archivos públicos se generan con campos de cuenta seleccionados y sin tokens.
+Los alias, SteamID, bibliotecas y horas sí son parte de los archivos públicos.
 
-## Requisitos de privacidad de Steam
+Para leer las bibliotecas, los detalles de juego y las horas deben ser públicos.
+Los logros privados se omiten. Si un token de familia caduca, debes renovarlo
+iniciando sesión en Steam y obteniendo el `webapi_token` de
+<https://store.steampowered.com/pointssummary/ajaxgetasyncconfig>.
 
-En cada cuenta, para que la API dé datos:
+## Actualizar todo
 
-- **Perfil → Editar perfil → Privacidad → "Detalles de juego" = Público** (lista y horas).
-- Para logros: **"Estado de los logros" = Público**. Si está privado, la API devuelve 403
-  y ese juego simplemente queda sin logros (no falla).
+En macOS o Linux, desde la carpeta del proyecto:
 
-## 1. Rellena `accounts.json`
-
-```json
-{
-  "api_key": "TU_API_KEY",
-  "accounts": [
-    { "alias": "main", "steamid": "7656119..." },
-    { "alias": "alt1", "steamid": "7656119...", "access_token": "eyA..." }
-  ],
-  "family_members": [
-    { "alias": "L@u", "steamid": "7656119...", "country": "cr" }
-  ]
-}
+```sh
+python3 update.py
 ```
 
-- **SteamID64**: en el perfil, la URL es `steamcommunity.com/profiles/<ID>`.
-- **`access_token`**: solo si quieres juegos de familia. Se saca logueado en Steam desde
-  `https://store.steampowered.com/pointssummary/ajaxgetasyncconfig` (campo `webapi_token`).
-  **Caduca**: si el script de familia deja de traer datos, genéralo de nuevo.
-- **`family_members`**: opcional; solo para poner alias/país bonitos a los dueños.
+En Windows:
 
-## 2. API key (recomendada)
-
-Una sola key sirve para **todas** las cuentas. Se pide en
-<https://steamcommunity.com/dev/apikey> (la cuenta debe haber comprado algo alguna vez).
-
-## 3. Ejecuta
-
-```powershell
-cd steam-tracker
-.\fetch_steam.ps1     # biblioteca de tus cuentas -> json + md + web
-.\fetch_family.ps1    # Steam Families: juegos compartidos, horas reales y fecha de compra
-.\fetch_meta.ps1      # precios (USD), costo por hora y logros
+```text
+py -3 update.py
 ```
 
-Los tres regeneran la web automáticamente al terminar. `fetch_meta.ps1` y `fetch_genres.ps1`
-usan **caché** (`meta_cache.json`, `genres_cache.json`) y pausas para respetar el rate limit
-de Steam (si ves 429, sube `-SleepMs`).
+El comando consulta cuentas, agrega familia, obtiene precios USD y logros, y
+regenera `steam_games.json`, `steam_games.md` y `steam_games.html` con los mismos
+datos. También conserva localmente la primera fecha en que el tracker vio cada
+juego en `steam_history.json`; este archivo no se publica. No requiere PowerShell.
+La primera consulta de precios puede tardar varios minutos; la caché de tienda
+dura 24 horas. Los logros se consultan en cada ejecución.
 
-`fetch_genres.ps1` queda **opcional**: la web actual no muestra géneros, pero los guarda en el JSON.
+Opciones:
 
-## 4. Publicar (GitHub Pages)
-
-```powershell
-.\subir_a_github.ps1
+```sh
+python3 update.py --skip-meta          # solo bibliotecas y familia
+python3 update.py --skip-family        # solo juegos propios, elimina familia de esta salida
+python3 update.py --no-achievements    # precios sin consultas de logros
+python3 update.py --genres             # añade géneros y lanzamiento al JSON
+python3 update.py --refresh            # vuelve a consultar los precios
+python3 update.py --sleep-ms 1500       # mayor pausa entre consultas
+python3 update.py --config /ruta/accounts.json --out-dir /ruta/salida
+python3 update.py --history /ruta/steam_history.json
+python3 update.py --family-account main
 ```
 
-Luego, en GitHub: secreto `STEAM_ACCOUNTS_JSON` (contenido de `accounts.json`) y
-Pages con Source "GitHub Actions". El workflow `.github/workflows/update.yml` corre a diario
-y con cada push de código; publica en `https://TU_USUARIO.github.io/steam-tracker/`.
+Por defecto se usa la primera cuenta con token para consultar una familia. Para
+usar otra cuenta, indica `--family-account`. Las bibliotecas propias siempre se
+consultan todas. Sin API key se intenta el XML público, que puede no estar
+accesible y no incluye última vez jugado ni logros.
 
-## Problemas típicos
+Si falla una biblioteca propia o una familia solicitada, el proceso sale con
+error antes de publicar datos, conservando las salidas anteriores. Un fallo de
+precios o logros se informa y no impide actualizar la biblioteca. Si falla la tienda,
+se conserva el precio en caché cuando existe; `price_updated` indica su antigüedad.
+Los logros no disponibles se muestran sin datos, no como cero logros conseguidos.
 
-| Síntoma | Causa |
-|---|---|
-| `perfil no publico ... pagina de login` | "Detalles de juego" en Privado/Amigos |
-| Horas en 0 en una cuenta | Esa cuenta tiene el tiempo de juego privado |
-| Logros en 0 / 403 | "Estado de los logros" privado |
-| Familia sin datos | `access_token` caducado: genéralo de nuevo |
-| 429 Too Many Requests | Sube `-SleepMs` en `fetch_meta`/`fetch_genres` |
+Los tres archivos se preparan antes de escribir. Cada reemplazo es atómico; no hay
+una transacción conjunta ante un fallo de disco entre reemplazos.
+
+## Consultar y reconstruir la web
+
+Abre `steam_games.html` en el navegador. Para regenerarla desde el JSON existente,
+sin secretos ni consultas a Steam:
+
+```sh
+python3 build_web.py
+```
+
+Esto conserva los datos y la fecha de la última consulta. No corrige datos antiguos:
+la clasificación nueva de propios y compartidos requiere ejecutar `update.py`.
+Las carátulas y banderas requieren internet, aunque los filtros funcionan sin conexión.
+
+`fetch_steam.py` sigue disponible para consultar únicamente las cuentas propias.
+También regenera las tres salidas, pero no agrega familia ni metadatos; normalmente
+conviene usar `update.py`.
+
+## Interpretación de los datos
+
+- `accounts`: horas por cuenta informadas por la API de bibliotecas propias.
+- `owned_accounts` y `owned_count`: tus cuentas que poseen el juego, independientes
+  de si hay horas disponibles.
+- `family`: verdadero solo cuando ninguna de tus cuentas posee el juego.
+- `family_owners`: todos los dueños externos informados, usados por el filtro de miembro.
+  `family_owner` conserva el primer dueño por compatibilidad.
+- `family_hours`: horas de la respuesta de Steam Families, sin atribuirlas a un dueño.
+- `total_hours`: suma de `accounts` cuando hay datos propios; en caso contrario,
+  horas informadas por Families. `hours_source` distingue `accounts` y `family`.
+  La suma global no representa necesariamente tus horas personales.
+- `acquired`: fecha informada por Families en `rt_time_acquired`, en UTC. No es la
+  fecha de incorporación al tracker ni un historial de compras por cuenta.
+- `first_seen`: primera fecha UTC en que este tracker observó el juego. En la
+  primera actualización que crea el historial, los juegos ya existentes reciben
+  ese día; no es una fecha de compra ni se puede reconstruir retroactivamente.
+  En GitHub Actions se conserva mediante caché y solo el campo `first_seen` de
+  cada juego se publica con la biblioteca.
+- `last_played_iso`: última actividad de tus cuentas, o la de Families cuando no
+  hay desglose propio.
+- `price_usd`: precio de tienda de EE. UU. al consultar, no importe pagado.
+  `cost_per_hour` es una estimación. Gratis tiene precio cero; desconocido, `null`.
+- `achieved_by`: logros por cuenta propia; los totales agregan las cuentas con datos.
+  `skip_achievements: true` permite omitir una cuenta.
+
+## GitHub Actions y pruebas
+
+Consulta `DEPLOY.md` para las actualizaciones diarias y GitHub Pages.
+El secreto existente `STEAM_ACCOUNTS_JSON` sigue funcionando sin cambiar de formato.
+
+```sh
+python3 -m unittest discover -s tests -v
+```
+
+Las pruebas usan respuestas simuladas y no necesitan credenciales ni internet.
+GitHub Actions tiene una matriz para Windows, macOS y Linux con Python 3.10,
+y una ejecución adicional en Python 3.14.
