@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-04T18:46:50.751590+00:00",
+  "generated": "2026-10-04T20:01:12.741732+00:00",
   "source": "api",
   "accounts": [
     {
@@ -28,7 +28,7 @@
     }
   ],
   "total_unique_games": 795,
-  "total_hours": 5117.4,
+  "total_hours": 5118.4,
   "games": [
     {
       "appid": "570",
@@ -286,6 +286,32 @@
       "achievements_pct": null
     },
     {
+      "appid": "2350790",
+      "name": "Moonlighter 2: The Endless Vault",
+      "accounts": {
+        "y.roulin.tk": 50.7
+      },
+      "last_played": 0,
+      "img_icon_url": "d81f04ab67d598bcf786925d7c9295dac67d070f",
+      "total_hours": 50.7,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 20.99,
+      "is_free": false,
+      "price_updated": 1791139626.6552308,
+      "cost_per_hour": 0.41,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
       "appid": "239140",
       "name": "Dying Light",
       "accounts": {
@@ -328,32 +354,6 @@
       "achievements_got": 36,
       "achievements_total": 78,
       "achievements_pct": 46
-    },
-    {
-      "appid": "2350790",
-      "name": "Moonlighter 2: The Endless Vault",
-      "accounts": {
-        "y.roulin.tk": 49.7
-      },
-      "last_played": 0,
-      "img_icon_url": "d81f04ab67d598bcf786925d7c9295dac67d070f",
-      "total_hours": 49.7,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 20.99,
-      "is_free": false,
-      "price_updated": 1791139626.6552308,
-      "cost_per_hour": 0.42,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null
     },
     {
       "appid": "4704690",
@@ -9112,9 +9112,9 @@
       "family_hours": 0.0,
       "hours_source": "family",
       "first_seen": "2026-10-04",
-      "price_usd": null,
+      "price_usd": 1.49,
       "is_free": false,
-      "price_updated": null,
+      "price_updated": 1791144264.3407907,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -24098,9 +24098,9 @@
       "family_hours": 0.0,
       "hours_source": "family",
       "first_seen": "2026-10-04",
-      "price_usd": null,
+      "price_usd": 2.24,
       "is_free": false,
-      "price_updated": null,
+      "price_updated": 1791144264.8398955,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -26051,7 +26051,7 @@
     }
   ],
   "metadata_warnings": {
-    "prices": 2,
+    "prices": 0,
     "achievements": 380
   },
   "schema_version": 2
