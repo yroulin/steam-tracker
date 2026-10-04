@@ -1,5 +1,5 @@
 ---
-generated: 2026-10-04 09:17 UTC
+generated: 2026-10-04 09:16 UTC
 source: api
 accounts:
   - alias: aln024 - cr
@@ -276,8 +276,8 @@ total_hours: 5112.3
 | Dead Estate | 1484720 | y.roulin.tk (0h) | 0 | - |
 | Deadlink | 1676130 | e]g[e > yves - cr (0h) | 0 | - |
 | Deadlock | 1422450 | e]g[e > yves - cr (0h) | 0 | - |
-| Death's Gambit: Afterlife | 356650 | e]g[e > yves - cr (0h) | 0 | - |
 | Deathmatch Classic | 40 | e]g[e > yves - cr (0h) | 0 | - |
+| Death's Gambit: Afterlife | 356650 | e]g[e > yves - cr (0h) | 0 | - |
 | Desperados III | 610370 | e]g[e > yves - cr (0h) | 0 | - |
 | Dinkum | 1062520 | e]g[e > yves - cr (0h) | 0 | - |
 | DiRT Rally 2.0 | 690790 | aln024 - cr (0h) | 0 | - |
@@ -378,7 +378,7 @@ total_hours: 5112.3
 | Mirror's Edge | 17410 | aln024 - cr (0h) | 0 | - |
 | Monster Hunter Wilds | 2246340 | e]g[e > yves - cr (0h) | 0 | - |
 | Monster Train | 1102190 | y.roulin.tk (0h) | 0 | - |
-| Moonlighter | 606150 | alain.roulin - mx (0h), y.roulin.tk (0h), e]g[e > yves - cr (0h), aln024 - cr (0h) | 0 | - |
+| Moonlighter | 606150 | aln024 - cr (0h), y.roulin.tk (0h), alain.roulin - mx (0h), e]g[e > yves - cr (0h) | 0 | - |
 | Moonrise Fall | 1035110 | y.roulin.tk (0h) | 0 | - |
 | Moving Out | 996770 | e]g[e > yves - cr (0h) | 0 | - |
 | My Friend Pedro | 557340 | e]g[e > yves - cr (0h) | 0 | - |

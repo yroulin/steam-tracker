@@ -5,6 +5,14 @@ on:
     # Todos los dias a las 15:00 UTC (~09:00 Costa Rica). Ajusta a tu gusto.
     - cron: "0 15 * * *"
   workflow_dispatch:   # permite ejecutarlo a mano desde la pestana Actions
+  push:
+    branches: [main]
+    # Evita bucle infinito: NO disparar cuando el bot actualiza los datos.
+    paths-ignore:
+      - 'steam_games.json'
+      - 'steam_games.md'
+      - 'steam_games.html'
+      - 'genres_cache.json'
 
 concurrency:
   group: "steam-tracker"
@@ -52,7 +60,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add steam_games.md steam_games.json steam_games.html
-          git diff --staged --quiet || git commit -m "Actualizar biblioteca Steam ($(date -u +%Y-%m-%d))"
+          git diff --staged --quiet || git commit -m "Actualizar biblioteca Steam ($(date -u +%Y-%m-%d)) [skip ci]"
           git push || true
 
       - name: Subir artefacto de Pages
