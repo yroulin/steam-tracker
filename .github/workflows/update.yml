@@ -6,11 +6,6 @@ on:
     - cron: "0 15 * * *"
   workflow_dispatch:   # permite ejecutarlo a mano desde la pestana Actions
 
-permissions:
-  contents: write      # para poder commitear los datos actualizados
-  pages: write
-  id-token: write
-
 concurrency:
   group: "steam-tracker"
   cancel-in-progress: false
@@ -18,6 +13,8 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write      # para poder commitear los datos actualizados
     steps:
       - uses: actions/checkout@v4
 
@@ -66,6 +63,9 @@ jobs:
   deploy:
     needs: update
     runs-on: ubuntu-latest
+    permissions:
+      pages: write         # publicar en Pages
+      id-token: write      # OIDC para el deploy de Pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
