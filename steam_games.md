@@ -1,5 +1,5 @@
 ---
-generated: 2026-10-04 09:07 UTC
+generated: 2026-10-04 14:59 UTC
 source: api
 accounts:
   - alias: aln024 - cr
@@ -34,13 +34,13 @@ total_hours: 5112.3
 | Counter-Strike 2 | 730 | aln024 - cr (670.6h), y.roulin.tk (1.3h) | 671.9 | 2026-03-21 |
 | PUBG: BATTLEGROUNDS | 578080 | aln024 - cr (518.3h) | 518.3 | - |
 | Deep Rock Galactic: Survivor | 2321470 | aln024 - cr (179.6h) | 179.6 | - |
-| Palworld | 1623730 | alain.roulin - mx (105h), y.roulin.tk (25.4h) | 130.4 | 2026-07-18 |
+| Palworld | 1623730 | y.roulin.tk (25.4h), alain.roulin - mx (105h) | 130.4 | 2026-07-18 |
 | Monster Hunter: World | 582010 | aln024 - cr (89.7h) | 89.7 | - |
 | Path of Exile 2 | 2694490 | y.roulin.tk (83.8h) | 83.8 | 2026-06-26 |
 | Hollow Knight: Silksong | 1030300 | y.roulin.tk (65.2h) | 65.2 | 2026-10-03 |
 | Dying Light | 239140 | aln024 - cr (50.3h), e]g[e > yves - cr (0h) | 50.3 | - |
 | Moonlighter 2: The Endless Vault | 2350790 | y.roulin.tk (49.7h) | 49.7 | 2026-10-04 |
-| MECCHA CHAMELEON | 4704690 | alain.roulin - mx (30.1h), y.roulin.tk (14.4h) | 44.5 | 2026-08-11 |
+| MECCHA CHAMELEON | 4704690 | y.roulin.tk (14.4h), alain.roulin - mx (30.1h) | 44.5 | 2026-08-11 |
 | Megabonk | 3405340 | y.roulin.tk (43.7h) | 43.7 | 2026-10-03 |
 | Assassin's Creed II | 33230 | aln024 - cr (36.9h) | 36.9 | - |
 | Nine Sols | 1809540 | y.roulin.tk (35.9h) | 35.9 | 2025-08-15 |
@@ -53,7 +53,7 @@ total_hours: 5112.3
 | The Witcher 2: Assassins of Kings Enhanced Edition | 20920 | aln024 - cr (22.4h) | 22.4 | - |
 | Grand Theft Auto V Legacy | 271590 | aln024 - cr (22.3h) | 22.3 | - |
 | Metro 2033 Redux | 286690 | aln024 - cr (22.2h) | 22.2 | - |
-| SWORN | 1763250 | alain.roulin - mx (6.9h), y.roulin.tk (15.2h) | 22.1 | 2025-12-17 |
+| SWORN | 1763250 | y.roulin.tk (15.2h), alain.roulin - mx (6.9h) | 22.1 | 2025-12-17 |
 | Temtem: Swarm | 2510960 | e]g[e > yves - cr (0h), y.roulin.tk (21h) | 21 | 2026-08-23 |
 | Trine 2 | 35720 | aln024 - cr (21h) | 21 | - |
 | Portal 2 | 620 | aln024 - cr (8.1h), y.roulin.tk (11.2h) | 19.3 | 2026-09-20 |
@@ -82,7 +82,7 @@ total_hours: 5112.3
 | FINAL FANTASY VII (2013) | 39140 | aln024 - cr (9.8h) | 9.8 | - |
 | Sonic Mania | 584400 | aln024 - cr (9.8h), e]g[e > yves - cr (0h) | 9.8 | - |
 | Level Devil | 3242750 | y.roulin.tk (8.9h) | 8.9 | 2026-08-07 |
-| Chained Together | 2567870 | alain.roulin - mx (4.4h), y.roulin.tk (4.4h) | 8.8 | 2026-09-03 |
+| Chained Together | 2567870 | y.roulin.tk (4.4h), alain.roulin - mx (4.4h) | 8.8 | 2026-09-03 |
 | Dead Space (2008) | 17470 | aln024 - cr (7.9h) | 7.9 | - |
 | Warface: Clutch | 291480 | aln024 - cr (7.4h) | 7.4 | - |
 | METAL GEAR SOLID Δ: SNAKE EATER | 2417610 | y.roulin.tk (7.2h) | 7.2 | 2026-03-14 |
@@ -106,12 +106,12 @@ total_hours: 5112.3
 | Resident Evil 0 | 339340 | aln024 - cr (3.9h) | 3.9 | - |
 | Hyper Light Drifter | 257850 | aln024 - cr (3.8h) | 3.8 | - |
 | Dead Island: Epidemic | 222900 | aln024 - cr (3.7h) | 3.7 | - |
-| Machine Party | 4108000 | alain.roulin - mx (0h), y.roulin.tk (3.6h) | 3.6 | 2026-08-30 |
+| Machine Party | 4108000 | y.roulin.tk (3.6h), alain.roulin - mx (0h) | 3.6 | 2026-08-30 |
 | Pipistrello and the Cursed Yoyo | 2870350 | y.roulin.tk (3.5h) | 3.5 | 2026-08-23 |
 | Sniper Elite 3 | 238090 | aln024 - cr (3.5h) | 3.5 | - |
 | Overcooked | 448510 | aln024 - cr (3.4h) | 3.4 | - |
 | Punch Club | 394310 | y.roulin.tk (3.4h) | 3.4 | 2025-07-03 |
-| West Hunt | 1570330 | alain.roulin - mx (3.4h), e]g[e > yves - cr (0h) | 3.4 | - |
+| West Hunt | 1570330 | e]g[e > yves - cr (0h), alain.roulin - mx (3.4h) | 3.4 | - |
 | Bot Vice | 491040 | y.roulin.tk (3.3h) | 3.3 | 2026-08-21 |
 | Marvel Rivals | 2767030 | y.roulin.tk (3.2h) | 3.2 | 2026-07-11 |
 | METAL GEAR SOLID V: THE PHANTOM PAIN | 287700 | aln024 - cr (3.2h) | 3.2 | - |
@@ -141,7 +141,7 @@ total_hours: 5112.3
 | Trine 3: The Artifacts of Power | 319910 | aln024 - cr (1.7h) | 1.7 | - |
 | Batman: Arkham Asylum GOTY Edition | 35140 | aln024 - cr (1.6h) | 1.6 | - |
 | METAL SLUG | 366250 | aln024 - cr (1.6h) | 1.6 | - |
-| Raft | 648800 | alain.roulin - mx (1.5h), e]g[e > yves - cr (0h) | 1.5 | - |
+| Raft | 648800 | e]g[e > yves - cr (0h), alain.roulin - mx (1.5h) | 1.5 | - |
 | DuckTales Remastered | 237630 | aln024 - cr (1.4h) | 1.4 | - |
 | Mina the Hollower | 1875580 | y.roulin.tk (1.4h) | 1.4 | 2026-08-23 |
 | Outlast | 238320 | aln024 - cr (1.4h) | 1.4 | - |
@@ -243,7 +243,7 @@ total_hours: 5112.3
 | BOMBANANA! | 4656000 | y.roulin.tk (0h) | 0 | - |
 | Boomerang Fu | 965680 | e]g[e > yves - cr (0h) | 0 | - |
 | Boti: Byteland Overclocked | 2161050 | y.roulin.tk (0h) | 0 | - |
-| Breathedge | 738520 | alain.roulin - mx (0h), y.roulin.tk (0h) | 0 | - |
+| Breathedge | 738520 | y.roulin.tk (0h), alain.roulin - mx (0h) | 0 | - |
 | Broforce | 274190 | e]g[e > yves - cr (0h) | 0 | - |
 | Burnout Paradise: The Ultimate Box | 24740 | aln024 - cr (0h) | 0 | - |
 | Call of Duty: WWII | 476600 | e]g[e > yves - cr (0h) | 0 | - |
@@ -276,8 +276,8 @@ total_hours: 5112.3
 | Dead Estate | 1484720 | y.roulin.tk (0h) | 0 | - |
 | Deadlink | 1676130 | e]g[e > yves - cr (0h) | 0 | - |
 | Deadlock | 1422450 | e]g[e > yves - cr (0h) | 0 | - |
-| Death's Gambit: Afterlife | 356650 | e]g[e > yves - cr (0h) | 0 | - |
 | Deathmatch Classic | 40 | e]g[e > yves - cr (0h) | 0 | - |
+| Death's Gambit: Afterlife | 356650 | e]g[e > yves - cr (0h) | 0 | - |
 | Desperados III | 610370 | e]g[e > yves - cr (0h) | 0 | - |
 | Dinkum | 1062520 | e]g[e > yves - cr (0h) | 0 | - |
 | DiRT Rally 2.0 | 690790 | aln024 - cr (0h) | 0 | - |
@@ -310,7 +310,7 @@ total_hours: 5112.3
 | Gladiator Guild Manager | 1043260 | y.roulin.tk (0h) | 0 | - |
 | God of War | 1593500 | e]g[e > yves - cr (0h) | 0 | - |
 | Going Under | 1154810 | e]g[e > yves - cr (0h) | 0 | - |
-| Golf With Your Friends | 431240 | alain.roulin - mx (0h), e]g[e > yves - cr (0h) | 0 | - |
+| Golf With Your Friends | 431240 | e]g[e > yves - cr (0h), alain.roulin - mx (0h) | 0 | - |
 | Grand Theft Auto V Enhanced | 3240220 | aln024 - cr (0h) | 0 | - |
 | Gravity Circuit | 858710 | y.roulin.tk (0h) | 0 | - |
 | Griftlands | 601840 | e]g[e > yves - cr (0h) | 0 | - |
@@ -378,7 +378,7 @@ total_hours: 5112.3
 | Mirror's Edge | 17410 | aln024 - cr (0h) | 0 | - |
 | Monster Hunter Wilds | 2246340 | e]g[e > yves - cr (0h) | 0 | - |
 | Monster Train | 1102190 | y.roulin.tk (0h) | 0 | - |
-| Moonlighter | 606150 | alain.roulin - mx (0h), y.roulin.tk (0h), aln024 - cr (0h), e]g[e > yves - cr (0h) | 0 | - |
+| Moonlighter | 606150 | aln024 - cr (0h), y.roulin.tk (0h), alain.roulin - mx (0h), e]g[e > yves - cr (0h) | 0 | - |
 | Moonrise Fall | 1035110 | y.roulin.tk (0h) | 0 | - |
 | Moving Out | 996770 | e]g[e > yves - cr (0h) | 0 | - |
 | My Friend Pedro | 557340 | e]g[e > yves - cr (0h) | 0 | - |

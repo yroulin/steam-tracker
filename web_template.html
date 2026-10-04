@@ -132,6 +132,9 @@ const flagImg = alias => {
   if (!cc) return '';
   return '<img class="flag" alt="' + esc(cc) + '" title="' + esc(alias) + '" loading="lazy" src="https://flagcdn.com/' + cc + '.svg">';
 };
+const flagCC = cc => cc
+  ? '<img class="flag" alt="' + esc(cc) + '" loading="lazy" src="https://flagcdn.com/' + esc(String(cc).toLowerCase()) + '.svg">'
+  : '';
 
 const state = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false, family: false, minh: 0 };
 
@@ -186,7 +189,7 @@ function render() {
     }).join('');
     if (g.family) {
       badges += '<span class="badge fam" title="Compartido por Steam Families">' +
-        'FAMILIA: ' + esc(g.family_owner || '?') + '</span>';
+        flagCC(g.family_country) + 'FAMILIA: ' + esc(g.family_owner || '?') + '</span>';
     }
     if (!badges) badges = '<span class="muted">-</span>';
     const id = esc(g.appid);

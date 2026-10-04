@@ -57,7 +57,7 @@ if (-not $acc) {
 $token = [string]$acc.access_token
 Write-Host "[i] Token de: $($acc.alias)"
 
-# Mapa steamid -> alias
+# Mapa steamid -> alias (cuentas propias)
 $idToAlias = @{}
 foreach ($a in $cfg.accounts) { $idToAlias[[string]$a.steamid] = $a.alias }
 
@@ -71,6 +71,42 @@ Write-Host "[i] family_groupid = $groupId"
 $lib = Invoke-RestMethod "https://api.steampowered.com/IFamilyGroupsService/GetSharedLibraryApps/v1/?access_token=$token&family_groupid=$groupId&include_own=true&include_excluded=false&include_free=true&format=json" -Headers $UA -TimeoutSec 60
 $apps = @($lib.response.apps)
 Write-Host "[i] Apps en la familia: $($apps.Count)"
+
+# Miembros de familia definidos a mano en accounts.json (alias + pais preferidos).
+$idToName = @{}
+$idToCountry = @{}
+if ($cfg.PSObject.Properties.Name -contains 'family_members') {
+    foreach ($fm in @($cfg.family_members)) {
+        if (-not $fm.steamid) { continue }
+        if ($fm.alias)   { $idToName[[string]$fm.steamid]    = [string]$fm.alias }
+        if ($fm.country) { $idToCountry[[string]$fm.steamid] = ([string]$fm.country).ToLower() }
+    }
+}
+
+# Resolver nombres reales de los miembros que NO son cuentas propias, para no
+# mostrar SteamIDs crudos. Usa la API key (GetPlayerSummaries), hasta 100 por lote.
+$apiKey = [string]$cfg.api_key
+if ($apiKey) {
+    $rawIds = @($apps | ForEach-Object { @($_.owner_steamids) } | Where-Object { $_ } | Sort-Object -Unique)
+    foreach ($sid in $rawIds) {
+        if ($idToAlias.ContainsKey([string]$sid)) { continue }
+        try {
+            $sum = Invoke-RestMethod "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$apiKey&steamids=$sid&format=json" -Headers $UA -TimeoutSec 20
+            $p = $sum.response.players | Select-Object -First 1
+            # No pisar alias/pais definidos a mano en family_members.
+            if ($p -and $p.personaname -and -not $idToName.ContainsKey([string]$sid)) { $idToName[[string]$sid] = [string]$p.personaname }
+            if ($p -and $p.loccountrycode -and -not $idToCountry.ContainsKey([string]$sid)) { $idToCountry[[string]$sid] = ([string]$p.loccountrycode).ToLower() }
+        } catch { }
+    }
+    Write-Host "[i] Miembros resueltos: $($idToName.Count)"
+}
+
+function Resolve-Owner($ownerId) {
+    $sid = [string]$ownerId
+    if ($idToAlias.ContainsKey($sid)) { return $idToAlias[$sid] }
+    if ($idToName.ContainsKey($sid))  { return $idToName[$sid] }
+    return 'Miembro de familia'
+}
 
 function Unix-Date($ts) {
     if (-not $ts -or [int64]$ts -le 0) { return $null }
@@ -95,7 +131,9 @@ foreach ($app in $apps) {
     $owners = @($app.owner_steamids)
     $ownerId = $owners | Where-Object { $_ -and $_ -ne $acc.steamid } | Select-Object -First 1
     if (-not $ownerId) { $ownerId = $owners | Select-Object -First 1 }
-    $ownerAlias = if ($idToAlias.ContainsKey([string]$ownerId)) { $idToAlias[[string]$ownerId] } else { [string]$ownerId }
+    $ownerAlias = Resolve-Owner $ownerId
+    $ownerCountry = ''
+    if ($ownerId -and $idToCountry.ContainsKey([string]$ownerId)) { $ownerCountry = $idToCountry[[string]$ownerId] }
 
     $hours = 0.0
     if ($app.PSObject.Properties.Name -contains 'rt_playtime') { $hours = [math]::Round(([double]$app.rt_playtime / 60.0), 1) }
@@ -108,6 +146,7 @@ foreach ($app in $apps) {
         $game = $byId[$appid]
         $game | Add-Member -NotePropertyName family          -NotePropertyValue $true        -Force
         $game | Add-Member -NotePropertyName family_owner    -NotePropertyValue $ownerAlias   -Force
+        $game | Add-Member -NotePropertyName family_country  -NotePropertyValue $ownerCountry -Force
         $game | Add-Member -NotePropertyName acquired        -NotePropertyValue $acquired    -Force
         $game | Add-Member -NotePropertyName img_icon_hash   -NotePropertyValue ([string]$app.img_icon_hash) -Force
         # Si la cuenta propia no daba horas (privada), usamos las de familia.
@@ -134,6 +173,7 @@ foreach ($app in $apps) {
             img_icon_hash   = [string]$app.img_icon_hash
             family          = $true
             family_owner    = $ownerAlias
+            family_country  = $ownerCountry
             acquired        = $acquired
         }
         $data.games = @($data.games) + $new
