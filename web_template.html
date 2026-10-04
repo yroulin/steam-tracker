@@ -62,6 +62,7 @@
   .badge{display:inline-flex;align-items:center;gap:4px;background:var(--panel2);border:1px solid var(--line);
     border-radius:999px;padding:1px 8px;margin:1px 3px 1px 0;font-size:11px;color:var(--muted)}
   .badge.multi{border-color:var(--amber);color:var(--amber)}
+  .badge.fam{border-color:#9b6ef3;color:#c9a8ff}
   .flag{width:15px;height:11px;object-fit:cover;border-radius:2px;vertical-align:middle}
   .muted{color:var(--muted)}
   .empty{text-align:center;color:var(--muted);padding:40px}
@@ -85,6 +86,7 @@
     </select>
     <label class="chk"><input type="checkbox" id="backlog"> Solo backlog</label>
     <label class="chk"><input type="checkbox" id="multi"> En varias cuentas</label>
+    <label class="chk"><input type="checkbox" id="family"> De familia</label>
     <label class="chk">Min horas <input type="number" id="minh" min="0" step="1" style="width:64px"></label>
     <button class="btn" id="csv">Exportar CSV</button>
   </div>
@@ -97,6 +99,7 @@
         <th data-sort="name">Juego</th>
         <th>Cuentas</th>
         <th class="num" data-sort="hours">Horas</th>
+        <th class="num" data-sort="acquired">Comprado</th>
         <th class="num" data-sort="last">Ultima vez</th>
       </tr>
     </thead>
@@ -130,7 +133,7 @@ const flagImg = alias => {
   return '<img class="flag" alt="' + esc(cc) + '" title="' + esc(alias) + '" loading="lazy" src="https://flagcdn.com/' + cc + '.svg">';
 };
 
-const state = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false, minh: 0 };
+const state = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false, family: false, minh: 0 };
 
 $('#meta').textContent =
   GAMES.length + ' juegos unicos | ' + ACCOUNTS.length + ' cuentas | actualizado ' +
@@ -141,6 +144,7 @@ $('#stats').innerHTML = [
   ['Horas totales', fmtH(GAMES.reduce((a, g) => a + (g.total_hours || 0), 0))],
   ['Backlog', GAMES.filter(g => !g.total_hours).length],
   ['En varias cuentas', GAMES.filter(g => g.owned_count > 1).length],
+  ['De familia', GAMES.filter(g => g.family).length],
 ].map(p => '<div class="stat"><b>' + p[1] + '</b><small>' + p[0] + '</small></div>').join('');
 
 $('#account').innerHTML = '<option value="">Todas las cuentas</option>' +
@@ -152,6 +156,7 @@ function current() {
     if (state.account && !(state.account in (g.accounts || {}))) return false;
     if (state.backlog && g.total_hours !== 0) return false;
     if (state.multi && !(g.owned_count > 1)) return false;
+    if (state.family && !g.family) return false;
     if (state.minh && (g.total_hours || 0) < state.minh) return false;
     if (qn && norm(g.name).indexOf(qn) === -1) return false;
     return true;
@@ -162,6 +167,7 @@ function current() {
   list.sort((a, b) => {
     if (key === 'name') return a.name.localeCompare(b.name, 'es') * mul;
     if (key === 'last') return ((a.last_played || 0) - (b.last_played || 0)) * mul;
+    if (key === 'acquired') return String(a.acquired || '').localeCompare(String(b.acquired || '')) * mul;
     return ((a.total_hours || 0) - (b.total_hours || 0)) * mul;
   });
   return list;
@@ -174,10 +180,15 @@ function render() {
   let html = '';
   for (const g of list) {
     const entries = Object.entries(g.accounts || {}).sort((a, b) => b[1] - a[1]);
-    const badges = entries.map(function(e) {
+    let badges = entries.map(function(e) {
       return '<span class="badge' + (g.owned_count > 1 ? ' multi' : '') + '" title="' + esc(e[0]) + '">' +
         flagImg(e[0]) + esc(e[0]) + ' &middot; ' + fmtH(e[1]) + 'h</span>';
     }).join('');
+    if (g.family) {
+      badges += '<span class="badge fam" title="Compartido por Steam Families">' +
+        'FAMILIA: ' + esc(g.family_owner || '?') + '</span>';
+    }
+    if (!badges) badges = '<span class="muted">-</span>';
     const id = esc(g.appid);
     const header = 'https://cdn.cloudflare.steamstatic.com/steam/apps/' + id + '/header.jpg';
     const icon = 'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/' + id + '/' + esc(g.img_icon_url || '') + '.jpg';
@@ -193,6 +204,7 @@ function render() {
         '<div class="appid">' + id + '</div></span></td>' +
       '<td>' + badges + '</td>' +
       '<td class="num ' + (g.total_hours ? 'hours' : 'zero') + '">' + fmtH(g.total_hours) + '</td>' +
+      '<td class="num ' + (g.acquired ? '' : 'muted') + '">' + (g.acquired || '-') + '</td>' +
       '<td class="num ' + (g.last_played_iso ? '' : 'muted') + '">' + (g.last_played_iso || 'Nunca') + '</td>' +
       '</tr>';
   }
@@ -202,10 +214,10 @@ function render() {
 function exportCsv() {
   const list = current();
   const e2 = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-  const lines = [['appid','nombre','horas_total','cuentas','horas_por_cuenta','ultima_vez'].map(e2).join(',')];
+  const lines = [['appid','nombre','horas_total','cuentas','horas_por_cuenta','de_familia','dueno_familia','comprado','ultima_vez'].map(e2).join(',')];
   for (const g of list) {
     const per = Object.entries(g.accounts || {}).map(e => e[0] + '=' + e[1] + 'h').join(' | ');
-    lines.push([g.appid, g.name, g.total_hours, Object.keys(g.accounts || {}).length, per, g.last_played_iso || ''].map(e2).join(','));
+    lines.push([g.appid, g.name, g.total_hours, Object.keys(g.accounts || {}).length, per, g.family ? 'si' : 'no', g.family_owner || '', g.acquired || '', g.last_played_iso || ''].map(e2).join(','));
   }
   const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');
@@ -221,6 +233,7 @@ on($('#account'), 'change', e => { state.account = e.target.value; render(); });
 on($('#sort'), 'change', e => { state.sort = e.target.value; render(); });
 on($('#backlog'), 'change', e => { state.backlog = e.target.checked; render(); });
 on($('#multi'), 'change', e => { state.multi = e.target.checked; render(); });
+on($('#family'), 'change', e => { state.family = e.target.checked; render(); });
 on($('#minh'), 'input', e => { state.minh = Number(e.target.value) || 0; render(); });
 on($('#csv'), 'click', exportCsv);
 document.querySelectorAll('th[data-sort]').forEach(th => on(th, 'click', () => {

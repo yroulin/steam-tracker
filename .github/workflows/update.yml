@@ -36,6 +36,12 @@ jobs:
         run: |
           # fetch_steam.ps1 ya regenera la web (steam_games.html) al terminar.
           ./fetch_steam.ps1
+          # Steam Families: agrega juegos compartidos + horas reales + fecha de compra.
+          # Requiere access_token en el secreto STEAM_ACCOUNTS_JSON.
+          ./fetch_family.ps1
+          # --- GENEROS (desactivado: la web ya no los muestra) ---
+          # Si los quieres de vuelta, descomenta:
+          # if (Test-Path ./fetch_genres.ps1) { ./fetch_genres.ps1; ./build_web.ps1 }
 
       - name: Preparar sitio para Pages
         run: |
