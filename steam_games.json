@@ -1,34 +1,38 @@
 {
-  "generated": "2026-10-04T20:01:12.741732+00:00",
+  "generated": "2026-10-04T20:51:51.505923+00:00",
   "source": "api",
   "accounts": [
     {
       "alias": "aln024 - cr",
       "steamid": "76561198076878024",
       "personaname": "ALN024",
-      "country": ""
+      "country": "",
+      "avatar": "https://avatars.steamstatic.com/0c825c85d8da93dc9c7fed0f5eb6a4322b00053d_full.jpg"
     },
     {
       "alias": "y.roulin.tk",
       "steamid": "76561199343569301",
       "personaname": "y.roulin.tk",
-      "country": ""
+      "country": "",
+      "avatar": "https://avatars.steamstatic.com/3f2101516ed541386abf984140b199ae66af978b_full.jpg"
     },
     {
       "alias": "e]g[e > yves - cr",
       "steamid": "76561197965811903",
       "personaname": "Alain!024",
-      "country": ""
+      "country": "",
+      "avatar": "https://avatars.steamstatic.com/bb3ef3a7103423dbfe4947ad72c6a43a84b53fa9_full.jpg"
     },
     {
       "alias": "alain.roulin - mx",
       "steamid": "76561198377422221",
       "personaname": "alain.roulin",
-      "country": ""
+      "country": "",
+      "avatar": "https://avatars.steamstatic.com/8df1d8e32138fea510acb734f89c5fd0fa4dc411_full.jpg"
     }
   ],
   "total_unique_games": 795,
-  "total_hours": 5118.4,
+  "total_hours": 5118.8,
   "games": [
     {
       "appid": "570",
@@ -289,11 +293,11 @@
       "appid": "2350790",
       "name": "Moonlighter 2: The Endless Vault",
       "accounts": {
-        "y.roulin.tk": 50.7
+        "y.roulin.tk": 51.1
       },
       "last_played": 0,
       "img_icon_url": "d81f04ab67d598bcf786925d7c9295dac67d070f",
-      "total_hours": 50.7,
+      "total_hours": 51.1,
       "owned_count": 1,
       "owned_accounts": [
         "y.roulin.tk"
