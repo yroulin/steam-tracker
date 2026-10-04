@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-04T10:00:30.6933134Z",
+  "generated": "2026-10-04T18:18:57.6195021Z",
   "source": "api",
   "accounts": [
     {
@@ -40,15 +40,15 @@
       "country": "cr"
     }
   ],
-  "total_unique_games": 801,
+  "total_unique_games": 802,
   "total_hours": 5418.3,
   "games": [
     {
       "appid": "570",
       "name": "Dota 2",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 2176.6
+        "aln024 - cr": 2176.6,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 2176.6,
       "owned_count": 2,
@@ -217,8 +217,8 @@
       "appid": "239140",
       "name": "Dying Light",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 50.3
+        "aln024 - cr": 50.3,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 50.3,
       "owned_count": 2,
@@ -378,8 +378,8 @@
       "appid": "203160",
       "name": "Tomb Raider",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 22.6
+        "aln024 - cr": 22.6,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 22.6,
       "owned_count": 2,
@@ -455,8 +455,8 @@
       "appid": "2510960",
       "name": "Temtem: Swarm",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "y.roulin.tk": 21.0
+        "y.roulin.tk": 21.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 21.0,
       "owned_count": 2,
@@ -576,8 +576,8 @@
       "appid": "993090",
       "name": "Lossless Scaling",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "y.roulin.tk": 17.1
+        "y.roulin.tk": 17.1,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 17.1,
       "owned_count": 2,
@@ -635,8 +635,8 @@
       "appid": "1085660",
       "name": "Destiny 2",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 16.3
+        "aln024 - cr": 16.3,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 16.3,
       "owned_count": 2,
@@ -895,8 +895,8 @@
       "appid": "584400",
       "name": "Sonic Mania",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 9.8
+        "aln024 - cr": 9.8,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 9.8,
       "owned_count": 2,
@@ -1120,8 +1120,8 @@
       "appid": "1621690",
       "name": "Core Keeper",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "y.roulin.tk": 5.8
+        "y.roulin.tk": 5.8,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 5.8,
       "owned_count": 2,
@@ -1432,8 +1432,8 @@
       "appid": "1570330",
       "name": "West Hunt",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "alain.roulin - mx": 3.4
+        "alain.roulin - mx": 3.4,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 3.4,
       "owned_count": 2,
@@ -1532,8 +1532,8 @@
       "appid": "550",
       "name": "Left 4 Dead 2",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 3.0
+        "aln024 - cr": 3.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 3.0,
       "owned_count": 2,
@@ -1986,8 +1986,8 @@
       "appid": "648800",
       "name": "Raft",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "alain.roulin - mx": 1.5
+        "alain.roulin - mx": 1.5,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 1.5,
       "owned_count": 2,
@@ -2654,8 +2654,8 @@
       "appid": "548430",
       "name": "Deep Rock Galactic",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "y.roulin.tk": 0.4
+        "y.roulin.tk": 0.4,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.4,
       "owned_count": 2,
@@ -2907,8 +2907,8 @@
       "appid": "613100",
       "name": "House Flipper",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "y.roulin.tk": 0.3
+        "y.roulin.tk": 0.3,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.3,
       "owned_count": 2,
@@ -6361,8 +6361,8 @@
       "appid": "431240",
       "name": "Golf With Your Friends",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "alain.roulin - mx": 0.0
+        "alain.roulin - mx": 0.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 2,
@@ -7621,8 +7621,8 @@
       "appid": "40990",
       "name": "Mafia",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 0.0
+        "aln024 - cr": 0.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 2,
@@ -7639,8 +7639,8 @@
       "appid": "50130",
       "name": "Mafia II (Classic)",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 0.0
+        "aln024 - cr": 0.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 2,
@@ -7657,8 +7657,8 @@
       "appid": "1030830",
       "name": "Mafia II: Definitive Edition",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 0.0
+        "aln024 - cr": 0.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 2,
@@ -8168,8 +8168,8 @@
       "accounts": {
         "alain.roulin - mx": 0.0,
         "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 0.0,
-        "y.roulin.tk": 0.0
+        "y.roulin.tk": 0.0,
+        "aln024 - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 4,
@@ -9750,8 +9750,8 @@
       "appid": "1562700",
       "name": "SANABI",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "y.roulin.tk": 0.0
+        "y.roulin.tk": 0.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 2,
@@ -9842,8 +9842,8 @@
       "appid": "34270",
       "name": "SEGA Mega Drive & Genesis Classics",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 0.0
+        "aln024 - cr": 0.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 2,
@@ -9931,8 +9931,8 @@
       "appid": "750920",
       "name": "Shadow of the Tomb Raider",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 0.0
+        "aln024 - cr": 0.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 2,
@@ -11327,8 +11327,8 @@
       "appid": "640590",
       "name": "The LEGO® NINJAGO® Movie Video Game",
       "accounts": {
-        "e]g[e > yves - cr": 0.0,
-        "aln024 - cr": 0.0
+        "aln024 - cr": 0.0,
+        "e]g[e > yves - cr": 0.0
       },
       "total_hours": 0.0,
       "owned_count": 2,
@@ -11844,6 +11844,21 @@
       "family_owner": "Pai170",
       "family_country": "cr",
       "acquired": "2017-07-16"
+    },
+    {
+      "appid": "1659420",
+      "name": "UNCHARTED™: Legacy of Thieves Collection",
+      "accounts": {},
+      "total_hours": 0.0,
+      "owned_count": 0,
+      "last_played": 0,
+      "last_played_iso": null,
+      "img_icon_url": "",
+      "img_icon_hash": "b566a403067d6abf75136a3c19f9ed0d2e4fb5b1",
+      "family": true,
+      "family_owner": "L@u",
+      "family_country": "cr",
+      "acquired": "2026-10-04"
     },
     {
       "appid": "391540",
