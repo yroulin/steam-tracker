@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-06T16:19:04.264659+00:00",
+  "generated": "2026-10-06T19:55:21.329730+00:00",
   "source": "api",
   "accounts": [
     {
@@ -31,8 +31,8 @@
       "avatar": "https://avatars.steamstatic.com/8df1d8e32138fea510acb734f89c5fd0fa4dc411_full.jpg"
     }
   ],
-  "total_unique_games": 795,
-  "total_hours": 5126.5,
+  "total_unique_games": 801,
+  "total_hours": 5128.2,
   "games": [
     {
       "appid": "570",
@@ -459,11 +459,11 @@
       "appid": "264710",
       "name": "Subnautica",
       "accounts": {
-        "y.roulin.tk": 33.9
+        "y.roulin.tk": 35.4
       },
       "last_played": 0,
       "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 33.9,
+      "total_hours": 35.4,
       "owned_count": 1,
       "owned_accounts": [
         "y.roulin.tk"
@@ -475,7 +475,7 @@
       "price_usd": 7.49,
       "is_free": false,
       "price_updated": 1791139633.992171,
-      "cost_per_hour": 0.22,
+      "cost_per_hour": 0.21,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -5326,6 +5326,37 @@
       "achievements_pct": 0
     },
     {
+      "appid": "383870",
+      "name": "Firewatch",
+      "accounts": {
+        "aln024 - cr": 0.3
+      },
+      "last_played": 1791310862,
+      "img_icon_url": "d13e70a08cab192c52104f315a7d68591c085e81",
+      "total_hours": 0.3,
+      "owned_count": 1,
+      "owned_accounts": [
+        "aln024 - cr"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": "2026-10-06",
+      "first_seen": "2026-10-04",
+      "price_usd": 3.99,
+      "is_free": false,
+      "price_updated": 1791139866.3897803,
+      "cost_per_hour": 13.3,
+      "achieved_by": {
+        "aln024 - cr": {
+          "got": 0,
+          "total": 10
+        }
+      },
+      "achievements_got": 0,
+      "achievements_total": 10,
+      "achievements_pct": 0
+    },
+    {
       "appid": "613100",
       "name": "House Flipper",
       "accounts": {
@@ -5450,37 +5481,6 @@
       },
       "achievements_got": 0,
       "achievements_total": 53,
-      "achievements_pct": 0
-    },
-    {
-      "appid": "383870",
-      "name": "Firewatch",
-      "accounts": {
-        "aln024 - cr": 0.2
-      },
-      "last_played": 1574104303,
-      "img_icon_url": "d13e70a08cab192c52104f315a7d68591c085e81",
-      "total_hours": 0.2,
-      "owned_count": 1,
-      "owned_accounts": [
-        "aln024 - cr"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": "2019-11-18",
-      "first_seen": "2026-10-04",
-      "price_usd": 3.99,
-      "is_free": false,
-      "price_updated": 1791139866.3897803,
-      "cost_per_hour": 19.95,
-      "achieved_by": {
-        "aln024 - cr": {
-          "got": 0,
-          "total": 10
-        }
-      },
-      "achievements_got": 0,
-      "achievements_total": 10,
       "achievements_pct": 0
     },
     {
@@ -5709,6 +5709,32 @@
       "is_free": false,
       "price_updated": 1791139878.7752688,
       "cost_per_hour": 124.9,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
+      "appid": "3839300",
+      "name": "Dogpile",
+      "accounts": {
+        "y.roulin.tk": 0.1
+      },
+      "last_played": 0,
+      "img_icon_url": "9a27852c03571afabe5ea87db682a8ba505b98a3",
+      "total_hours": 0.1,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-06",
+      "price_usd": 5.99,
+      "is_free": false,
+      "price_updated": 1791316558.6974223,
+      "cost_per_hour": 59.9,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -14809,6 +14835,32 @@
       "achievements_pct": null
     },
     {
+      "appid": "1282730",
+      "name": "Loop Hero",
+      "accounts": {
+        "y.roulin.tk": 0.0
+      },
+      "last_played": 0,
+      "img_icon_url": "103175f4adb08d82a9937d252629e0a91dce84d5",
+      "total_hours": 0.0,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-06",
+      "price_usd": 2.99,
+      "is_free": false,
+      "price_updated": 1791316602.6003177,
+      "cost_per_hour": null,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
       "appid": "1501750",
       "name": "Lords of the Fallen",
       "accounts": {},
@@ -21649,6 +21701,32 @@
       "achievements_pct": null
     },
     {
+      "appid": "460920",
+      "name": "Steep",
+      "accounts": {
+        "y.roulin.tk": 0.0
+      },
+      "last_played": 0,
+      "img_icon_url": "0cd871768bc488856bd5bf44a196b221fc9a878b",
+      "total_hours": 0.0,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-06",
+      "price_usd": 1.49,
+      "is_free": false,
+      "price_updated": 1791316637.4143984,
+      "cost_per_hour": null,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
       "appid": "1048600",
       "name": "Stela",
       "accounts": {},
@@ -22298,6 +22376,32 @@
       "achievements_pct": null
     },
     {
+      "appid": "1913120",
+      "name": "Tears of Metal",
+      "accounts": {
+        "y.roulin.tk": 0.0
+      },
+      "last_played": 0,
+      "img_icon_url": "b78b67a2bb56418e2b4c07821216f7a62386a020",
+      "total_hours": 0.0,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-06",
+      "price_usd": 19.99,
+      "is_free": false,
+      "price_updated": 1791316640.640314,
+      "cost_per_hour": null,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
       "appid": "1361510",
       "name": "Teenage Mutant Ninja Turtles: Shredder's Revenge",
       "accounts": {
@@ -22512,6 +22616,32 @@
       "price_usd": 1.49,
       "is_free": false,
       "price_updated": 1791140592.0001097,
+      "cost_per_hour": null,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
+      "appid": "979690",
+      "name": "The Ascent",
+      "accounts": {
+        "y.roulin.tk": 0.0
+      },
+      "last_played": 0,
+      "img_icon_url": "ced822d46392fcb97daaeb303523b7ff5defecd7",
+      "total_hours": 0.0,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-06",
+      "price_usd": 2.99,
+      "is_free": false,
+      "price_updated": 1791316642.4667974,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -23174,6 +23304,32 @@
       "price_usd": 2.99,
       "is_free": false,
       "price_updated": 1791140639.827557,
+      "cost_per_hour": null,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
+      "appid": "835960",
+      "name": "The Talos Principle 2",
+      "accounts": {
+        "y.roulin.tk": 0.0
+      },
+      "last_played": 0,
+      "img_icon_url": "3f79ab72358e4a867351997738c994cdab35da19",
+      "total_hours": 0.0,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-06",
+      "price_usd": 2.99,
+      "is_free": false,
+      "price_updated": 1791316646.5879166,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -25017,10 +25173,10 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-10-06T16:19:04+00:00",
+  "family_sync_checked": "2026-10-06T19:55:21+00:00",
   "metadata_warnings": {
     "prices": 0,
-    "achievements": 380
+    "achievements": 386
   },
   "schema_version": 2
 }
