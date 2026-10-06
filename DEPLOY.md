@@ -15,16 +15,22 @@ No usa PowerShell ni depende de tu PC. Está programado a las 15:00 UTC,
 El workflow instala Python, ejecuta las pruebas, restaura la caché de tienda y
 crea un `accounts.json` temporal a partir del secreto. Luego actualiza las cuentas,
 familia, precios y logros, y elimina el archivo de configuración incluso si falla.
-Solo copia HTML, JSON y Markdown al artefacto de Pages. La caché no contiene claves
-ni tokens. La primera actualización puede tardar varios minutos.
+Antes de actualizar, restaura `steam_games.json` y `steam_artwork.json` desde la rama
+`steam-data`; después guarda ahí el nuevo snapshot. HTML, JSON y Markdown se copian
+al artefacto de Pages. La caché no contiene claves ni tokens. La primera actualización
+puede tardar varios minutos.
 
-La salida se guarda también en el repositorio. Los cambios automáticos de datos
-no vuelven a disparar la actualización. Un fallo de Steam al obtener bibliotecas
-impide publicar una biblioteca incompleta. Los precios o logros inaccesibles generan
-un aviso; el resto de datos puede publicarse.
+Los datos diarios se guardan en `steam-data`, separados del código en `main`; así
+las ejecuciones programadas no compiten con tus pushes de código. Los cambios en esa
+rama no disparan este workflow. Un fallo al obtener las bibliotecas propias impide
+publicar una biblioteca incompleta; si falla Steam Families, se conserva su último
+snapshot y se publican las bibliotecas propias actualizadas. Los precios o logros
+inaccesibles generan un aviso; el resto de datos puede publicarse.
 
 La web prevista para este repositorio es <https://yroulin.github.io/steam-tracker/>.
-Los datos están en `steam_games.json` y `steam_games.md` bajo esa misma dirección.
+Los datos publicados están en `steam_games.json` y `steam_games.md` bajo esa misma
+dirección. La copia versionada en `main` funciona como snapshot inicial/offline y
+puede quedar desactualizada; el snapshot diario más reciente está en `steam-data`.
 Esto describe la configuración; no confirma que el despliegue esté activo.
 
 Los archivos publicados incluyen SteamID, alias, juegos y horas. `accounts.json`

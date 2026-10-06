@@ -5,8 +5,9 @@ propias + los juegos compartidos por **Steam Families**.
 
 ## Archivos
 
-- `steam_games.json` → **fuente de verdad**. Úsala para cualquier consulta exacta,
-  conteos o filtros. No intentes inferir datos desde el markdown si el JSON está disponible.
+- `steam_games.json` → JSON local generado. La copia en `main` puede quedar
+  desactualizada: para consultas exactas usa el JSON publicado en Pages o el de la
+  rama `steam-data` si está disponible. No infieras datos desde Markdown si tienes JSON.
 - `steam_games.md` → resumen legible (frontmatter + tabla). Útil para mostrar al usuario.
 - `steam_games.html` → web con filtros (para el usuario, no la leas entera).
 - `steam_events.json` → fechas de ofertas estacionales y festivales temáticos; fuente
@@ -78,7 +79,9 @@ propias + los juegos compartidos por **Steam Families**.
 
 ## Reglas
 
-- Los datos son de Steam y pueden estar **desactualizados**: revisa `generated`.
+- Los datos son de Steam y pueden estar **desactualizados**: revisa `generated`. La copia
+  local de `main` no se actualiza con el Action diario; la versión diaria se guarda
+  en `steam-data` y se publica en Pages.
 - Si el usuario pregunta por "mi cuenta X", filtra `accounts.<alias>`.
 - En datos `schema_version: 2`, `.accounts` contiene solo horas de cuentas propias.
   `family_hours` no se atribuye al dueño; `hours_source` indica qué horas se muestran.

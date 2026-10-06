@@ -64,9 +64,10 @@ usar otra cuenta, indica `--family-account`. Las bibliotecas propias siempre se
 consultan todas. Sin API key se intenta el XML público, que puede no estar
 accesible y no incluye última vez jugado ni logros.
 
-Si falla una biblioteca propia o una familia solicitada, el proceso sale con
-error antes de publicar datos, conservando las salidas anteriores. Precios y
-logros se reutilizan 7 días por defecto para reducir llamadas repetidas; usa
+Si falla una biblioteca propia, el proceso sale con error antes de publicar
+datos, conservando las salidas anteriores. Si falla Steam Families, se reutiliza
+la última copia familiar conocida y se publican las bibliotecas propias actuales.
+Precios y logros se reutilizan 7 días por defecto para reducir llamadas repetidas; usa
 `--refresh` para actualizar precios o `--achievement-cache-days 0` para consultar
 logros en cada ejecución. Un fallo de
 precios o logros se informa y no impide actualizar la biblioteca. Si falla la tienda,
@@ -98,6 +99,12 @@ el último fondo disponible si Steam no responde.
 Esto conserva los datos y la fecha de la última consulta. No corrige datos antiguos:
 la clasificación nueva de propios y compartidos requiere ejecutar `update.py`.
 Las carátulas y banderas requieren internet, aunque los filtros funcionan sin conexión.
+
+GitHub Actions publica la versión diaria en GitHub Pages y guarda el snapshot más
+reciente (`steam_games.json` y `steam_artwork.json`) en la rama `steam-data`. No
+actualiza los archivos generados en `main`, así que la copia local versionada puede
+quedar atrás. Para consultar datos actuales, usa la web publicada o la rama
+`steam-data`.
 
 `fetch_steam.py` sigue disponible para consultar únicamente las cuentas propias.
 También regenera las tres salidas, pero no agrega familia ni metadatos; normalmente

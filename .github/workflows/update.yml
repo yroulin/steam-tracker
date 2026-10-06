@@ -7,7 +7,7 @@ on:
   workflow_dispatch:   # permite ejecutarlo a mano desde la pestana Actions
   push:
     branches: [main]
-    # Evita bucle infinito: NO disparar cuando el bot actualiza los datos.
+    # No ejecutar por cambios locales a archivos generados.
     paths-ignore:
       - 'steam_games.json'
       - 'steam_games.md'
@@ -24,9 +24,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
-      contents: write      # para poder commitear los datos actualizados
+      contents: write      # para mantener el snapshot en steam-data
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          ref: steam-data
+          path: _steam-data
+          persist-credentials: true
 
       - uses: actions/setup-python@v5
         with:
@@ -57,6 +63,11 @@ jobs:
           fi
           printf '%s' "$ACCOUNTS_JSON" > accounts.json
 
+      - name: Restaurar el último snapshot
+        run: |
+          cp _steam-data/steam_games.json steam_games.json
+          cp _steam-data/steam_artwork.json steam_artwork.json
+
       - name: Actualizar cuentas, familia, precios, logros y web
         run: python update.py --sleep-ms 250 --price-cache-days 7 --achievement-cache-days 7
 
@@ -71,13 +82,20 @@ jobs:
           cp steam_games.md   _site/
           cp steam_games.json _site/
 
-      - name: Guardar cambios en el repo
+      - name: Guardar snapshot en steam-data
         run: |
-          git config user.name  "github-actions[bot]"
+          cp steam_games.json _steam-data/steam_games.json
+          cp steam_artwork.json _steam-data/steam_artwork.json
+          cd _steam-data
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add steam_games.md steam_games.json steam_games.html steam_artwork.json
-          git diff --staged --quiet || git commit -m "Actualizar biblioteca Steam ($(date -u +%Y-%m-%d)) [skip ci]"
-          git push
+          git add steam_games.json steam_artwork.json
+          if git diff --staged --quiet; then
+            echo "El snapshot no tuvo cambios."
+          else
+            git commit -m "Actualizar snapshot de Steam ($(date -u +%Y-%m-%d))"
+            git push origin steam-data
+          fi
 
       - name: Subir artefacto de Pages
         uses: actions/upload-pages-artifact@v3
