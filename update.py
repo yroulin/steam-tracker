@@ -4,6 +4,7 @@
 import argparse
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 from build_web import render_html
@@ -15,6 +16,55 @@ from steam_history import load_history, record_first_seen, render_history
 from steam_artwork import refresh_sale_artwork
 
 BASE = Path(__file__).resolve().parent
+
+
+def previous_snapshot(out_dir):
+    path = Path(out_dir) / "steam_games.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
+        return data if isinstance(data, dict) and isinstance(data.get("games"), list) else None
+    except (OSError, ValueError):
+        return None
+
+
+def retain_family_snapshot(games, previous):
+    """Carry forward known family data without replacing newly fetched owned data."""
+    if not previous:
+        return
+    previous_games = {str(game.get("appid")): game for game in previous["games"] if game.get("appid")}
+    current = {str(game.get("appid")): game for game in games if game.get("appid")}
+    family_fields = (
+        "family_owners", "family_owner", "family_country", "acquired", "family_hours",
+    )
+    for appid, old in previous_games.items():
+        if not old.get("family") and not old.get("family_owners"):
+            continue
+        game = current.get(appid)
+        if game is None:
+            if old.get("family"):
+                games.append(dict(old))
+            continue
+        for field in family_fields:
+            if field in old:
+                game[field] = old[field]
+        # Preserve the freshly fetched owned-game hours and ownership classification.
+        game["family"] = not bool(game.get("owned_accounts") or game.get("accounts"))
+        if game["family"]:
+            game["hours_source"] = old.get("hours_source", "family")
+            game["family_hours"] = old.get("family_hours", game.get("family_hours", 0))
+            game["total_hours"] = old.get("total_hours", game.get("total_hours", 0))
+            game["last_played"] = old.get("last_played", game.get("last_played", 0))
+            game["last_played_iso"] = old.get("last_played_iso", game.get("last_played_iso"))
+            game["owned_count"] = old.get("owned_count", 0)
+            game["owned_accounts"] = old.get("owned_accounts", [])
+
+
+def has_family_snapshot(data):
+    return bool(data and (
+        data.get("family_members") or any(
+            game.get("family") or game.get("family_owners") for game in data.get("games", [])
+        )
+    ))
 
 
 def publish(data, out_dir):
@@ -54,24 +104,53 @@ def main(argv=None):
         parser.error("los días de caché deben ser positivos o cero")
     try:
         config = load_config(args.config)
-        # A configured family is required unless the caller explicitly opts out.
+        previous = previous_snapshot(args.out_dir)
+        # Try Steam Families when the configuration provides a token or member list.
         use_family = not args.skip_family and (args.family_account or config.get("family_members") or
                       any(a.get("access_token") for a in config["accounts"]))
-        if not args.skip_family and not use_family:
-            previous = args.out_dir / "steam_games.json"
-            if previous.exists():
-                old = json.loads(previous.read_text(encoding="utf-8-sig"))
-                if old.get("family_members") or any(g.get("family") for g in old.get("games", [])):
-                    raise SteamError("La biblioteca anterior contiene familia, pero falta access_token. Recupéralo o usa --skip-family.")
         data = fetch_owned(config, args.mode)
         if use_family:
             print("[i] Consultando Steam Families...")
-            apps, members = fetch_family(config, args.family_account)
-            data["family_members"] = members
-            merge_family(data["games"], apps, {**config, "family_members": members})
+            try:
+                apps, members = fetch_family(config, args.family_account)
+            except SteamError as exc:
+                retain_family_snapshot(data["games"], previous)
+                data["family_members"] = previous.get("family_members", []) if previous else config.get("family_members", [])
+                has_snapshot = has_family_snapshot(previous)
+                data["family_sync_status"] = "stale" if has_snapshot else "unavailable"
+                data["family_last_success"] = (
+                    (previous or {}).get("family_last_success") or (previous or {}).get("generated")
+                    if has_snapshot else None
+                )
+                data["family_sync_checked"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                if has_snapshot:
+                    print(f"[!] Steam Families no se actualizó; se conserva la última copia disponible. Detalle: {exc}")
+                else:
+                    print(f"[!] Steam Families no se actualizó y aún no hay una copia anterior. Detalle: {exc}")
+            else:
+                data["family_members"] = members
+                merge_family(data["games"], apps, {**config, "family_members": members})
+                data["family_sync_status"] = "ok"
+                data["family_last_success"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                data["family_sync_checked"] = data["family_last_success"]
         else:
-            data["family_members"] = []
-            print("[i] Se actualizarán solo juegos propios.")
+            if args.skip_family:
+                data["family_members"] = []
+                print("[i] Se actualizarán solo juegos propios (--skip-family).")
+            else:
+                retain_family_snapshot(data["games"], previous)
+                data["family_members"] = previous.get("family_members", []) if previous else []
+                has_snapshot = has_family_snapshot(previous)
+                data["family_sync_status"] = "stale" if has_snapshot else "unavailable"
+                data["family_last_success"] = (
+                    (previous or {}).get("family_last_success") or (previous or {}).get("generated")
+                    if has_snapshot else None
+                )
+                data["family_sync_checked"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                if has_snapshot:
+                    print("[!] No hay token configurado para Steam Families; se conserva la última copia disponible.")
+                else:
+                    print("[!] No hay token ni una copia previa de Steam Families; se publicarán solo cuentas propias.")
         history_path = args.history or args.out_dir / "steam_history.json"
         history = record_first_seen(
             load_history(history_path),

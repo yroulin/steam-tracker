@@ -21,6 +21,8 @@
   h1{margin:0;font-size:clamp(26px,4vw,38px);line-height:1.12;letter-spacing:-.035em;font-weight:750}
   h1 span{color:var(--blue)}
   .meta{color:var(--muted);font-size:13px;margin:8px 0 22px}
+  .family-sync-status{margin:-12px 0 16px;padding:9px 12px;background:#2b261d;border:1px solid #75603c;border-left:3px solid var(--gold);color:#f0d9aa;font-size:12px}
+  .family-sync-status[hidden]{display:none}
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-bottom:18px}
   .stat{background:rgba(23,33,45,.82);border:1px solid #486077;border-radius:3px;padding:12px 15px;min-width:0}
   .stat b{display:block;font-size:clamp(20px,2.5vw,25px);line-height:1.15;color:var(--blue);font-variant-numeric:tabular-nums}
@@ -145,6 +147,7 @@ if (saleMobile) document.documentElement.style.setProperty('--steam-hero-art-mob
   <section class="library-summary" aria-label="Resumen de tu biblioteca">
       <h1>Biblioteca <span>Steam</span></h1>
       <div class="meta" id="meta"></div>
+      <div class="family-sync-status" id="familySyncStatus" role="status" hidden></div>
       <div class="stats" id="stats"></div>
   </section>
   <section class="events-panel" aria-label="Ofertas y eventos de Steam">
@@ -341,6 +344,20 @@ const state = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: f
 $('#meta').textContent =
   GAMES.length + ' juegos unicos | ' + ACCOUNTS.length + ' cuentas | actualizado ' +
   String(DATA.generated || '').slice(0,10) + ' (fuente: ' + (DATA.source || '-') + ')';
+
+const familySyncStatus = $('#familySyncStatus');
+if (DATA.family_sync_status && DATA.family_sync_status !== 'ok') {
+  familySyncStatus.hidden = false;
+  if (DATA.family_sync_status === 'stale') {
+    const lastSync = DATA.family_last_success ? new Date(DATA.family_last_success) : null;
+    const dateText = lastSync && !Number.isNaN(lastSync.getTime())
+      ? new Intl.DateTimeFormat('es-CR', {dateStyle:'medium', timeStyle:'short'}).format(lastSync)
+      : 'fecha desconocida';
+    familySyncStatus.textContent = 'Steam Families no se actualizó en esta ejecución. Se conservan los datos anteriores del ' + dateText + '; las bibliotecas propias sí están actualizadas.';
+  } else {
+    familySyncStatus.textContent = 'Steam Families aún no tiene una copia disponible. Las bibliotecas propias sí están actualizadas.';
+  }
+}
 
 $('#stats').innerHTML = [
   ['Juegos', GAMES.length],

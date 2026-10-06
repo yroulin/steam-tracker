@@ -13,15 +13,21 @@ def fetch_family(config, account_alias=None):
         raise SteamError("Falta access_token para Steam Families. Usa --skip-family para actualizar solo juegos propios.")
     account = candidates[0]
     auth = {"access_token": account["access_token"], "format": "json"}
-    response = http_json(BASE + "GetFamilyGroupForUser/v1/", {**auth, "steamid": account["steamid"]}).get("response", {})
+    try:
+        response = http_json(BASE + "GetFamilyGroupForUser/v1/", {**auth, "steamid": account["steamid"]}).get("response", {})
+    except SteamError as exc:
+        raise SteamError(f"No se pudo consultar GetFamilyGroupForUser para {account['alias']}: {exc}") from None
     group = response.get("family_groupid")
     if not group or str(group) == "0":
         raise SteamError("Steam no devolvió una familia. Revisa la cuenta y renueva su access_token.")
-    response = http_json(BASE + "GetSharedLibraryApps/v1/", {
-        **auth, "family_groupid": group, "steamid": account["steamid"],
-        "include_own": "true", "include_excluded": "false", "include_non_games": "false",
-        "language": "spanish",
-    }).get("response", {})
+    try:
+        response = http_json(BASE + "GetSharedLibraryApps/v1/", {
+            **auth, "family_groupid": group, "steamid": account["steamid"],
+            "include_own": "true", "include_excluded": "false", "include_non_games": "false",
+            "language": "spanish",
+        }).get("response", {})
+    except SteamError as exc:
+        raise SteamError(f"No se pudo consultar GetSharedLibraryApps para {account['alias']}: {exc}") from None
     apps = response.get("apps")
     if not isinstance(apps, list):
         raise SteamError("Steam no devolvió la biblioteca familiar. Se conservan los archivos anteriores.")
