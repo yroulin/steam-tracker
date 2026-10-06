@@ -53,22 +53,36 @@ class EdgeCases(unittest.TestCase):
                 steam_common.http_get("https://steam/")
             self.assertEqual(request.call_count, 1)
 
-    def test_invalid_family_token_preserves_previous_outputs_after_owned_success(self):
+    def test_invalid_family_token_publishes_owned_games_and_stale_family_snapshot(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             cfg = root / "accounts.json"
             cfg.write_text(json.dumps(CONFIG))
-            old = {"source": "api", "generated": "old", "accounts": [], "games": library()}
+            family_game = {
+                "appid": "99", "name": "Family game", "accounts": {},
+                "total_hours": 4, "family_hours": 4, "family": True,
+                "owned_count": 0, "owned_accounts": [], "hours_source": "family",
+            }
+            old = {
+                "source": "api", "generated": "old", "accounts": [],
+                "family_members": [{"alias": "Friend", "steamid": "76561198000000003"}],
+                "games": [family_game],
+            }
             update.publish(old, root)
-            before = {p.name: p.read_bytes() for p in root.glob("steam_games.*")}
-            with patch("fetch_steam.owned_via_api", return_value={}), \
+            with patch("fetch_steam.owned_via_api", return_value={"10": {"name": "Fresh owned", "hours": 1, "last_played": 0}}), \
                  patch("fetch_steam.profile_name", return_value=""), \
                  patch("steam_family.http_json", return_value={"response": {}}), \
+                 patch("update.refresh_sale_artwork", return_value=False), \
                  contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-                self.assertEqual(update.main(["--config", str(cfg), "--out-dir", temp]), 1)
-            self.assertEqual(before, {p.name: p.read_bytes() for p in root.glob("steam_games.*")})
+                self.assertEqual(update.main(["--config", str(cfg), "--out-dir", temp, "--skip-meta"]), 0)
+            data = json.loads((root / "steam_games.json").read_text())
+            self.assertEqual(data["family_sync_status"], "stale")
+            games = {game["appid"]: game for game in data["games"]}
+            self.assertIn("10", games)
+            self.assertIn("99", games)
+            self.assertEqual(games["99"]["total_hours"], 4)
 
-    def test_missing_token_cannot_silently_remove_existing_family(self):
+    def test_missing_token_publishes_owned_data_and_retains_family_snapshot(self):
         cfg = copy.deepcopy(CONFIG)
         cfg["accounts"][0].pop("access_token")
         cfg["family_members"] = []
@@ -76,10 +90,23 @@ class EdgeCases(unittest.TestCase):
             root = Path(temp)
             config = root / "accounts.json"
             config.write_text(json.dumps(cfg))
-            (root / "steam_games.json").write_text('{"games": [{"family": true}]}')
-            with patch("update.fetch_owned") as fetch, contextlib.redirect_stderr(io.StringIO()):
-                self.assertEqual(update.main(["--config", str(config), "--out-dir", temp]), 1)
-                fetch.assert_not_called()
+            previous = {
+                "games": [{"appid": "99", "name": "Family game", "accounts": {}, "family": True,
+                           "total_hours": 4, "family_hours": 4, "owned_count": 0,
+                           "owned_accounts": [], "hours_source": "family"}],
+                "family_members": [{"alias": "Friend", "steamid": "76561198000000003"}],
+            }
+            (root / "steam_games.json").write_text(json.dumps(previous))
+            owned = {"generated": "2026-10-06T00:00:00+00:00", "source": "api", "accounts": [],
+                     "games": [], "family_members": []}
+            with patch("update.fetch_owned", return_value=owned) as fetch, \
+                 patch("update.refresh_sale_artwork", return_value=False), \
+                 contextlib.redirect_stderr(io.StringIO()), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(update.main(["--config", str(config), "--out-dir", temp, "--skip-meta"]), 0)
+                fetch.assert_called_once()
+            data = json.loads((root / "steam_games.json").read_text())
+            self.assertEqual(data["family_sync_status"], "stale")
+            self.assertEqual(data["games"][0]["name"], "Family game")
 
     def test_partial_owned_failure_aborts_instead_of_dropping_account(self):
         with patch("fetch_steam.owned_via_api", side_effect=[{}, steam_common.SteamError("private")]), \
