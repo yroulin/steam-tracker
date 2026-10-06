@@ -62,6 +62,7 @@ class EdgeCases(unittest.TestCase):
                 "appid": "99", "name": "Family game", "accounts": {},
                 "total_hours": 4, "family_hours": 4, "family": True,
                 "owned_count": 0, "owned_accounts": [], "hours_source": "family",
+                "last_played": 0, "last_played_iso": None,
             }
             old = {
                 "source": "api", "generated": "old", "accounts": [],
@@ -93,7 +94,8 @@ class EdgeCases(unittest.TestCase):
             previous = {
                 "games": [{"appid": "99", "name": "Family game", "accounts": {}, "family": True,
                            "total_hours": 4, "family_hours": 4, "owned_count": 0,
-                           "owned_accounts": [], "hours_source": "family"}],
+                           "owned_accounts": [], "hours_source": "family", "last_played": 0,
+                           "last_played_iso": None}],
                 "family_members": [{"alias": "Friend", "steamid": "76561198000000003"}],
             }
             (root / "steam_games.json").write_text(json.dumps(previous))
