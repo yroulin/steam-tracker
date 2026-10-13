@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-12T22:19:41.911226+00:00",
+  "generated": "2026-10-13T20:27:14.876985+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 801,
-  "total_hours": 5158.0,
+  "total_hours": 5160.6,
   "games": [
     {
       "appid": "570",
@@ -378,6 +378,32 @@
       "achievements_pct": null
     },
     {
+      "appid": "264710",
+      "name": "Subnautica",
+      "accounts": {
+        "y.roulin.tk": 44.0
+      },
+      "last_played": 0,
+      "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
+      "total_hours": 44.0,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 29.99,
+      "is_free": false,
+      "price_updated": 1791746217.888313,
+      "cost_per_hour": 0.68,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
       "appid": "3405340",
       "name": "Megabonk",
       "accounts": {
@@ -398,32 +424,6 @@
       "is_free": false,
       "price_updated": 1791746217.10233,
       "cost_per_hour": 0.23,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null
-    },
-    {
-      "appid": "264710",
-      "name": "Subnautica",
-      "accounts": {
-        "y.roulin.tk": 41.4
-      },
-      "last_played": 0,
-      "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 41.4,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 29.99,
-      "is_free": false,
-      "price_updated": 1791746217.888313,
-      "cost_per_hour": 0.72,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -586,10 +586,10 @@
       "hours_source": "accounts",
       "last_played_iso": "2026-10-12",
       "first_seen": "2026-10-06",
-      "price_usd": 13.39,
+      "price_usd": 19.99,
       "is_free": false,
-      "price_updated": 1791303555.5882194,
-      "cost_per_hour": 0.56,
+      "price_updated": 1791923240.0430338,
+      "cost_per_hour": 0.83,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -4360,7 +4360,7 @@
       "first_seen": "2026-10-06",
       "price_usd": 5.99,
       "is_free": false,
-      "price_updated": 1791316558.6974223,
+      "price_updated": 1791923260.0186665,
       "cost_per_hour": 7.49,
       "achieved_by": {},
       "achievements_got": 0,
@@ -14853,7 +14853,7 @@
       "first_seen": "2026-10-06",
       "price_usd": 2.99,
       "is_free": false,
-      "price_updated": 1791316602.6003177,
+      "price_updated": 1791923312.614483,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -21717,9 +21717,9 @@
       "hours_source": "accounts",
       "last_played_iso": null,
       "first_seen": "2026-10-06",
-      "price_usd": 1.49,
+      "price_usd": 29.99,
       "is_free": false,
-      "price_updated": 1791316637.4143984,
+      "price_updated": 1791923343.7567413,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -22392,9 +22392,9 @@
       "hours_source": "accounts",
       "last_played_iso": null,
       "first_seen": "2026-10-06",
-      "price_usd": 19.99,
+      "price_usd": 21.24,
       "is_free": false,
-      "price_updated": 1791316640.640314,
+      "price_updated": 1791923346.975525,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -22639,9 +22639,9 @@
       "hours_source": "accounts",
       "last_played_iso": null,
       "first_seen": "2026-10-06",
-      "price_usd": 2.99,
+      "price_usd": 29.99,
       "is_free": false,
-      "price_updated": 1791316642.4667974,
+      "price_updated": 1791923348.7523234,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -23329,7 +23329,7 @@
       "first_seen": "2026-10-06",
       "price_usd": 2.99,
       "is_free": false,
-      "price_updated": 1791316646.5879166,
+      "price_updated": 1791923352.8090234,
       "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
@@ -25173,7 +25173,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-10-12T22:19:42+00:00",
+  "family_sync_checked": "2026-10-13T20:27:15+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 386
