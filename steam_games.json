@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-14T19:05:29.737258+00:00",
+  "generated": "2026-10-15T18:47:42.432097+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 801,
-  "total_hours": 5161.8,
+  "total_hours": 5162.0,
   "games": [
     {
       "appid": "570",
@@ -3962,6 +3962,32 @@
       "achievements_pct": null
     },
     {
+      "appid": "1942280",
+      "name": "Brotato",
+      "accounts": {
+        "y.roulin.tk": 1.2
+      },
+      "last_played": 0,
+      "img_icon_url": "d9dfcab8f300a9548439f70bef7b5f4e53d0fc28",
+      "total_hours": 1.2,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 4.99,
+      "is_free": false,
+      "price_updated": 1791746286.3646727,
+      "cost_per_hour": 4.16,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
       "appid": "307780",
       "name": "Mortal Kombat X",
       "accounts": {
@@ -4137,32 +4163,6 @@
       "achievements_got": 1,
       "achievements_total": 48,
       "achievements_pct": 2
-    },
-    {
-      "appid": "1942280",
-      "name": "Brotato",
-      "accounts": {
-        "y.roulin.tk": 1.0
-      },
-      "last_played": 0,
-      "img_icon_url": "d9dfcab8f300a9548439f70bef7b5f4e53d0fc28",
-      "total_hours": 1.0,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 4.99,
-      "is_free": false,
-      "price_updated": 1791746286.3646727,
-      "cost_per_hour": 4.99,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null
     },
     {
       "appid": "310950",
@@ -25173,7 +25173,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-10-14T19:05:29+00:00",
+  "family_sync_checked": "2026-10-15T18:47:42+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 386
