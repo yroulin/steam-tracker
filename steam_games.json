@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-16T18:32:33.202608+00:00",
+  "generated": "2026-10-17T17:39:53.991584+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 801,
-  "total_hours": 5162.0,
+  "total_hours": 5162.6,
   "games": [
     {
       "appid": "570",
@@ -350,6 +350,32 @@
       "achievements_pct": 46
     },
     {
+      "appid": "264710",
+      "name": "Subnautica",
+      "accounts": {
+        "y.roulin.tk": 45.8
+      },
+      "last_played": 0,
+      "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
+      "total_hours": 45.8,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 29.99,
+      "is_free": false,
+      "price_updated": 1791746217.888313,
+      "cost_per_hour": 0.65,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
       "appid": "4704690",
       "name": "MECCHA CHAMELEON",
       "accounts": {
@@ -372,32 +398,6 @@
       "is_free": false,
       "price_updated": 1791746216.0030189,
       "cost_per_hour": 0.13,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null
-    },
-    {
-      "appid": "264710",
-      "name": "Subnautica",
-      "accounts": {
-        "y.roulin.tk": 45.2
-      },
-      "last_played": 0,
-      "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 45.2,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 29.99,
-      "is_free": false,
-      "price_updated": 1791746217.888313,
-      "cost_per_hour": 0.66,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -25173,7 +25173,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-10-16T18:32:33+00:00",
+  "family_sync_checked": "2026-10-17T17:39:54+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 386
