@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-22T18:58:45.038317+00:00",
+  "generated": "2026-10-23T18:48:48.973378+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 801,
-  "total_hours": 5175.0,
+  "total_hours": 5177.3,
   "games": [
     {
       "appid": "570",
@@ -283,11 +283,11 @@
       "appid": "264710",
       "name": "Subnautica",
       "accounts": {
-        "y.roulin.tk": 56.5
+        "y.roulin.tk": 58.0
       },
       "last_played": 0,
       "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 56.5,
+      "total_hours": 58.0,
       "owned_count": 1,
       "owned_accounts": [
         "y.roulin.tk"
@@ -299,7 +299,7 @@
       "price_usd": 29.99,
       "is_free": false,
       "price_updated": 1792441116.8667915,
-      "cost_per_hour": 0.53,
+      "cost_per_hour": 0.52,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -3553,6 +3553,32 @@
       "achievements_pct": null
     },
     {
+      "appid": "848450",
+      "name": "Subnautica: Below Zero",
+      "accounts": {
+        "y.roulin.tk": 1.8
+      },
+      "last_played": 0,
+      "img_icon_url": "eae16718327a78d87ac7ae61db96729926c97a16",
+      "total_hours": 1.8,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 29.99,
+      "is_free": false,
+      "price_updated": 1792441192.3983073,
+      "cost_per_hour": 16.66,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
       "appid": "2744010",
       "name": "Urban Jungle",
       "accounts": {
@@ -4205,32 +4231,6 @@
       "achievements_got": 1,
       "achievements_total": 45,
       "achievements_pct": 2
-    },
-    {
-      "appid": "848450",
-      "name": "Subnautica: Below Zero",
-      "accounts": {
-        "y.roulin.tk": 1.0
-      },
-      "last_played": 0,
-      "img_icon_url": "eae16718327a78d87ac7ae61db96729926c97a16",
-      "total_hours": 1.0,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 29.99,
-      "is_free": false,
-      "price_updated": 1792441192.3983073,
-      "cost_per_hour": 29.99,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null
     },
     {
       "appid": "39150",
@@ -25173,7 +25173,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-10-22T18:58:45+00:00",
+  "family_sync_checked": "2026-10-23T18:48:49+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 386
