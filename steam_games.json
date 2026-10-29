@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-28T19:59:46.391535+00:00",
+  "generated": "2026-10-29T19:58:49.068308+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 801,
-  "total_hours": 5192.8,
+  "total_hours": 5194.2,
   "games": [
     {
       "appid": "570",
@@ -257,11 +257,11 @@
       "appid": "264710",
       "name": "Subnautica",
       "accounts": {
-        "y.roulin.tk": 72.1
+        "y.roulin.tk": 73.0
       },
       "last_played": 0,
       "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 72.1,
+      "total_hours": 73.0,
       "owned_count": 1,
       "owned_accounts": [
         "y.roulin.tk"
@@ -2644,7 +2644,7 @@
         "alain.roulin - mx": 0.0
       },
       "last_played": 0,
-      "img_icon_url": "e55f26ffc98c548061663e7e8cb005ee3b89b602",
+      "img_icon_url": "7917ee02aa27c216c025f93ed87c4983d0051dec",
       "total_hours": 3.6,
       "owned_count": 2,
       "owned_accounts": [
@@ -2659,6 +2659,32 @@
       "is_free": false,
       "price_updated": 1793130433.7802403,
       "cost_per_hour": 1.66,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null
+    },
+    {
+      "appid": "848450",
+      "name": "Subnautica: Below Zero",
+      "accounts": {
+        "y.roulin.tk": 3.6
+      },
+      "last_played": 0,
+      "img_icon_url": "eae16718327a78d87ac7ae61db96729926c97a16",
+      "total_hours": 3.6,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 29.99,
+      "is_free": false,
+      "price_updated": 1793130446.851582,
+      "cost_per_hour": 8.33,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -2937,32 +2963,6 @@
       "is_free": false,
       "price_updated": 1793130445.8913777,
       "cost_per_hour": 4.06,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null
-    },
-    {
-      "appid": "848450",
-      "name": "Subnautica: Below Zero",
-      "accounts": {
-        "y.roulin.tk": 3.1
-      },
-      "last_played": 0,
-      "img_icon_url": "eae16718327a78d87ac7ae61db96729926c97a16",
-      "total_hours": 3.1,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 29.99,
-      "is_free": false,
-      "price_updated": 1793130446.851582,
-      "cost_per_hour": 9.67,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -25173,7 +25173,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-10-28T19:59:46+00:00",
+  "family_sync_checked": "2026-10-29T19:58:49+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 386
