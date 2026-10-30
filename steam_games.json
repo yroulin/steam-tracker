@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-29T19:58:49.068308+00:00",
+  "generated": "2026-10-30T19:48:04.868193+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 801,
-  "total_hours": 5194.2,
+  "total_hours": 5194.7,
   "games": [
     {
       "appid": "570",
@@ -257,11 +257,11 @@
       "appid": "264710",
       "name": "Subnautica",
       "accounts": {
-        "y.roulin.tk": 73.0
+        "y.roulin.tk": 73.5
       },
       "last_played": 0,
       "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 73.0,
+      "total_hours": 73.5,
       "owned_count": 1,
       "owned_accounts": [
         "y.roulin.tk"
@@ -25173,7 +25173,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-10-29T19:58:49+00:00",
+  "family_sync_checked": "2026-10-30T19:48:05+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 386
