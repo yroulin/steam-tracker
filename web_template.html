@@ -8,7 +8,7 @@
 <link rel="icon" href="https://store.steampowered.com/favicon.ico" sizes="any">
 <title>Biblioteca Steam</title>
 <style>
-  :root{color-scheme:dark;--bg:#1b2838;--panel:#17212d;--panel-hi:#202f40;--line:#2a3f52;--text:#edf3f8;--muted:#a3b5c8;--blue:#66c0f4;--blue-deep:#2a475e;--green:#8ee1b1;--gold:#f4c46b;--violet:#c8a7ff;--steam-hero-art:linear-gradient(135deg,#1b2838 0%,#2a475e 55%,#66c0f4 100%)}
+  :root{color-scheme:dark;--bg:#1b2838;--panel:#17212d;--panel-hi:#202f40;--line:#2a3f52;--text:#edf3f8;--muted:#a3b5c8;--blue:#66c0f4;--blue-deep:#2a475e;--green:#8ee1b1;--gold:#f4c46b;--violet:#c8a7ff;--steam-hero-art:url("https://store.akamai.steamstatic.com/public/images/v6/colored_body_top2.png"),linear-gradient(135deg,#1b2838 0%,#2a475e 55%,#66c0f4 100%)}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
   header,.wrap{width:min(1440px,100%);margin-inline:auto;padding-inline:clamp(16px,3vw,40px)}
@@ -18,6 +18,7 @@
   .steam-hero{position:relative;isolation:isolate;overflow:hidden;margin-bottom:0;aspect-ratio:10/3;min-height:185px;background:#1b2838;border:1px solid #344b60;border-bottom:0}
   .steam-hero::before{content:"";position:absolute;z-index:-1;inset:0;background-image:var(--steam-hero-art);background-size:cover;background-position:center top}
   .steam-hero::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,rgba(16,24,35,.34) 0%,rgba(16,24,35,0) 40%,rgba(27,40,56,.42) 74%,#1b2838 100%)}
+  .steam-hero-mark{position:absolute;z-index:-1;top:50%;right:clamp(12px,4vw,56px);height:min(46%,128px);width:auto;transform:translateY(-50%);opacity:.18;filter:brightness(0) invert(1) drop-shadow(0 0 20px rgba(102,192,244,.4))}
   .library-summary{padding:14px clamp(16px,2.5vw,32px) 2px;background:#1b2838;border:1px solid #344b60;border-top:0;margin-bottom:16px}
   h1{margin:0;font-size:clamp(26px,4vw,38px);line-height:1.12;letter-spacing:-.035em;font-weight:750}
   h1 span{color:var(--blue)}
@@ -120,7 +121,7 @@
   .card-facts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:7px 0 0}.card-facts div{min-width:0;padding:9px 10px;background:#101822;border:1px solid #263746;border-radius:2px}
   .card-facts dt{color:#96a6b4;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.card-facts dd{margin:4px 0 0;font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
   @media(max-width:860px){.primary-controls{grid-template-columns:1fr 1fr}.primary-controls input[type=search]{grid-column:1/-1}.primary-controls .btn{width:100%}}
-  @media(max-width:620px){header{padding-top:14px}.steam-brand{margin-bottom:9px}.steam-brand img{width:92px}.steam-hero{aspect-ratio:10/7;min-height:210px}.steam-hero::before{background-image:var(--steam-hero-art-mobile,var(--steam-hero-art));background-position:center top}.library-summary{padding:11px 13px 1px;margin-bottom:12px}.meta{margin-bottom:14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.stat{padding:10px}.stat:last-child:nth-child(odd){grid-column:1/-1}.events-panel{grid-template-columns:1fr;gap:10px;padding:10px}.sale-countdown{min-height:0;padding:13px}.event-grid{grid-template-columns:1fr 1fr;gap:7px}.event-card{grid-template-columns:40px minmax(0,1fr);gap:8px;padding:8px}.event-art{width:40px;height:40px}.event-art svg{width:23px;height:23px}.event-kind{font-size:8px!important;letter-spacing:.06em}.event-card h3{font-size:12px}.primary-controls{grid-template-columns:1fr}.primary-controls input[type=search]{grid-column:auto}.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}.wrap{padding-bottom:32px}table{display:none}.mobile-games{display:grid;gap:10px}.cover{width:80px;height:38px}}
+  @media(max-width:620px){header{padding-top:14px}.steam-brand{margin-bottom:9px}.steam-brand img{width:92px}.steam-hero{aspect-ratio:10/7;min-height:210px}.steam-hero::before{background-image:var(--steam-hero-art-mobile,var(--steam-hero-art));background-position:center top}.steam-hero-mark{height:min(40%,104px);opacity:.16}.library-summary{padding:11px 13px 1px;margin-bottom:12px}.meta{margin-bottom:14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.stat{padding:10px}.stat:last-child:nth-child(odd){grid-column:1/-1}.events-panel{grid-template-columns:1fr;gap:10px;padding:10px}.sale-countdown{min-height:0;padding:13px}.event-grid{grid-template-columns:1fr 1fr;gap:7px}.event-card{grid-template-columns:40px minmax(0,1fr);gap:8px;padding:8px}.event-art{width:40px;height:40px}.event-art svg{width:23px;height:23px}.event-kind{font-size:8px!important;letter-spacing:.06em}.event-card h3{font-size:12px}.primary-controls{grid-template-columns:1fr}.primary-controls input[type=search]{grid-column:auto}.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}.wrap{padding-bottom:32px}table{display:none}.mobile-games{display:grid;gap:10px}.cover{width:80px;height:38px}}
   @media(max-width:380px){.event-grid{grid-template-columns:1fr}}
   @media(max-width:380px){.filter-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat small{font-size:9px}}
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
@@ -146,7 +147,9 @@ function runningSale(now = new Date()) {
 </script>
 <header>
   <div class="steam-brand" aria-label="Steam"><img src="https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg" alt="Steam"></div>
-  <div class="steam-hero" role="img" aria-label="Arte de las ofertas estacionales de Steam"></div>
+  <div class="steam-hero" role="img" aria-label="Banner de Steam">
+    <img class="steam-hero-mark" src="https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg" alt="" aria-hidden="true" decoding="async">
+  </div>
   <section class="library-summary" aria-label="Resumen de tu biblioteca">
       <h1>Biblioteca <span>Steam</span></h1>
       <div class="meta" id="meta"></div>
@@ -307,56 +310,25 @@ function renderSteamEvents(now = new Date()) {
   $('#allEvents').innerHTML = remaining.map(event => eventCard(event, now)).join('');
 }
 const heroCssUrl = url => 'url("' + url.replace(/["\\]/g, '') + '")';
-const libraryHeroUrl = appid => 'https://cdn.akamai.steamstatic.com/steam/apps/' + appid + '/library_hero.jpg';
-// Steam's library heroes are 1920x620, the same wide crop the banner needs. Outside a
-// sale the banner tries the most played games in order and keeps the first art that loads.
-const libraryHeroCandidates = () => GAMES
-  .filter(game => /^\d+$/.test(String(game.appid)) && (game.total_hours || 0) > 0)
-  .sort((a, b) => (b.total_hours || 0) - (a.total_hours || 0))
-  .slice(0, 6);
-const imageLoads = url => new Promise(resolve => {
-  const image = new Image();
-  image.onload = () => resolve(true);
-  image.onerror = () => resolve(false);
-  image.src = url;
-});
-let libraryArt;          // undefined while probing, null when no art loads
-let libraryArtProbe;
-function resolveLibraryArt() {
-  if (libraryArtProbe) return libraryArtProbe;
-  libraryArtProbe = (async () => {
-    for (const game of libraryHeroCandidates()) {
-      const url = libraryHeroUrl(game.appid);
-      if (await imageLoads(url)) { libraryArt = { url, name: game.name }; return; }
-    }
-    libraryArt = null;
-  })().then(() => applyHero());
-  return libraryArtProbe;
-}
+// The stylesheet carries the Steam brand background. While a sale runs its art takes
+// over; outside sales the property is cleared and that background shows again.
 function applyHero(now = new Date()) {
   const style = document.documentElement.style;
   const hero = $('.steam-hero');
   const sale = runningSale(now);
-  if (sale) {
-    const desktop = safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile);
-    const mobile = safeSteamImage(sale.mobile);
-    if (desktop) style.setProperty('--steam-hero-art', heroCssUrl(desktop));
-    else style.removeProperty('--steam-hero-art');
-    if (mobile) style.setProperty('--steam-hero-art-mobile', heroCssUrl(mobile));
-    else style.removeProperty('--steam-hero-art-mobile');
-    hero.setAttribute('aria-label', 'Arte de la oferta en curso de Steam: ' + sale.name);
-    return;
-  }
-  resolveLibraryArt();
-  if (libraryArt) {
-    style.setProperty('--steam-hero-art', heroCssUrl(libraryArt.url));
-    style.removeProperty('--steam-hero-art-mobile');
-    hero.setAttribute('aria-label', 'Arte de tu biblioteca de Steam: ' + libraryArt.name);
-  } else {
+  if (!sale) {
     style.removeProperty('--steam-hero-art');
     style.removeProperty('--steam-hero-art-mobile');
-    hero.setAttribute('aria-label', 'Banner de Steam, sin arte disponible');
+    hero.setAttribute('aria-label', 'Banner de Steam');
+    return;
   }
+  const desktop = safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile);
+  const mobile = safeSteamImage(sale.mobile);
+  if (desktop) style.setProperty('--steam-hero-art', heroCssUrl(desktop));
+  else style.removeProperty('--steam-hero-art');
+  if (mobile) style.setProperty('--steam-hero-art-mobile', heroCssUrl(mobile));
+  else style.removeProperty('--steam-hero-art-mobile');
+  hero.setAttribute('aria-label', 'Arte de la oferta en curso de Steam: ' + sale.name);
 }
 function updateSaleCountdown(now = new Date()) {
   const sales = (STEAM_EVENTS.events || []).filter(event => event.type === 'sale')
