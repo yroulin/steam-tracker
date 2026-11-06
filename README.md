@@ -176,8 +176,11 @@ El secreto existente `STEAM_ACCOUNTS_JSON` sigue funcionando sin cambiar de form
 
 ```sh
 python3 -m unittest discover -s tests -v
+python3 check_web.py steam_games.html   # sintaxis de los <script> (usa Node si está)
 ```
 
 Las pruebas usan respuestas simuladas y no necesitan credenciales ni internet.
+La comprobación de JavaScript omite el paso si Node no está instalado; en GitHub
+Actions siempre está y bloquea el despliegue si la página tiene un error de sintaxis.
 GitHub Actions tiene una matriz para Windows, macOS y Linux con Python 3.10,
 y una ejecución adicional en Python 3.14.

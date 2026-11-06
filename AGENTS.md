@@ -111,5 +111,7 @@ propias + los juegos compartidos por **Steam Families**.
 - `steam_schema.validate_snapshot()` corre antes de escribir artefactos; un snapshot
   con tipos incorrectos falla con `SnapshotError` en vez de publicar una web rota.
 - Pruebas: `python3 -m unittest discover -s tests -v`, sin credenciales.
+- Sintaxis JS: `python3 check_web.py steam_games.html` (o `web_template.html`); usa
+  Node si está instalado y se ejecuta antes de cada despliegue.
 - No publicar datos si falla una biblioteca requerida; no imprimir excepciones HTTP
   crudas porque pueden contener URLs con credenciales.

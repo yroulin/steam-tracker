@@ -38,9 +38,10 @@ plantilla, estilos o fechas de eventos llega al sitio sin esperar la actualizaci
 diaria. Los tres workflows comparten el grupo de concurrencia `steam-tracker`, de
 modo que nunca hay dos despliegues de Pages a la vez.
 
-La web prevista para este repositorio es <https://yroulin.github.io/steam-tracker/>.
-Los datos publicados están en `steam_games.json` y `steam_games.md` bajo esa misma
-dirección. El snapshot diario más reciente está en `steam-data`.
+La web se publica en <https://steam.aroulin.com/> (dominio propio sobre GitHub Pages);
+la URL del repositorio es <https://yroulin.github.io/steam-tracker/>. Los datos
+publicados están en `steam_games.json` y `steam_games.md` bajo esa misma dirección.
+El snapshot diario más reciente está en `steam-data`.
 Esto describe la configuración; no confirma que el despliegue esté activo.
 
 Los archivos publicados incluyen SteamID, alias, juegos y horas. `accounts.json`

@@ -34,6 +34,9 @@ jobs:
       - name: Verificar pruebas antes de consultar Steam
         run: python -m unittest discover -s tests -v
 
+      - name: Comprobar el JavaScript de la plantilla
+        run: python check_web.py web_template.html
+
       - uses: actions/cache@v4
         with:
           path: meta_cache.json

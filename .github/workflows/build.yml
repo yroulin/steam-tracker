@@ -48,6 +48,9 @@ jobs:
       - name: Regenerar la web sin consultar Steam
         run: python update.py --republish
 
+      - name: Comprobar el JavaScript de la página
+        run: python check_web.py steam_games.html
+
       - name: Preparar sitio para Pages
         run: |
           mkdir -p _site

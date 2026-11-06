@@ -40,6 +40,9 @@ jobs:
             cp _steam-data/steam_artwork.json steam_artwork.json
           fi
 
+      - name: Comprobar el JavaScript de la plantilla
+        run: python check_web.py web_template.html
+
       - name: Consultar el arte en la tienda de Steam
         run: python steam_artwork.py
 
