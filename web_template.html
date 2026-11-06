@@ -17,6 +17,7 @@
   .steam-brand img{display:block;width:112px;height:auto;filter:brightness(0) invert(1)}
   .steam-hero{position:relative;isolation:isolate;overflow:hidden;margin-bottom:0;aspect-ratio:10/3;min-height:185px;background:#1b2838;border:1px solid #344b60;border-bottom:0}
   .steam-hero::before{content:"";position:absolute;z-index:-1;inset:0;background-image:var(--steam-hero-art);background-size:cover;background-position:center top}
+  .steam-hero::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,rgba(16,24,35,.34) 0%,rgba(16,24,35,0) 40%,rgba(27,40,56,.42) 74%,#1b2838 100%)}
   .library-summary{padding:14px clamp(16px,2.5vw,32px) 2px;background:#1b2838;border:1px solid #344b60;border-top:0;margin-bottom:16px}
   h1{margin:0;font-size:clamp(26px,4vw,38px);line-height:1.12;letter-spacing:-.035em;font-weight:750}
   h1 span{color:var(--blue)}
@@ -135,8 +136,8 @@ const safeSteamImage = value => {
       url.pathname.includes('/store_item_assets/steam/clusters/seasonalsales/') ? url.href : '';
   } catch { return ''; }
 };
-// Art saved for each sale with a valid Steam image. The banner only uses it during
-// that sale; otherwise the neutral gradient from the stylesheet stays.
+// Art saved for each sale with a valid Steam image. The banner uses it while that
+// sale runs; outside sales it falls back to a library hero from the user's games.
 const saleArt = (STEAM_EVENTS.sale_art || [])
   .filter(sale => safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile));
 function runningSale(now = new Date()) {
@@ -305,16 +306,57 @@ function renderSteamEvents(now = new Date()) {
   $('#allEventsDetails').hidden = remaining.length === 0;
   $('#allEvents').innerHTML = remaining.map(event => eventCard(event, now)).join('');
 }
+const heroCssUrl = url => 'url("' + url.replace(/["\\]/g, '') + '")';
+const libraryHeroUrl = appid => 'https://cdn.akamai.steamstatic.com/steam/apps/' + appid + '/library_hero.jpg';
+// Steam's library heroes are 1920x620, the same wide crop the banner needs. Outside a
+// sale the banner tries the most played games in order and keeps the first art that loads.
+const libraryHeroCandidates = () => GAMES
+  .filter(game => /^\d+$/.test(String(game.appid)) && (game.total_hours || 0) > 0)
+  .sort((a, b) => (b.total_hours || 0) - (a.total_hours || 0))
+  .slice(0, 6);
+const imageLoads = url => new Promise(resolve => {
+  const image = new Image();
+  image.onload = () => resolve(true);
+  image.onerror = () => resolve(false);
+  image.src = url;
+});
+let libraryArt;          // undefined while probing, null when no art loads
+let libraryArtProbe;
+function resolveLibraryArt() {
+  if (libraryArtProbe) return libraryArtProbe;
+  libraryArtProbe = (async () => {
+    for (const game of libraryHeroCandidates()) {
+      const url = libraryHeroUrl(game.appid);
+      if (await imageLoads(url)) { libraryArt = { url, name: game.name }; return; }
+    }
+    libraryArt = null;
+  })().then(() => applyHero());
+  return libraryArtProbe;
+}
 function applyHero(now = new Date()) {
-  const sale = runningSale(now);
   const style = document.documentElement.style;
-  const desktop = sale && (safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile));
-  const mobile = sale && safeSteamImage(sale.mobile);
-  if (desktop) style.setProperty('--steam-hero-art', 'url("' + desktop.replace(/["\\]/g, '') + '")');
-  else style.removeProperty('--steam-hero-art');
-  if (mobile) style.setProperty('--steam-hero-art-mobile', 'url("' + mobile.replace(/["\\]/g, '') + '")');
-  else style.removeProperty('--steam-hero-art-mobile');
-  $('.steam-hero').setAttribute('aria-label', sale ? 'Arte de la oferta en curso de Steam: ' + sale.name : 'Banner de Steam, sin oferta estacional en curso');
+  const hero = $('.steam-hero');
+  const sale = runningSale(now);
+  if (sale) {
+    const desktop = safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile);
+    const mobile = safeSteamImage(sale.mobile);
+    if (desktop) style.setProperty('--steam-hero-art', heroCssUrl(desktop));
+    else style.removeProperty('--steam-hero-art');
+    if (mobile) style.setProperty('--steam-hero-art-mobile', heroCssUrl(mobile));
+    else style.removeProperty('--steam-hero-art-mobile');
+    hero.setAttribute('aria-label', 'Arte de la oferta en curso de Steam: ' + sale.name);
+    return;
+  }
+  resolveLibraryArt();
+  if (libraryArt) {
+    style.setProperty('--steam-hero-art', heroCssUrl(libraryArt.url));
+    style.removeProperty('--steam-hero-art-mobile');
+    hero.setAttribute('aria-label', 'Arte de tu biblioteca de Steam: ' + libraryArt.name);
+  } else {
+    style.removeProperty('--steam-hero-art');
+    style.removeProperty('--steam-hero-art-mobile');
+    hero.setAttribute('aria-label', 'Banner de Steam, sin arte disponible');
+  }
 }
 function updateSaleCountdown(now = new Date()) {
   const sales = (STEAM_EVENTS.events || []).filter(event => event.type === 'sale')

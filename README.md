@@ -93,7 +93,9 @@ no siempre la hora; en esos casos se usa como referencia las 10:00 del Pacífico
 y el sitio presenta la hora en la zona local del navegador. El contador solo sigue
 las ofertas estacionales; la lista también muestra los festivales.
 El encabezado usa el arte de la oferta estacional en curso, con variantes para
-escritorio y móvil. Fuera de una oferta muestra un degradado neutro. `steam_artwork.json`
+escritorio y móvil. Fuera de una oferta muestra el `library_hero` de tu juego con más
+horas (se prueba en orden hasta encontrar uno que cargue; es arte de Steam, no un
+archivo del repo). Si no carga ninguno, queda un degradado neutro. `steam_artwork.json`
 guarda el arte por oferta, según las fechas de `steam_events.json`, así que una
 oferta que falte en ese archivo no guarda su arte y genera un aviso. `update.py`
 lo refresca y `python3 steam_artwork.py` lo hace sin consultar las bibliotecas.
