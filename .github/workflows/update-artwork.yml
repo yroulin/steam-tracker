@@ -1,0 +1,91 @@
+name: Actualizar arte de ofertas Steam
+
+on:
+  schedule:
+    # Steam inicia sus ofertas a las 10:00 del Pacífico: 17:00 UTC en verano y
+    # 18:00 UTC en invierno. El resto del día lo cubre la actualización diaria.
+    - cron: "20 17-20 * * *"
+  workflow_dispatch:
+
+# Mismo grupo que update.yml: ambos publican en steam-data y en Pages.
+concurrency:
+  group: "steam-tracker"
+  cancel-in-progress: false
+
+jobs:
+  artwork:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write      # para guardar el arte en steam-data
+    outputs:
+      changed: ${{ steps.snapshot.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          ref: steam-data
+          path: _steam-data
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restaurar el último snapshot
+        run: |
+          cp _steam-data/steam_games.json steam_games.json
+          cp _steam-data/steam_artwork.json steam_artwork.json
+
+      - name: Consultar el arte en la tienda de Steam
+        run: python steam_artwork.py
+
+      - name: Guardar el arte en steam-data
+        id: snapshot
+        run: |
+          cp steam_artwork.json _steam-data/steam_artwork.json
+          cd _steam-data
+          if git diff --quiet -- steam_artwork.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add steam_artwork.json
+            git commit -m "Actualizar arte de ofertas Steam ($(date -u +%Y-%m-%d))"
+            git push origin steam-data
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Regenerar la web con el snapshot
+        if: steps.snapshot.outputs.changed == 'true'
+        run: python update.py --republish
+
+      - name: Preparar sitio para Pages
+        if: steps.snapshot.outputs.changed == 'true'
+        run: |
+          mkdir -p _site
+          cp steam_games.html _site/index.html
+          cp steam_games.md   _site/
+          cp steam_games.json _site/
+
+      - name: Subir artefacto de Pages
+        if: steps.snapshot.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: artwork
+    if: needs.artwork.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write         # publicar en Pages
+      id-token: write      # OIDC para el deploy de Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -82,9 +82,21 @@ def publish(data, out_dir):
         atomic_write(Path(out_dir) / name, content)
 
 
+def republish(out_dir):
+    """Rebuild every output from the saved snapshot, without credentials or requests."""
+    data = previous_snapshot(out_dir)
+    if data is None:
+        print("[!] No hay un snapshot válido de steam_games.json para regenerar.", file=sys.stderr)
+        return 1
+    publish(data, out_dir)
+    print(f"[ok] Salidas regeneradas desde el snapshot en {out_dir}")
+    return 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=BASE / "accounts.json")
+    parser.add_argument("--republish", action="store_true", help="Regenerar las salidas desde el último snapshot, sin consultar Steam")
     parser.add_argument("--out-dir", type=Path, default=BASE)
     parser.add_argument("--history", type=Path, help="Ruta del historial local de primeras detecciones")
     parser.add_argument("--mode", choices=["auto", "api", "xml"], default="auto")
@@ -102,6 +114,8 @@ def main(argv=None):
         parser.error("--sleep-ms debe ser positivo o cero")
     if args.price_cache_days < 0 or args.achievement_cache_days < 0:
         parser.error("los días de caché deben ser positivos o cero")
+    if args.republish:
+        return republish(args.out_dir)
     try:
         config = load_config(args.config)
         previous = previous_snapshot(args.out_dir)

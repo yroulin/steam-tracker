@@ -135,15 +135,22 @@ const safeSteamImage = value => {
       url.pathname.includes('/store_item_assets/steam/clusters/seasonalsales/') ? url.href : '';
   } catch { return ''; }
 };
-const saleArtwork = STEAM_EVENTS.artwork || {};
-const saleDesktop = safeSteamImage(saleArtwork.desktop);
-const saleMobile = safeSteamImage(saleArtwork.mobile);
-if (saleDesktop) document.documentElement.style.setProperty('--steam-hero-art', 'url("' + saleDesktop.replace(/["\\]/g, '') + '")');
-if (saleMobile) document.documentElement.style.setProperty('--steam-hero-art-mobile', 'url("' + saleMobile.replace(/["\\]/g, '') + '")');
+// Valid art only, oldest first. Art is saved during its sale, so the last entry is
+// the running sale or, between sales, the most recent one.
+const saleArt = (STEAM_EVENTS.sale_art || [])
+  .filter(sale => new Date(sale.start) <= new Date() && (safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile)))
+  .sort((a, b) => new Date(a.start) - new Date(b.start));
+const heroSale = saleArt[saleArt.length - 1];
+if (heroSale) {
+  const desktop = safeSteamImage(heroSale.desktop) || safeSteamImage(heroSale.mobile);
+  const mobile = safeSteamImage(heroSale.mobile);
+  document.documentElement.style.setProperty('--steam-hero-art', 'url("' + desktop.replace(/["\\]/g, '') + '")');
+  if (mobile) document.documentElement.style.setProperty('--steam-hero-art-mobile', 'url("' + mobile.replace(/["\\]/g, '') + '")');
+}
 </script>
 <header>
   <div class="steam-brand" aria-label="Steam"><img src="https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg" alt="Steam"></div>
-  <div class="steam-hero" role="img" aria-label="Arte de las ofertas estacionales actuales de Steam"></div>
+  <div class="steam-hero" role="img" aria-label="Arte de las ofertas estacionales de Steam"></div>
   <section class="library-summary" aria-label="Resumen de tu biblioteca">
       <h1>Biblioteca <span>Steam</span></h1>
       <div class="meta" id="meta"></div>
@@ -282,7 +289,7 @@ function eventCard(event, now) {
   const active = new Date(event.start) <= now && now < new Date(event.end);
   const sale = event.type === 'sale';
   const theme = eventArtTheme(event);
-  const imageUrl = safeEventImage(event.image || (sale && active ? saleArtwork.desktop : ''));
+  const imageUrl = safeEventImage(event.image || (sale && active ? (saleArt.find(item => item.name === event.name) || {}).desktop : ''));
   const image = imageUrl ? '<img class="event-art-image" src="' + esc(imageUrl) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">' : '';
   return '<article class="event-card ' + (sale ? 'sale ' : '') + (active ? 'active' : '') + '">' +
     '<div class="event-art event-art-' + theme + '" aria-hidden="true">' + EVENT_ART[theme] + image + '</div>' +
@@ -302,6 +309,11 @@ function renderSteamEvents(now = new Date()) {
   const remaining = events.slice(4);
   $('#allEventsDetails').hidden = remaining.length === 0;
   $('#allEvents').innerHTML = remaining.map(event => eventCard(event, now)).join('');
+}
+function updateHeroLabel(now = new Date()) {
+  if (!heroSale) return;
+  const running = new Date(heroSale.start) <= now && now < new Date(heroSale.end);
+  $('.steam-hero').setAttribute('aria-label', (running ? 'Arte de la oferta en curso de Steam: ' : 'Arte de la última oferta de Steam: ') + heroSale.name);
 }
 function updateSaleCountdown(now = new Date()) {
   const sales = (STEAM_EVENTS.events || []).filter(event => event.type === 'sale')
@@ -326,9 +338,10 @@ function updateSaleCountdown(now = new Date()) {
     '<a href="' + eventUrl + '" target="_blank" rel="noopener noreferrer">' + (active ? 'Ver ofertas en Steam' : 'Abrir la tienda Steam') + '</a>';
 }
 renderSteamEvents();
+updateHeroLabel();
 updateSaleCountdown();
 setInterval(() => updateSaleCountdown(), 1000);
-setInterval(() => renderSteamEvents(), 60000);
+setInterval(() => { renderSteamEvents(); updateHeroLabel(); }, 60000);
 const flagFor = alias => FLAG_BY_ALIAS[alias] || '';
 const flagImg = alias => {
   const cc = flagFor(alias);

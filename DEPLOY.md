@@ -37,6 +37,11 @@ Los archivos publicados incluyen SteamID, alias, juegos y horas. `accounts.json`
 nunca debe estar en el repositorio. Los secretos de Actions no son archivos
 versionados: conserva una copia privada del original para configurar otra PC.
 
+El workflow `update-artwork.yml` corre cada hora de 17:20 a 20:20 UTC, justo después
+de la hora en que Steam inicia sus ofertas. Solo consulta la portada de la tienda y
+no necesita secretos. Si el arte cambió, lo guarda en `steam-data` y vuelve a publicar
+Pages desde el último snapshot, así que un fallo de las bibliotecas no lo bloquea.
+
 El workflow `tests.yml` verifica por separado Windows, macOS y Linux sin secretos,
 incluidos los pull requests. La actualización también ejecuta las pruebas antes
 de consultar Steam.

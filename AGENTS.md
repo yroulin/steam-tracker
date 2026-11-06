@@ -12,6 +12,8 @@ propias + los juegos compartidos por **Steam Families**.
 - `steam_games.html` → web con filtros (para el usuario, no la leas entera).
 - `steam_events.json` → fechas de ofertas estacionales y festivales temáticos; fuente
   oficial enlazada dentro del archivo. Actualízalo cuando Steam anuncie fechas nuevas.
+- `steam_artwork.json` → arte del encabezado por oferta (`sales`); generado por
+  `steam_artwork.py`, la copia diaria está en `steam-data`. No lo edites a mano.
 - `accounts.json` → configuración de cuentas, API key y access token. **NUNCA expongas
   `api_key` ni `access_token`.**
 - `meta_cache.json`, `genres_cache.json` → cachés locales (no las edites a mano).
