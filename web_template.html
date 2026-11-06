@@ -8,7 +8,7 @@
 <link rel="icon" href="https://store.steampowered.com/favicon.ico" sizes="any">
 <title>Biblioteca Steam</title>
 <style>
-  :root{color-scheme:dark;--bg:#1b2838;--panel:#17212d;--panel-hi:#202f40;--line:#2a3f52;--text:#edf3f8;--muted:#a3b5c8;--blue:#66c0f4;--blue-deep:#2a475e;--green:#8ee1b1;--gold:#f4c46b;--violet:#c8a7ff}
+  :root{color-scheme:dark;--bg:#1b2838;--panel:#17212d;--panel-hi:#202f40;--line:#2a3f52;--text:#edf3f8;--muted:#a3b5c8;--blue:#66c0f4;--blue-deep:#2a475e;--green:#8ee1b1;--gold:#f4c46b;--violet:#c8a7ff;--steam-hero-art:linear-gradient(135deg,#1b2838 0%,#2a475e 55%,#66c0f4 100%)}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
   header,.wrap{width:min(1440px,100%);margin-inline:auto;padding-inline:clamp(16px,3vw,40px)}
@@ -135,17 +135,12 @@ const safeSteamImage = value => {
       url.pathname.includes('/store_item_assets/steam/clusters/seasonalsales/') ? url.href : '';
   } catch { return ''; }
 };
-// Valid art only, oldest first. Art is saved during its sale, so the last entry is
-// the running sale or, between sales, the most recent one.
+// Art saved for each sale with a valid Steam image. The banner only uses it during
+// that sale; otherwise the neutral gradient from the stylesheet stays.
 const saleArt = (STEAM_EVENTS.sale_art || [])
-  .filter(sale => new Date(sale.start) <= new Date() && (safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile)))
-  .sort((a, b) => new Date(a.start) - new Date(b.start));
-const heroSale = saleArt[saleArt.length - 1];
-if (heroSale) {
-  const desktop = safeSteamImage(heroSale.desktop) || safeSteamImage(heroSale.mobile);
-  const mobile = safeSteamImage(heroSale.mobile);
-  document.documentElement.style.setProperty('--steam-hero-art', 'url("' + desktop.replace(/["\\]/g, '') + '")');
-  if (mobile) document.documentElement.style.setProperty('--steam-hero-art-mobile', 'url("' + mobile.replace(/["\\]/g, '') + '")');
+  .filter(sale => safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile));
+function runningSale(now = new Date()) {
+  return saleArt.find(sale => new Date(sale.start) <= now && now < new Date(sale.end));
 }
 </script>
 <header>
@@ -310,10 +305,16 @@ function renderSteamEvents(now = new Date()) {
   $('#allEventsDetails').hidden = remaining.length === 0;
   $('#allEvents').innerHTML = remaining.map(event => eventCard(event, now)).join('');
 }
-function updateHeroLabel(now = new Date()) {
-  if (!heroSale) return;
-  const running = new Date(heroSale.start) <= now && now < new Date(heroSale.end);
-  $('.steam-hero').setAttribute('aria-label', (running ? 'Arte de la oferta en curso de Steam: ' : 'Arte de la última oferta de Steam: ') + heroSale.name);
+function applyHero(now = new Date()) {
+  const sale = runningSale(now);
+  const style = document.documentElement.style;
+  const desktop = sale && (safeSteamImage(sale.desktop) || safeSteamImage(sale.mobile));
+  const mobile = sale && safeSteamImage(sale.mobile);
+  if (desktop) style.setProperty('--steam-hero-art', 'url("' + desktop.replace(/["\\]/g, '') + '")');
+  else style.removeProperty('--steam-hero-art');
+  if (mobile) style.setProperty('--steam-hero-art-mobile', 'url("' + mobile.replace(/["\\]/g, '') + '")');
+  else style.removeProperty('--steam-hero-art-mobile');
+  $('.steam-hero').setAttribute('aria-label', sale ? 'Arte de la oferta en curso de Steam: ' + sale.name : 'Banner de Steam, sin oferta estacional en curso');
 }
 function updateSaleCountdown(now = new Date()) {
   const sales = (STEAM_EVENTS.events || []).filter(event => event.type === 'sale')
@@ -338,10 +339,10 @@ function updateSaleCountdown(now = new Date()) {
     '<a href="' + eventUrl + '" target="_blank" rel="noopener noreferrer">' + (active ? 'Ver ofertas en Steam' : 'Abrir la tienda Steam') + '</a>';
 }
 renderSteamEvents();
-updateHeroLabel();
+applyHero();
 updateSaleCountdown();
 setInterval(() => updateSaleCountdown(), 1000);
-setInterval(() => { renderSteamEvents(); updateHeroLabel(); }, 60000);
+setInterval(() => { renderSteamEvents(); applyHero(); }, 60000);
 const flagFor = alias => FLAG_BY_ALIAS[alias] || '';
 const flagImg = alias => {
   const cc = flagFor(alias);
