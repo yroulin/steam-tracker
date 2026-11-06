@@ -43,6 +43,26 @@ def record_first_seen(history, appids, date):
     return updated
 
 
+def seed_history(history, games):
+    """Recover known dates from a published snapshot, keeping the earliest one.
+
+    The history file lives in the Actions cache, which can be evicted. The snapshot is
+    restored on every run, so its first_seen values are the safety net.
+    """
+    updated = dict(history)
+    for game in games or ():
+        if not isinstance(game, dict):
+            continue
+        appid = str(game.get("appid", ""))
+        date = game.get("first_seen")
+        if not appid.isdecimal() or not _valid_date(date):
+            continue
+        previous = updated.get(appid)
+        if previous is None or date < previous:
+            updated[appid] = date
+    return updated
+
+
 def render_history(history):
     """Serialize history deterministically for atomic writing."""
     value = {

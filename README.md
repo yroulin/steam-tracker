@@ -133,8 +133,11 @@ conviene usar `update.py`.
 - `first_seen`: primera fecha UTC en que este tracker observó el juego. En la
   primera actualización que crea el historial, los juegos ya existentes reciben
   ese día; no es una fecha de compra ni se puede reconstruir retroactivamente.
-  En GitHub Actions se conserva mediante caché y solo el campo `first_seen` de
-  cada juego se publica con la biblioteca.
+  En GitHub Actions se conserva en `steam_history.json` (caché y copia en
+  `steam-data`); si la caché se pierde, se recupera del snapshot publicado.
+- `achievements_complete`: falso cuando Steam no respondió para alguna cuenta. En ese
+  caso se conservan los últimos logros conocidos de esa cuenta y el juego no cuenta
+  como completado al 100%.
 - `last_played_iso`: última actividad de tus cuentas, o la de Families cuando no
   hay desglose propio.
 - `price_usd`: precio de tienda de EE. UU. al consultar, no importe pagado.

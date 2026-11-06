@@ -67,6 +67,9 @@ jobs:
         run: |
           cp _steam-data/steam_games.json steam_games.json
           cp _steam-data/steam_artwork.json steam_artwork.json
+          if [ -f _steam-data/steam_history.json ]; then
+            cp _steam-data/steam_history.json steam_history.json
+          fi
 
       - name: Actualizar cuentas, familia, precios, logros y web
         run: python update.py --sleep-ms 250 --price-cache-days 7 --achievement-cache-days 7
@@ -86,10 +89,16 @@ jobs:
         run: |
           cp steam_games.json _steam-data/steam_games.json
           cp steam_artwork.json _steam-data/steam_artwork.json
+          if [ -f steam_history.json ]; then
+            cp steam_history.json _steam-data/steam_history.json
+          fi
           cd _steam-data
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add steam_games.json steam_artwork.json
+          if [ -f steam_history.json ]; then
+            git add -f steam_history.json
+          fi
           if git diff --staged --quiet; then
             echo "El snapshot no tuvo cambios."
           else

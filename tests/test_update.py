@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import fetch_steam
+from steam_common import SteamError
 
 
 CONFIG = {"api_key": "PRIVATE_KEY", "accounts": [
@@ -111,6 +112,7 @@ class MigrationTests(unittest.TestCase):
             with patch("fetch_steam.owned_via_api", return_value={"10": {"name": "Game", "hours": 1, "last_played": 0}}), \
                  patch("fetch_steam.profile_name", return_value=""), \
                  patch("steam_family.http_json", side_effect=fake_json), \
+                 patch("update.refresh_sale_artwork", return_value=False), \
                  contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(update.main(["--config", str(cfg), "--out-dir", temp, "--skip-meta"]), 0)
             data = json.loads((root / "steam_games.json").read_text())
@@ -121,6 +123,67 @@ class MigrationTests(unittest.TestCase):
                 self.assertIn("Shared", text)
                 self.assertNotIn("PRIVATE_", text)
             self.assertNotIn("/*__STEAM_DATA__*/", (root / "steam_games.html").read_text())
+
+    def test_first_seen_survives_a_missing_history_cache(self):
+        import update
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cfg = root / "accounts.json"
+            cfg.write_text(json.dumps(CONFIG))
+            (root / "steam_games.json").write_text(json.dumps({
+                "generated": "2020-01-01T00:00:00Z",
+                "games": [{"appid": "10", "name": "Game", "first_seen": "2020-01-01"}],
+                "family_members": [],
+            }))
+            self.assertFalse((root / "steam_history.json").exists())
+            def fake_json(url, params=None):
+                if "GetSharedLibraryApps" in url:
+                    return {"response": {"apps": []}}
+                return {"response": {"players": []}}
+            with patch("fetch_steam.owned_via_api", return_value={"10": {"name": "Game", "hours": 1, "last_played": 0}}), \
+                 patch("fetch_steam.profile_name", return_value=""), \
+                 patch("steam_family.http_json", side_effect=fake_json), \
+                 patch("update.refresh_sale_artwork", return_value=False), \
+                 contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(update.main(["--config", str(cfg), "--out-dir", temp, "--skip-meta"]), 0)
+            data = json.loads((root / "steam_games.json").read_text())
+            game = next(g for g in data["games"] if g["appid"] == "10")
+            self.assertEqual(game["first_seen"], "2020-01-01")
+            history = json.loads((root / "steam_history.json").read_text())
+            self.assertEqual(history["first_seen"]["10"], "2020-01-01")
+
+    def test_history_seeding_keeps_the_earliest_date(self):
+        from steam_history import seed_history
+        seeded = seed_history({}, [{"appid": "10", "first_seen": "2020-05-01"},
+                                    {"appid": "x", "first_seen": "2020-01-01"}])
+        self.assertEqual(seeded, {"10": "2020-05-01"})
+        self.assertEqual(seed_history(seeded, [{"appid": "10", "first_seen": "2019-01-01"}]),
+                         {"10": "2019-01-01"})
+
+    def test_achievement_failure_keeps_last_values_and_flags_incomplete(self):
+        from steam_meta import enrich_metadata
+        game = library()[0]
+        game["accounts"] = {"main": 2.5, "alt": 1.0}
+        game["owned_count"] = 2
+        alt_id = str(CONFIG["accounts"][1]["steamid"])
+        cache = {"10": {"achievements_by_steamid": {
+            alt_id: {"got": 4, "total": 4, "fetched_at": 0},
+        }}}
+        def fake_json(url, params=None):
+            if "appdetails" in url:
+                return {"10": {"success": True, "data": {"is_free": True}}}
+            if params["steamid"] == alt_id:
+                raise SteamError("sin respuesta")
+            return {"playerstats": {"success": True, "achievements": [{"achieved": 1}, {"achieved": 1}]}}
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "cache.json"
+            path.write_text(json.dumps(cache))
+            with patch("steam_meta.http_json", side_effect=fake_json), \
+                 contextlib.redirect_stdout(io.StringIO()):
+                enrich_metadata([game], CONFIG, path, sleep_ms=0)
+        self.assertEqual(game["achieved_by"], {"alt": {"got": 4, "total": 4}, "main": {"got": 2, "total": 2}})
+        self.assertEqual((game["achievements_got"], game["achievements_total"]), (6, 6))
+        self.assertFalse(game["achievements_complete"])
 
     def test_metadata_prices_achievements_and_free_games(self):
         from steam_meta import enrich_metadata
@@ -135,6 +198,7 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(game["price_usd"], 10)
         self.assertEqual(game["cost_per_hour"], 4)
         self.assertEqual(game["achievements_pct"], 50)
+        self.assertTrue(game["achievements_complete"])
         self.assertEqual(game["genres"], ["Action"])
 
     def test_metadata_cache_reuses_prices_but_refreshes_achievements(self):

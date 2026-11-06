@@ -55,6 +55,7 @@ def enrich_metadata(games, config, cache_path, *, sleep_ms=250, refresh=False,
             game["genres"] = entry.get("genres", [])
             game["released"] = entry.get("released", "")
         achieved = {}
+        incomplete = False
         if key and not no_achievements:
             achievement_cache = entry.get("achievements_by_steamid", {})
             if not isinstance(achievement_cache, dict):
@@ -74,15 +75,19 @@ def enrich_metadata(games, config, cache_path, *, sleep_ms=250, refresh=False,
                         "key": key, "steamid": eligible[alias]["steamid"], "appid": appid, "l": "spanish",
                     }).get("playerstats", {})
                     if not stats.get("success"):
-                        warnings["achievements"] += 1
-                        continue
+                        raise SteamError("Logros no disponibles.")
                     achievements = stats.get("achievements", [])
                     got = sum(a.get("achieved") == 1 for a in achievements)
                     achievement_cache[steamid] = {"got": got, "total": len(achievements), "fetched_at": time.time()}
                     if achievements:
                         achieved[alias] = {"got": got, "total": len(achievements)}
                 except SteamError:
+                    # Keep the last known numbers so a failed refresh cannot shrink the aggregate
+                    # and make a game look completed.
                     warnings["achievements"] += 1
+                    incomplete = True
+                    if isinstance(cached, dict) and cached.get("total", 0) > 0:
+                        achieved[alias] = {"got": cached.get("got", 0), "total": cached["total"]}
                 finally:
                     time.sleep(min(sleep_ms, 150) / 1000)
             entry["achievements_by_steamid"] = achievement_cache
@@ -90,7 +95,9 @@ def enrich_metadata(games, config, cache_path, *, sleep_ms=250, refresh=False,
         got = sum(a["got"] for a in achieved.values())
         total = sum(a["total"] for a in achieved.values())
         game.update(achieved_by=achieved, achievements_got=got,
-                    achievements_total=total, achievements_pct=round(100 * got / total) if total else None)
+                    achievements_total=total,
+                    achievements_pct=round(100 * got / total) if total else None,
+                    achievements_complete=not incomplete)
         if index % 50 == 0:
             print(f"[i] Metadatos: {index}/{len(games)}")
     atomic_write(cache_path, json.dumps(cache, ensure_ascii=False, indent=2))

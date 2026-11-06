@@ -58,7 +58,9 @@ propias + los juegos compartidos por **Steam Families**.
       "achieved_by": { "y.roulin.tk": { "got": 30, "total": 42 } },
       "achievements_got": 30,
       "achievements_total": 42,
-      "achievements_pct": 71           // 0-100; null si no hay logros
+      "achievements_pct": 71,          // 0-100; null si no hay logros
+      "achievements_complete": true    // false si Steam no respondió para alguna cuenta
+                                       // (se conservan los últimos datos conocidos)
     }
   ]
 }
@@ -91,7 +93,9 @@ propias + los juegos compartidos por **Steam Families**.
   ni corregirlos a mano; esperar a la siguiente consulta real con `update.py`.
 - El precio es **actual** (hoy), no lo que se pagó. `cost_per_hour` es una estimación.
 - `first_seen` es la primera fecha UTC en que el tracker vio el juego. El historial
-  fuente está en `steam_history.json` (local/cache de Actions); no inferir compras.
+  fuente está en `steam_history.json` (local, caché de Actions y copia en
+  `steam-data`); si la caché se pierde, se recupera del snapshot publicado.
+  No inferir compras.
 - No modifiques `steam_games.json` a mano; se regenera con los comando `python3 update.py`.
 
 ## Desarrollo

@@ -12,7 +12,7 @@ from fetch_steam import fetch_owned, render_md
 from steam_common import SteamError, atomic_write, load_config, without_secrets
 from steam_family import fetch_family, merge_family
 from steam_meta import enrich_metadata
-from steam_history import load_history, record_first_seen, render_history
+from steam_history import load_history, record_first_seen, render_history, seed_history
 from steam_artwork import refresh_sale_artwork
 
 BASE = Path(__file__).resolve().parent
@@ -166,8 +166,9 @@ def main(argv=None):
                 else:
                     print("[!] No hay token ni una copia previa de Steam Families; se publicarán solo cuentas propias.")
         history_path = args.history or args.out_dir / "steam_history.json"
+        history = seed_history(load_history(history_path), (previous or {}).get("games", []))
         history = record_first_seen(
-            load_history(history_path),
+            history,
             (game["appid"] for game in data["games"]),
             data["generated"][:10],
         )

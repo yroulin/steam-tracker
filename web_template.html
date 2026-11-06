@@ -206,7 +206,7 @@ function runningSale(now = new Date()) {
         <th scope="col" data-sort="name"><button class="sort-button" type="button">Juego</button></th>
         <th scope="col">Cuentas</th>
         <th scope="col" class="num" data-sort="hours" title="Horas de tus cuentas; en juegos compartidos, horas informadas por Steam Families sin desglose personal"><button class="sort-button" type="button">Horas</button></th>
-        <th scope="col" class="num" data-sort="price"><button class="sort-button" type="button">Precio</button></th>
+        <th scope="col" class="num" data-sort="price" title="Precio actual en la tienda de EE. UU., no lo que pagaste"><button class="sort-button" type="button">Precio</button></th>
         <th scope="col" class="num" data-sort="ach" title="Logros conseguidos / totales"><button class="sort-button" type="button">Logros</button></th>
         <th scope="col" class="num" data-sort="first"><button class="sort-button" type="button">Visto por primera vez</button></th>
         <th scope="col" class="num" data-sort="acquired" title="Steam Families solo informa adquisición para juegos compartidos"><button class="sort-button" type="button">Adquirido · familia</button></th>
@@ -250,6 +250,7 @@ const norm = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toL
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtH = n => { const v = Math.round((Number(n) || 0) * 10) / 10; return Number.isInteger(v) ? String(v) : v.toFixed(1); };
+const fmtUsd = n => '$' + (Number(n) || 0).toFixed(2);
 const steamEventDate = value => new Intl.DateTimeFormat(navigator.language || 'es', {
   day:'numeric', month:'short', hour:'numeric', minute:'2-digit', timeZoneName:'short'
 }).format(new Date(value));
@@ -330,6 +331,19 @@ function applyHero(now = new Date()) {
   else style.removeProperty('--steam-hero-art-mobile');
   hero.setAttribute('aria-label', 'Arte de la oferta en curso de Steam: ' + sale.name);
 }
+const pad2 = n => String(n).padStart(2, '0');
+function countdownText(target, now) {
+  const seconds = Math.max(0, Math.floor((target - now) / 1000));
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainder = seconds % 60;
+  return days ? days + ' d · ' + pad2(hours) + ' h · ' + pad2(minutes) + ' min'
+    : pad2(hours) + ' h · ' + pad2(minutes) + ' min · ' + pad2(remainder) + ' s';
+}
+// Rebuild the panel only when the sale or phase changes; otherwise update the text so
+// keyboard focus on the Steam link survives the one-second tick.
+let countdownKey = '';
 function updateSaleCountdown(now = new Date()) {
   const sales = (STEAM_EVENTS.events || []).filter(event => event.type === 'sale')
     .sort((a, b) => new Date(a.start) - new Date(b.start));
@@ -337,20 +351,22 @@ function updateSaleCountdown(now = new Date()) {
   const next = active || sales.find(event => new Date(event.start) > now);
   const panel = $('#saleCountdown');
   if (!next) {
-    panel.innerHTML = '<span class="eyebrow">Ofertas estacionales</span><h2>Sin próxima fecha anunciada</h2><p>Steam todavía no publica la siguiente fecha.</p><a href="' + eventUrl + '" target="_blank" rel="noopener noreferrer">Ver ofertas en Steam</a>';
+    if (countdownKey !== 'none') {
+      countdownKey = 'none';
+      panel.innerHTML = '<span class="eyebrow">Ofertas estacionales</span><h2>Sin próxima fecha anunciada</h2><p>Steam todavía no publica la siguiente fecha.</p><a href="' + eventUrl + '" target="_blank" rel="noopener noreferrer">Ver ofertas en Steam</a>';
+    }
     return;
   }
   const target = new Date(active ? next.end : next.start);
-  const seconds = Math.max(0, Math.floor((target - now) / 1000));
-  const days = Math.floor(seconds / 86400);
-  const hours = Math.floor((seconds % 86400) / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainder = seconds % 60;
-  const countdown = days ? days + ' d · ' + String(hours).padStart(2, '0') + ' h · ' + String(minutes).padStart(2, '0') + ' min' :
-    String(hours).padStart(2, '0') + ' h · ' + String(minutes).padStart(2, '0') + ' min · ' + String(remainder).padStart(2, '0') + ' s';
-  panel.innerHTML = '<span class="eyebrow">' + (active ? 'La oferta termina en' : 'Próxima oferta estacional · empieza en') + '</span>' +
-    '<h2>' + esc(next.name) + '</h2><p>' + countdown + '</p><p class="muted">' + esc(steamEventDate(target)) + '</p>' +
-    '<a href="' + eventUrl + '" target="_blank" rel="noopener noreferrer">' + (active ? 'Ver ofertas en Steam' : 'Abrir la tienda Steam') + '</a>';
+  const key = (active ? 'run:' : 'next:') + next.name + '|' + target.toISOString();
+  if (key !== countdownKey) {
+    countdownKey = key;
+    panel.innerHTML = '<span class="eyebrow">' + (active ? 'La oferta termina en' : 'Próxima oferta estacional · empieza en') + '</span>' +
+      '<h2>' + esc(next.name) + '</h2><p class="countdown-value"></p><p class="muted">' + esc(steamEventDate(target)) + '</p>' +
+      '<a href="' + eventUrl + '" target="_blank" rel="noopener noreferrer">' + (active ? 'Ver ofertas en Steam' : 'Abrir la tienda Steam') + '</a>';
+  }
+  const value = panel.querySelector('.countdown-value');
+  if (value) value.textContent = countdownText(target, now);
 }
 renderSteamEvents();
 applyHero();
@@ -465,7 +481,7 @@ function current() {
     if (state.family && !hasFamilyRelationship(g)) return false;
     if (state.wasted && !((g.price_usd > 0) && g.total_hours === 0)) return false;
     if (state.pending && !(g.achievements_total > 0 && g.achievements_got < g.achievements_total)) return false;
-    if (state.done && !(g.achievements_total > 0 && g.achievements_got === g.achievements_total)) return false;
+    if (state.done && !(g.achievements_complete !== false && g.achievements_total > 0 && g.achievements_got === g.achievements_total)) return false;
     if (state.minh && (g.total_hours || 0) < state.minh) return false;
     if (qn && norm(g.name).indexOf(qn) === -1) return false;
     return true;
@@ -523,9 +539,11 @@ function render() {
       : '<img class="cover" loading="lazy" alt="" src="' + header + '" onerror="this.replaceWith(document.createRange().createContextualFragment(this.dataset.ph))" data-ph="' + ph.replace(/"/g, '&quot;') + '">';
 
     const priceTxt = g.price_usd == null ? '<span class="muted">-</span>'
-      : (g.is_free ? '<span class="muted">Gratis</span>' : '$' + fmtH(g.price_usd));
+      : (g.is_free ? '<span class="muted">Gratis</span>' : fmtUsd(g.price_usd));
+    const achIncomplete = g.achievements_complete === false;
     const achTxt = (g.achievements_total > 0)
-      ? (g.achievements_got + '/' + g.achievements_total + ' <span class="pct">' + (g.achievements_pct || 0) + '%</span>')
+      ? (g.achievements_got + '/' + g.achievements_total + ' <span class="pct">' + (g.achievements_pct || 0) + '%</span>' +
+        (achIncomplete ? ' <span class="pct" title="Steam no respondió para todas las cuentas; se usan los últimos datos disponibles">parcial</span>' : ''))
       : '<span class="muted">-</span>';
 
     const gameLink = '<a class="game" target="_blank" rel="noopener" href="https://store.steampowered.com/app/' + id + '/">' + esc(g.name) + '</a>';
