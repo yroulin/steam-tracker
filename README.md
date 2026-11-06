@@ -105,9 +105,11 @@ mensaje claro si el snapshot no cumple el contrato que consume la página.
 
 La web guarda los filtros, la búsqueda y el orden en la URL, así que un enlace
 compartido reproduce la misma vista y «Limpiar filtros» vuelve al estado inicial.
-Al elegir una de tus cuentas, las horas, el backlog y los logros se calculan solo
-con esa cuenta; el selector de familia muestra los juegos compartidos por ese
-miembro. En móvil, el mismo selector de orden y los filtros aplican a las tarjetas.
+La lista abre ordenada por «Vistos recientemente», es decir, los juegos que el
+tracker detectó al final aparecen primero. Al elegir una de tus cuentas, las horas,
+el backlog y los logros se calculan solo con esa cuenta; el selector de familia
+muestra los juegos compartidos por ese miembro. En móvil, el mismo selector de orden
+y los filtros aplican a las tarjetas.
 
 El calendario visual de festivales temáticos y ofertas estacionales usa las fechas
 de `steam_events.json`, tomadas de los anuncios de Steamworks enlazados en ese

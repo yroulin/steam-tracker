@@ -172,6 +172,8 @@ function runningSale(now = new Date()) {
       <input type="search" id="q" placeholder="Buscar juego..." aria-label="Buscar en la biblioteca">
       <select id="account" aria-label="Filtrar por cuenta" title="Filtra los juegos que posee la cuenta y muestra sus horas y logros"></select>
       <select id="sort" aria-label="Ordenar juegos">
+      <option value="first-desc">Vistos recientemente</option>
+      <option value="first-asc">Vistos hace más tiempo</option>
       <option value="hours-desc">Horas (mayor)</option>
       <option value="hours-asc">Horas (menor)</option>
       <option value="price-desc">Precio (mayor)</option>
@@ -184,8 +186,6 @@ function runningSale(now = new Date()) {
       <option value="name-desc">Nombre Z-A</option>
       <option value="last-desc">Ultima vez (reciente)</option>
       <option value="last-asc">Ultima vez (antiguo)</option>
-      <option value="first-desc">Vistos recientemente</option>
-      <option value="first-asc">Vistos hace más tiempo</option>
       <option value="acquired-desc">Adquirido · familia (reciente)</option>
       <option value="acquired-asc">Adquirido · familia (antiguo)</option>
       </select>
@@ -393,7 +393,7 @@ const flagCC = cc => cc
   ? '<img class="flag" alt="' + esc(cc) + '" loading="lazy" src="https://flagcdn.com/' + esc(String(cc).toLowerCase()) + '.svg">'
   : '';
 
-const DEFAULT_STATE = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false,
+const DEFAULT_STATE = { q: '', account: '', sort: 'first-desc', backlog: false, multi: false,
   family: false, wasted: false, pending: false, done: false, minh: 0 };
 const state = { ...DEFAULT_STATE };
 const SORTS = new Set(['hours-desc', 'hours-asc', 'price-desc', 'price-asc', 'cost-asc', 'cost-desc',
