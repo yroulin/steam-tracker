@@ -8,6 +8,12 @@ genres_cache.json
 meta_cache.json
 steam_history.json
 
+# Salidas generadas: la copia publicada vive en la rama steam-data y en Pages.
+steam_games.json
+steam_games.md
+steam_games.html
+steam_artwork.json
+
 # Python y salidas temporales
 __pycache__/
 *.py[cod]

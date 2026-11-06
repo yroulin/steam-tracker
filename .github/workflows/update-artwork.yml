@@ -7,7 +7,7 @@ on:
     - cron: "20 17-20 * * *"
   workflow_dispatch:
 
-# Mismo grupo que update.yml: ambos publican en steam-data y en Pages.
+# Mismo grupo que update.yml y build.yml: los tres publican en steam-data y en Pages.
 concurrency:
   group: "steam-tracker"
   cancel-in-progress: false
@@ -36,10 +36,15 @@ jobs:
       - name: Restaurar el último snapshot
         run: |
           cp _steam-data/steam_games.json steam_games.json
-          cp _steam-data/steam_artwork.json steam_artwork.json
+          if [ -s _steam-data/steam_artwork.json ]; then
+            cp _steam-data/steam_artwork.json steam_artwork.json
+          fi
 
       - name: Consultar el arte en la tienda de Steam
         run: python steam_artwork.py
+
+      - name: Regenerar la web con el arte nuevo
+        run: python update.py --republish
 
       - name: Guardar el arte en steam-data
         id: snapshot
@@ -57,12 +62,10 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Regenerar la web con el snapshot
-        if: steps.snapshot.outputs.changed == 'true'
-        run: python update.py --republish
-
+      # Un workflow_dispatch siempre publica, aunque el manifiesto no cambie: sirve
+      # para forzar el redespliegue de Pages tras un cambio de código o de eventos.
       - name: Preparar sitio para Pages
-        if: steps.snapshot.outputs.changed == 'true'
+        if: steps.snapshot.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p _site
           cp steam_games.html _site/index.html
@@ -70,14 +73,14 @@ jobs:
           cp steam_games.json _site/
 
       - name: Subir artefacto de Pages
-        if: steps.snapshot.outputs.changed == 'true'
+        if: steps.snapshot.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
   deploy:
     needs: artwork
-    if: needs.artwork.outputs.changed == 'true'
+    if: needs.artwork.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       pages: write         # publicar en Pages

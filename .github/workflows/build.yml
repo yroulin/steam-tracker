@@ -1,0 +1,75 @@
+name: Publicar web desde el snapshot
+
+# Publica los cambios de main (plantilla, estilos, eventos) sin consultar Steam:
+# reutiliza el último snapshot de la rama steam-data. Así un cambio de código no
+# depende del secreto STEAM_ACCOUNTS_JSON ni gasta consultas a la API.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Mismo grupo que update.yml y update-artwork.yml: todas escriben en Pages y leen
+# steam-data, así que nunca deben solaparse.
+concurrency:
+  group: "steam-tracker"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          ref: steam-data
+          path: _steam-data
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restaurar el snapshot publicado
+        run: |
+          if [ ! -s _steam-data/steam_games.json ]; then
+            echo "::error::La rama steam-data no tiene steam_games.json. Ejecuta primero «Actualizar biblioteca Steam»."
+            exit 1
+          fi
+          cp _steam-data/steam_games.json steam_games.json
+          if [ -s _steam-data/steam_artwork.json ]; then
+            cp _steam-data/steam_artwork.json steam_artwork.json
+          fi
+
+      - name: Regenerar la web sin consultar Steam
+        run: python update.py --republish
+
+      - name: Preparar sitio para Pages
+        run: |
+          mkdir -p _site
+          cp steam_games.html _site/index.html
+          cp steam_games.md   _site/
+          cp steam_games.json _site/
+
+      - name: Subir artefacto de Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write         # publicar en Pages
+      id-token: write      # OIDC para el deploy de Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

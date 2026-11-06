@@ -39,7 +39,8 @@ py -3 update.py
 El comando consulta cuentas, agrega familia, obtiene precios USD y logros, y
 regenera `steam_games.json`, `steam_games.md` y `steam_games.html` con los mismos
 datos. También conserva localmente la primera fecha en que el tracker vio cada
-juego en `steam_history.json`; este archivo no se publica. No requiere PowerShell.
+juego en `steam_history.json`; ese historial no se publica en la web, solo se
+guarda en caché y en `steam-data` para no perder las fechas. No requiere PowerShell.
 La primera consulta de precios puede tardar varios minutos; la caché de tienda
 dura 24 horas. Los logros se consultan en cada ejecución.
 
@@ -57,6 +58,7 @@ python3 update.py --achievement-cache-days 7  # reutilizar logros durante 7 día
 python3 update.py --config /ruta/accounts.json --out-dir /ruta/salida
 python3 update.py --history /ruta/steam_history.json
 python3 update.py --family-account main
+python3 update.py --republish          # regenera las salidas desde el snapshot, sin red
 ```
 
 Por defecto se usa la primera cuenta con token para consultar una familia. Para
@@ -86,6 +88,27 @@ sin secretos ni consultas a Steam:
 python3 build_web.py
 ```
 
+Los archivos generados (`steam_games.json`, `steam_games.md`, `steam_games.html`
+y `steam_artwork.json`) no se versionan en `main`: la copia publicada vive en la
+rama `steam-data` y en Pages. Para reconstruir la web desde el último snapshot
+publicado, sin consultar Steam ni usar credenciales:
+
+```sh
+git fetch origin steam-data
+git show origin/steam-data:steam_games.json > steam_games.json
+git show origin/steam-data:steam_artwork.json > steam_artwork.json
+python3 update.py --republish
+```
+
+`--republish` reescribe los tres artefactos desde `steam_games.json` y falla con un
+mensaje claro si el snapshot no cumple el contrato que consume la página.
+
+La web guarda los filtros, la búsqueda y el orden en la URL, así que un enlace
+compartido reproduce la misma vista y «Limpiar filtros» vuelve al estado inicial.
+Al elegir una de tus cuentas, las horas, el backlog y los logros se calculan solo
+con esa cuenta; el selector de familia muestra los juegos compartidos por ese
+miembro. En móvil, el mismo selector de orden y los filtros aplican a las tarjetas.
+
 El calendario visual de festivales temáticos y ofertas estacionales usa las fechas
 de `steam_events.json`, tomadas de los anuncios de Steamworks enlazados en ese
 archivo. Actualízalo cuando Valve publique nuevas fechas. Steam anuncia fechas, pero
@@ -107,10 +130,9 @@ la clasificación nueva de propios y compartidos requiere ejecutar `update.py`.
 Las carátulas y banderas requieren internet, aunque los filtros funcionan sin conexión.
 
 GitHub Actions publica la versión diaria en GitHub Pages y guarda el snapshot más
-reciente (`steam_games.json` y `steam_artwork.json`) en la rama `steam-data`. No
-actualiza los archivos generados en `main`, así que la copia local versionada puede
-quedar atrás. Para consultar datos actuales, usa la web publicada o la rama
-`steam-data`.
+reciente (`steam_games.json`, `steam_artwork.json` y `steam_history.json`) en la
+rama `steam-data`. Los archivos generados no se versionan en `main`. Para consultar
+datos actuales, usa la web publicada o la rama `steam-data`.
 
 `fetch_steam.py` sigue disponible para consultar únicamente las cuentas propias.
 También regenera las tres salidas, pero no agrega familia ni metadatos; normalmente

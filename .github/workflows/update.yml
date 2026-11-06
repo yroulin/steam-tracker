@@ -5,16 +5,9 @@ on:
     # Todos los dias a las 15:00 UTC (~09:00 Costa Rica). Ajusta a tu gusto.
     - cron: "0 15 * * *"
   workflow_dispatch:   # permite ejecutarlo a mano desde la pestana Actions
-  push:
-    branches: [main]
-    # No ejecutar por cambios locales a archivos generados.
-    paths-ignore:
-      - 'steam_games.json'
-      - 'steam_games.md'
-      - 'steam_games.html'
-      - 'genres_cache.json'
-      - 'steam_artwork.json'
 
+# Mismo grupo que build.yml y update-artwork.yml: los tres publican en Pages y
+# escriben o leen steam-data, así que nunca deben solaparse.
 concurrency:
   group: "steam-tracker"
   cancel-in-progress: false
@@ -66,7 +59,9 @@ jobs:
       - name: Restaurar el último snapshot
         run: |
           cp _steam-data/steam_games.json steam_games.json
-          cp _steam-data/steam_artwork.json steam_artwork.json
+          if [ -s _steam-data/steam_artwork.json ]; then
+            cp _steam-data/steam_artwork.json steam_artwork.json
+          fi
           if [ -f _steam-data/steam_history.json ]; then
             cp _steam-data/steam_history.json steam_history.json
           fi

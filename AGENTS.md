@@ -5,15 +5,18 @@ propias + los juegos compartidos por **Steam Families**.
 
 ## Archivos
 
-- `steam_games.json` → JSON local generado. La copia en `main` puede quedar
-  desactualizada: para consultas exactas usa el JSON publicado en Pages o el de la
-  rama `steam-data` si está disponible. No infieras datos desde Markdown si tienes JSON.
-- `steam_games.md` → resumen legible (frontmatter + tabla). Útil para mostrar al usuario.
-- `steam_games.html` → web con filtros (para el usuario, no la leas entera).
+- `steam_games.json` → JSON generado. **No se versiona en `main`**: la copia diaria
+  está en la rama `steam-data` y en Pages. Para consultas exactas usa el JSON
+  publicado o `git show origin/steam-data:steam_games.json`; si no existe localmente,
+  no lo inventes ni lo infieras desde Markdown.
+- `steam_games.md` → resumen legible (frontmatter + tabla), también generado.
+- `steam_games.html` → web con filtros, también generada (para el usuario, no la leas entera).
 - `steam_events.json` → fechas de ofertas estacionales y festivales temáticos; fuente
   oficial enlazada dentro del archivo. Actualízalo cuando Steam anuncie fechas nuevas.
+  Sí se versiona: es fuente, no salida.
 - `steam_artwork.json` → arte del encabezado por oferta (`sales`); generado por
-  `steam_artwork.py`, la copia diaria está en `steam-data`. No lo edites a mano.
+  `steam_artwork.py`. No se versiona en `main`; la copia diaria está en `steam-data`.
+  No lo edites a mano.
 - `accounts.json` → configuración de cuentas, API key y access token. **NUNCA expongas
   `api_key` ni `access_token`.**
 - `meta_cache.json`, `genres_cache.json` → cachés locales (no las edites a mano).
@@ -97,11 +100,16 @@ propias + los juegos compartidos por **Steam Families**.
   `steam-data`); si la caché se pierde, se recupera del snapshot publicado.
   No inferir compras.
 - No modifiques `steam_games.json` a mano; se regenera con los comando `python3 update.py`.
+  Si no hay copia local, recupérala de `steam-data` y usa `python3 update.py --republish`
+  (no consulta Steam ni necesita `accounts.json`).
 
 ## Desarrollo
 
 - Python 3.10+, solo biblioteca estándar. No reintroducir PowerShell.
-- Flujo completo: `python3 update.py`; HTML offline: `python3 build_web.py`.
+- Flujo completo: `python3 update.py`; HTML offline: `python3 build_web.py`;
+  republicar desde el snapshot: `python3 update.py --republish`.
+- `steam_schema.validate_snapshot()` corre antes de escribir artefactos; un snapshot
+  con tipos incorrectos falla con `SnapshotError` en vez de publicar una web rota.
 - Pruebas: `python3 -m unittest discover -s tests -v`, sin credenciales.
 - No publicar datos si falla una biblioteca requerida; no imprimir excepciones HTTP
   crudas porque pueden contener URLs con credenciales.
