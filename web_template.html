@@ -68,7 +68,7 @@
   .primary-controls{display:grid;grid-template-columns:minmax(200px,1fr) minmax(190px,.8fr) minmax(170px,.65fr) auto;gap:9px}
   .account-legend{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px;padding-top:9px;border-top:1px solid var(--line)}
   .account-legend-title{color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-right:2px}
-  .account-chip{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:4px 8px;background:#101822;border:1px solid #2c4051;color:#c6d4df;font-size:11px;line-height:1.2;border-radius:2px}
+  .account-chip{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:4px 8px;background:#101822;border:1px solid #2c4051;color:#c6d4df;font:inherit;font-size:11px;line-height:1.2;border-radius:2px;cursor:pointer}
   .account-chip.selected{border-color:var(--blue);background:#223b50;color:#fff}
   .account-avatar-shell{display:inline-flex;width:18px;height:18px;flex:0 0 18px;align-items:center;justify-content:center;overflow:hidden;border-radius:50%;background:#30465a;vertical-align:middle}
   .account-avatar{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
@@ -170,17 +170,27 @@ function runningSale(now = new Date()) {
   <div class="controls">
     <div class="primary-controls">
       <input type="search" id="q" placeholder="Buscar juego..." aria-label="Buscar en la biblioteca">
-      <select id="account" aria-label="Filtrar por cuenta"></select>
+      <select id="account" aria-label="Filtrar por cuenta" title="Filtra los juegos que posee la cuenta y muestra sus horas y logros"></select>
       <select id="sort" aria-label="Ordenar juegos">
       <option value="hours-desc">Horas (mayor)</option>
       <option value="hours-asc">Horas (menor)</option>
+      <option value="price-desc">Precio (mayor)</option>
+      <option value="price-asc">Precio (menor)</option>
+      <option value="cost-asc">Costo por hora (menor)</option>
+      <option value="cost-desc">Costo por hora (mayor)</option>
+      <option value="ach-desc">Logros (más completos)</option>
+      <option value="ach-asc">Logros (menos completos)</option>
       <option value="name-asc">Nombre A-Z</option>
       <option value="name-desc">Nombre Z-A</option>
       <option value="last-desc">Ultima vez (reciente)</option>
+      <option value="last-asc">Ultima vez (antiguo)</option>
       <option value="first-desc">Vistos recientemente</option>
       <option value="first-asc">Vistos hace más tiempo</option>
+      <option value="acquired-desc">Adquirido · familia (reciente)</option>
+      <option value="acquired-asc">Adquirido · familia (antiguo)</option>
       </select>
-      <button class="btn" id="csv">Exportar CSV</button>
+      <button class="btn" id="csv" type="button">Exportar CSV</button>
+      <button class="btn" id="clearFilters" type="button" hidden>Limpiar filtros</button>
     </div>
     <div class="account-legend" id="accountLegend" aria-label="Avatares de tus cuentas"></div>
     <details class="advanced">
@@ -383,11 +393,22 @@ const flagCC = cc => cc
   ? '<img class="flag" alt="' + esc(cc) + '" loading="lazy" src="https://flagcdn.com/' + esc(String(cc).toLowerCase()) + '.svg">'
   : '';
 
-const state = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false, family: false, wasted: false, pending: false, done: false, minh: 0 };
+const DEFAULT_STATE = { q: '', account: '', sort: 'hours-desc', backlog: false, multi: false,
+  family: false, wasted: false, pending: false, done: false, minh: 0 };
+const state = { ...DEFAULT_STATE };
+const SORTS = new Set(['hours-desc', 'hours-asc', 'price-desc', 'price-asc', 'cost-asc', 'cost-desc',
+  'ach-desc', 'ach-asc', 'name-asc', 'name-desc', 'last-desc', 'last-asc', 'first-desc', 'first-asc',
+  'acquired-desc', 'acquired-asc']);
+const FLAGS = ['backlog', 'multi', 'family', 'wasted', 'pending', 'done'];
 
 $('#meta').textContent =
   GAMES.length + ' juegos unicos | ' + ACCOUNTS.length + ' cuentas | actualizado ' +
   String(DATA.generated || '').slice(0,10) + ' (fuente: ' + (DATA.source || '-') + ')';
+const dataAgeHours = (Date.now() - new Date(DATA.generated || 0).getTime()) / 3600000;
+if (Number.isFinite(dataAgeHours) && dataAgeHours >= 36) {
+  const days = Math.floor(dataAgeHours / 24);
+  $('#meta').textContent += ' · hace ' + days + (days === 1 ? ' día' : ' días');
+}
 
 const familySyncStatus = $('#familySyncStatus');
 if (DATA.family_sync_status && DATA.family_sync_status !== 'ok') {
@@ -440,8 +461,8 @@ document.addEventListener('error', event => {
 ACCOUNTS.forEach(a => { if (a.country) FLAG_BY_ALIAS[a.alias] = String(a.country).toLowerCase(); });
 FAMILY.forEach(f => { if (f.country) FLAG_BY_ALIAS[f.alias] = String(f.country).toLowerCase(); });
 $('#accountLegend').innerHTML = '<span class="account-legend-title">Mis cuentas</span>' +
-  ACCOUNTS.map(account => '<span class="account-chip" data-account-alias="' + esc(account.alias) + '">' +
-    accountAvatar(account.alias) + '<span>' + esc(account.alias) + '</span></span>').join('');
+  ACCOUNTS.map(account => '<button type="button" class="account-chip" data-account-alias="' + esc(account.alias) + '" aria-pressed="false">' +
+    accountAvatar(account.alias) + '<span>' + esc(account.alias) + '</span></button>').join('');
 $('#account').innerHTML = '<option value="">Todas las cuentas</option>' +
   '<optgroup label="Mis cuentas">' +
     ACCOUNTS.map(a => '<option value="acc:' + esc(a.alias) + '">' + esc(a.personaname || a.alias) + ' (' + esc(a.alias) + ')</option>').join('') +
@@ -465,6 +486,31 @@ function hasFamilyRelationship(game) {
   return familyOwners(game).length > 0;
 }
 
+const selectedAlias = () => state.account.indexOf('acc:') === 0 ? state.account.slice(4) : '';
+// With an account selected, hours and achievements come from that account instead of
+// the consolidated totals, so "backlog" and "100%" mean something for that account.
+function viewOf(game) {
+  const alias = selectedAlias();
+  const owned = game.owned_accounts || Object.keys(game.accounts || {});
+  if (alias && owned.includes(alias)) {
+    const per = (game.achieved_by || {})[alias];
+    return {
+      alias,
+      hours: Number((game.accounts || {})[alias] || 0),
+      got: per ? per.got : 0,
+      total: per ? per.total : 0,
+      complete: game.achievements_complete !== false,
+    };
+  }
+  return {
+    alias: '',
+    hours: game.total_hours || 0,
+    got: game.achievements_got || 0,
+    total: game.achievements_total || 0,
+    complete: game.achievements_complete !== false,
+  };
+}
+
 function current() {
   const qn = norm(state.q);
   let list = GAMES.filter(g => {
@@ -476,13 +522,14 @@ function current() {
         if (!(g.owned_accounts || Object.keys(g.accounts || {})).includes(state.account.slice(4))) return false;
       }
     }
-    if (state.backlog && g.total_hours !== 0) return false;
+    const m = viewOf(g);
+    if (state.backlog && m.hours !== 0) return false;
     if (state.multi && !(g.owned_count > 1)) return false;
     if (state.family && !hasFamilyRelationship(g)) return false;
-    if (state.wasted && !((g.price_usd > 0) && g.total_hours === 0)) return false;
-    if (state.pending && !(g.achievements_total > 0 && g.achievements_got < g.achievements_total)) return false;
-    if (state.done && !(g.achievements_complete !== false && g.achievements_total > 0 && g.achievements_got === g.achievements_total)) return false;
-    if (state.minh && (g.total_hours || 0) < state.minh) return false;
+    if (state.wasted && !((g.price_usd > 0) && m.hours === 0)) return false;
+    if (state.pending && !(m.total > 0 && m.got < m.total)) return false;
+    if (state.done && !(m.complete && m.total > 0 && m.got === m.total)) return false;
+    if (state.minh && m.hours < state.minh) return false;
     if (qn && norm(g.name).indexOf(qn) === -1) return false;
     return true;
   });
@@ -490,27 +537,46 @@ function current() {
   const key = parts[0], dir = parts[1];
   const mul = dir === 'asc' ? 1 : -1;
   list.sort((a, b) => {
+    const am = viewOf(a), bm = viewOf(b);
     if (key === 'name') return a.name.localeCompare(b.name, 'es') * mul;
     if (key === 'last') return ((a.last_played || 0) - (b.last_played || 0)) * mul;
     if (key === 'acquired') return String(a.acquired || '').localeCompare(String(b.acquired || '')) * mul;
     if (key === 'first') return String(a.first_seen || '').localeCompare(String(b.first_seen || '')) * mul;
     if (key === 'price') return ((a.price_usd == null ? -1 : a.price_usd) - (b.price_usd == null ? -1 : b.price_usd)) * mul;
-    if (key === 'ach') return ((a.achievements_total > 0 ? a.achievements_got / a.achievements_total : -1) - (b.achievements_total > 0 ? b.achievements_got / b.achievements_total : -1)) * mul;
-    return ((a.total_hours || 0) - (b.total_hours || 0)) * mul;
+    if (key === 'cost') {
+      const x = a.cost_per_hour, y = b.cost_per_hour;
+      if (x == null && y == null) return 0;
+      if (x == null) return 1;
+      if (y == null) return -1;
+      return (x - y) * mul;
+    }
+    if (key === 'ach') return ((am.total > 0 ? am.got / am.total : -1) - (bm.total > 0 ? bm.got / bm.total : -1)) * mul;
+    return (am.hours - bm.hours) * mul;
   });
   return list;
 }
 
 function render() {
+  const alias = selectedAlias();
   document.querySelectorAll('.account-chip').forEach(chip => {
-    chip.classList.toggle('selected', $('#account').value === 'acc:' + chip.dataset.accountAlias);
+    const selected = $('#account').value === 'acc:' + chip.dataset.accountAlias;
+    chip.classList.toggle('selected', selected);
+    chip.setAttribute('aria-pressed', selected ? 'true' : 'false');
   });
   const list = current();
-  $('#count').textContent = list.length + ' de ' + GAMES.length + ' juegos';
+  let summary = list.length + ' de ' + GAMES.length + ' juegos';
+  if (alias) summary += ' · vista: ' + alias;
+  if (state.wasted) summary += ' · ' + fmtUsd(list.reduce((total, g) => total + (g.price_usd || 0), 0)) + ' en juegos sin jugar';
+  $('#count').textContent = summary;
   $('#empty').hidden = list.length > 0;
+  $('#empty').textContent = filtersActive()
+    ? 'Sin resultados con esos filtros. Prueba con «Limpiar filtros».'
+    : 'No hay juegos para mostrar.';
+  updateClearButton();
   let html = '';
   let cards = '';
   for (const g of list) {
+    const m = viewOf(g);
     const entries = Object.entries(g.accounts || {}).sort((a, b) => b[1] - a[1]);
     let badges = entries.map(function(e) {
       return '<span class="badge' + (g.owned_count > 1 ? ' multi' : '') + '" title="' + esc(e[0]) + '">' +
@@ -540,14 +606,16 @@ function render() {
 
     const priceTxt = g.price_usd == null ? '<span class="muted">-</span>'
       : (g.is_free ? '<span class="muted">Gratis</span>' : fmtUsd(g.price_usd));
-    const achIncomplete = g.achievements_complete === false;
-    const achTxt = (g.achievements_total > 0)
-      ? (g.achievements_got + '/' + g.achievements_total + ' <span class="pct">' + (g.achievements_pct || 0) + '%</span>' +
+    const priceView = priceTxt + (g.cost_per_hour == null ? '' : '<div class="pct">' + fmtUsd(g.cost_per_hour) + '/h</div>');
+    const achIncomplete = !m.complete;
+    const achTxt = (m.total > 0)
+      ? (m.got + '/' + m.total + ' <span class="pct">' + Math.round(100 * m.got / m.total) + '%</span>' +
         (achIncomplete ? ' <span class="pct" title="Steam no respondió para todas las cuentas; se usan los últimos datos disponibles">parcial</span>' : ''))
       : '<span class="muted">-</span>';
 
     const gameLink = '<a class="game" target="_blank" rel="noopener" href="https://store.steampowered.com/app/' + id + '/">' + esc(g.name) + '</a>';
-    const hoursText = fmtH(g.total_hours) + (g.hours_source === 'family' ? ' <span class="pct">familia</span>' : '');
+    const hoursText = fmtH(m.hours) +
+      (m.alias || g.hours_source !== 'family' ? '' : ' <span class="pct">familia</span>');
     const firstSeenText = g.first_seen ? esc(g.first_seen) : '<span class="muted">Se registra al actualizar</span>';
     const acquiredText = g.acquired ? esc(g.acquired) : '<span class="muted">-</span>';
     const lastPlayedText = g.last_played_iso ? esc(g.last_played_iso) : 'Nunca';
@@ -556,11 +624,11 @@ function render() {
         '<span class="gmeta"><span class="game">' + gameLink + '</span>' +
         '<div class="appid">' + id + '</div></span></div></td>' +
       '<td data-label="Cuentas">' + badges + '</td>' +
-      '<td class="num ' + (g.total_hours ? 'hours' : 'zero') + '" data-label="Horas" title="' +
-        (g.hours_source === 'family' ? 'Steam Families: sin desglose por jugador' : 'Horas registradas por cuenta') + '">' +
+      '<td class="num ' + (m.hours ? 'hours' : 'zero') + '" data-label="Horas" title="' +
+        (m.alias ? 'Horas de ' + esc(m.alias) : g.hours_source === 'family' ? 'Steam Families: sin desglose por jugador' : 'Horas registradas por cuenta') + '">' +
         hoursText + '</td>' +
-      '<td class="num" data-label="Precio">' + priceTxt + '</td>' +
-      '<td class="num ' + (g.achievements_total > 0 ? '' : 'muted') + '" data-label="Logros">' + achTxt + '</td>' +
+      '<td class="num" data-label="Precio">' + priceView + '</td>' +
+      '<td class="num ' + (m.total > 0 ? '' : 'muted') + '" data-label="Logros">' + achTxt + '</td>' +
       '<td class="num ' + (g.first_seen ? '' : 'muted') + '" data-label="Visto por primera vez">' + firstSeenText + '</td>' +
       '<td class="num ' + (g.acquired ? '' : 'muted') + '" data-label="Adquirido · familia">' + acquiredText + '</td>' +
       '<td class="num ' + (g.last_played_iso ? '' : 'muted') + '" data-label="Última vez">' + lastPlayedText + '</td>' +
@@ -571,8 +639,8 @@ function render() {
     cards += '<article class="game-card"><div class="card-head">' + cover +
       '<div class="gmeta"><h2 class="card-title">' + gameLink + '</h2><div class="appid">App ' + id + '</div></div></div>' +
       '<div class="card-ownership"><p class="card-ownership-label">Cuentas y biblioteca familiar</p>' + badges + '</div>' +
-      '<dl class="card-facts"><div><dt>Horas registradas</dt><dd class="' + (g.total_hours ? 'hours' : 'zero') + '">' + hoursText + '</dd></div>' +
-      '<div><dt>Precio actual</dt><dd>' + priceTxt + '</dd></div>' + achievementFact + firstFact + acquiredFact +
+      '<dl class="card-facts"><div><dt>Horas registradas</dt><dd class="' + (m.hours ? 'hours' : 'zero') + '">' + hoursText + '</dd></div>' +
+      '<div><dt>Precio actual</dt><dd>' + priceView + '</dd></div>' + achievementFact + firstFact + acquiredFact +
       '<div><dt>Última vez</dt><dd>' + lastPlayedText + '</dd></div></dl></article>';
   }
   $('#rows').innerHTML = MOBILE_QUERY.matches ? '' : html;
@@ -581,11 +649,12 @@ function render() {
 
 function exportCsv() {
   const list = current();
-  const e2 = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-  const lines = [['appid','nombre','horas_total','cuentas_propias','horas_por_cuenta','solo_compartido','duenos_familia','precio_usd','logros_obtenidos','logros_totales','logros_pct','primera_vez_visto','adquirido_familia','ultima_vez','fuente_horas'].map(e2).join(',')];
+  const cell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const lines = [['appid','nombre','horas_total','cuentas_propias','horas_por_cuenta','solo_compartido','duenos_familia','precio_usd','costo_por_hora','logros_obtenidos','logros_totales','logros_pct','primera_vez_visto','adquirido_familia','ultima_vez','fuente_horas','vista_cuenta','horas_vista'].map(cell).join(',')];
   for (const g of list) {
+    const m = viewOf(g);
     const per = Object.entries(g.accounts || {}).map(e => e[0] + '=' + e[1] + 'h').join(' | ');
-    lines.push([g.appid, g.name, g.total_hours, g.owned_count, per, SCHEMA_V2 ? (g.family ? 'si' : 'no') : '', familyOwners(g).map(o => o.alias).join(' | '), (g.price_usd == null ? '' : g.price_usd), g.achievements_got ?? '', g.achievements_total ?? '', (g.achievements_pct == null ? '' : g.achievements_pct), g.first_seen || '', g.acquired || '', g.last_played_iso || '', g.hours_source || ''].map(e2).join(','));
+    lines.push([g.appid, g.name, g.total_hours, g.owned_count, per, SCHEMA_V2 ? (g.family ? 'si' : 'no') : '', familyOwners(g).map(o => o.alias).join(' | '), (g.price_usd == null ? '' : g.price_usd), (g.cost_per_hour == null ? '' : g.cost_per_hour), m.got, m.total, (m.total > 0 ? Math.round(100 * m.got / m.total) : ''), g.first_seen || '', g.acquired || '', g.last_played_iso || '', g.hours_source || '', m.alias, m.hours].map(cell).join(','));
   }
   const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');
@@ -593,6 +662,56 @@ function exportCsv() {
   a.download = 'steam_filtrado.csv';
   a.click();
   URL.revokeObjectURL(a.href);
+}
+
+function filtersActive() {
+  return Boolean(state.q || state.account || state.minh || FLAGS.some(flag => state[flag]));
+}
+function updateClearButton() {
+  $('#clearFilters').hidden = !filtersActive();
+}
+function writeUrlState() {
+  const params = new URLSearchParams();
+  if (state.q) params.set('q', state.q);
+  if (state.account) params.set('cuenta', state.account);
+  if (state.sort !== DEFAULT_STATE.sort) params.set('sort', state.sort);
+  for (const flag of FLAGS) if (state[flag]) params.set(flag, '1');
+  if (state.minh) params.set('minh', String(state.minh));
+  const query = params.toString();
+  try {
+    history.replaceState(null, '', location.pathname + (query ? '?' + query : '') + location.hash);
+  } catch { /* al abrir el archivo local, el navegador no permite reescribir la URL */ }
+}
+function readUrlState() {
+  let params;
+  try { params = new URLSearchParams(location.search); } catch { return; }
+  const search = params.get('q');
+  if (search) state.q = search.slice(0, 100);
+  const sort = params.get('sort');
+  if (SORTS.has(sort)) state.sort = sort;
+  const cuenta = params.get('cuenta') || '';
+  if ([...$('#account').options].some(option => option.value === cuenta)) state.account = cuenta;
+  for (const flag of FLAGS) state[flag] = params.get(flag) === '1';
+  const minh = Number(params.get('minh'));
+  if (Number.isFinite(minh) && minh > 0) state.minh = Math.min(Math.floor(minh), 100000);
+}
+function syncControls() {
+  $('#q').value = state.q;
+  $('#account').value = state.account;
+  $('#sort').value = state.sort;
+  for (const flag of FLAGS) $('#' + flag).checked = state[flag];
+  $('#minh').value = state.minh || '';
+  syncSortHeader();
+  updateClearButton();
+}
+function apply() {
+  writeUrlState();
+  render();
+}
+function resetFilters() {
+  Object.assign(state, DEFAULT_STATE);
+  syncControls();
+  apply();
 }
 
 const on = (el, ev, fn) => el.addEventListener(ev, fn);
@@ -603,17 +722,24 @@ function syncSortHeader() {
     else th.removeAttribute('aria-sort');
   });
 }
-on($('#q'), 'input', e => { state.q = e.target.value; render(); });
-on($('#account'), 'change', e => { state.account = e.target.value; render(); });
-on($('#sort'), 'change', e => { state.sort = e.target.value; syncSortHeader(); render(); });
-on($('#backlog'), 'change', e => { state.backlog = e.target.checked; render(); });
-on($('#multi'), 'change', e => { state.multi = e.target.checked; render(); });
-on($('#family'), 'change', e => { state.family = e.target.checked; render(); });
-on($('#wasted'), 'change', e => { state.wasted = e.target.checked; render(); });
-on($('#pending'), 'change', e => { state.pending = e.target.checked; render(); });
-on($('#done'), 'change', e => { state.done = e.target.checked; render(); });
-on($('#minh'), 'input', e => { state.minh = Number(e.target.value) || 0; render(); });
+on($('#q'), 'input', e => { state.q = e.target.value; apply(); });
+on($('#account'), 'change', e => { state.account = e.target.value; apply(); });
+on($('#sort'), 'change', e => { state.sort = e.target.value; syncSortHeader(); apply(); });
+on($('#backlog'), 'change', e => { state.backlog = e.target.checked; apply(); });
+on($('#multi'), 'change', e => { state.multi = e.target.checked; apply(); });
+on($('#family'), 'change', e => { state.family = e.target.checked; apply(); });
+on($('#wasted'), 'change', e => { state.wasted = e.target.checked; apply(); });
+on($('#pending'), 'change', e => { state.pending = e.target.checked; apply(); });
+on($('#done'), 'change', e => { state.done = e.target.checked; apply(); });
+on($('#minh'), 'input', e => { state.minh = Number(e.target.value) || 0; apply(); });
+on($('#clearFilters'), 'click', resetFilters);
 on($('#csv'), 'click', exportCsv);
+document.querySelectorAll('.account-chip').forEach(chip => on(chip, 'click', () => {
+  const value = 'acc:' + chip.dataset.accountAlias;
+  state.account = state.account === value ? '' : value;
+  syncControls();
+  apply();
+}));
 MOBILE_QUERY.addEventListener('change', render);
 document.querySelectorAll('th[data-sort]').forEach(th => on(th, 'click', () => {
   const k = th.dataset.sort;
@@ -621,10 +747,11 @@ document.querySelectorAll('th[data-sort]').forEach(th => on(th, 'click', () => {
     : (state.sort === k + '-desc' ? k + '-asc' : k + '-desc');
   $('#sort').value = state.sort;
   syncSortHeader();
-  render();
+  apply();
 }));
 
-syncSortHeader();
+readUrlState();
+syncControls();
 render();
 </script>
 </body>
