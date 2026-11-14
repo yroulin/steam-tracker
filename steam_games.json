@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-13T21:06:34.886629+00:00",
+  "generated": "2026-11-14T19:37:50.105295+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 802,
-  "total_hours": 5210.0,
+  "total_hours": 5212.6,
   "games": [
     {
       "appid": "570",
@@ -264,11 +264,11 @@
       "appid": "264710",
       "name": "Subnautica",
       "accounts": {
-        "y.roulin.tk": 83.0
+        "y.roulin.tk": 83.7
       },
       "last_played": 0,
       "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 83.0,
+      "total_hours": 83.7,
       "owned_count": 1,
       "owned_accounts": [
         "y.roulin.tk"
@@ -2337,11 +2337,11 @@
       "appid": "848450",
       "name": "Subnautica: Below Zero",
       "accounts": {
-        "y.roulin.tk": 4.8
+        "y.roulin.tk": 5.0
       },
       "last_played": 0,
       "img_icon_url": "eae16718327a78d87ac7ae61db96729926c97a16",
-      "total_hours": 4.8,
+      "total_hours": 5.0,
       "owned_count": 1,
       "owned_accounts": [
         "y.roulin.tk"
@@ -2353,7 +2353,7 @@
       "price_usd": 29.99,
       "is_free": false,
       "price_updated": 1794344896.9940658,
-      "cost_per_hour": 6.25,
+      "cost_per_hour": 6.0,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -3477,6 +3477,33 @@
       "is_free": false,
       "price_updated": 1794344926.4356582,
       "cost_per_hour": 8.69,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null,
+      "achievements_complete": false
+    },
+    {
+      "appid": "4331760",
+      "name": "Drawquarium Demo",
+      "accounts": {
+        "y.roulin.tk": 2.2
+      },
+      "last_played": 0,
+      "img_icon_url": "68b9425628d09dc3ab883ed03eb47ef37d6142a1",
+      "total_hours": 2.2,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-11-13",
+      "price_usd": 0,
+      "is_free": true,
+      "price_updated": 1794604024.997923,
+      "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -4965,33 +4992,6 @@
       "is_free": false,
       "price_updated": 1794344962.800137,
       "cost_per_hour": 59.98,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null,
-      "achievements_complete": false
-    },
-    {
-      "appid": "4331760",
-      "name": "Drawquarium Demo",
-      "accounts": {
-        "y.roulin.tk": 0.5
-      },
-      "last_played": 0,
-      "img_icon_url": "68b9425628d09dc3ab883ed03eb47ef37d6142a1",
-      "total_hours": 0.5,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-11-13",
-      "price_usd": 0,
-      "is_free": true,
-      "price_updated": 1794604024.997923,
-      "cost_per_hour": null,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -26001,7 +26001,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-11-13T21:06:35+00:00",
+  "family_sync_checked": "2026-11-14T19:37:50+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 387
