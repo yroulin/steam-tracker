@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-14T19:37:50.105295+00:00",
+  "generated": "2026-11-15T20:03:28.194805+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 802,
-  "total_hours": 5212.6,
+  "total_hours": 5215.3,
   "games": [
     {
       "appid": "570",
@@ -234,6 +234,33 @@
       "achievements_complete": true
     },
     {
+      "appid": "264710",
+      "name": "Subnautica",
+      "accounts": {
+        "y.roulin.tk": 85.6
+      },
+      "last_played": 0,
+      "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
+      "total_hours": 85.6,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 29.99,
+      "is_free": false,
+      "price_updated": 1794344843.476826,
+      "cost_per_hour": 0.35,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null,
+      "achievements_complete": false
+    },
+    {
       "appid": "2694490",
       "name": "Path of Exile 2",
       "accounts": {
@@ -254,33 +281,6 @@
       "is_free": false,
       "price_updated": 1794344842.6867874,
       "cost_per_hour": null,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null,
-      "achievements_complete": false
-    },
-    {
-      "appid": "264710",
-      "name": "Subnautica",
-      "accounts": {
-        "y.roulin.tk": 83.7
-      },
-      "last_played": 0,
-      "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 83.7,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 29.99,
-      "is_free": false,
-      "price_updated": 1794344843.476826,
-      "cost_per_hour": 0.36,
       "achieved_by": {},
       "achievements_got": 0,
       "achievements_total": 0,
@@ -2270,6 +2270,33 @@
       "achievements_complete": false
     },
     {
+      "appid": "848450",
+      "name": "Subnautica: Below Zero",
+      "accounts": {
+        "y.roulin.tk": 5.8
+      },
+      "last_played": 0,
+      "img_icon_url": "eae16718327a78d87ac7ae61db96729926c97a16",
+      "total_hours": 5.8,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 29.99,
+      "is_free": false,
+      "price_updated": 1794344896.9940658,
+      "cost_per_hour": 5.17,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null,
+      "achievements_complete": false
+    },
+    {
       "appid": "2386310",
       "name": "Ultros",
       "accounts": {
@@ -2332,33 +2359,6 @@
       "achievements_total": 71,
       "achievements_pct": 8,
       "achievements_complete": true
-    },
-    {
-      "appid": "848450",
-      "name": "Subnautica: Below Zero",
-      "accounts": {
-        "y.roulin.tk": 5.0
-      },
-      "last_played": 0,
-      "img_icon_url": "eae16718327a78d87ac7ae61db96729926c97a16",
-      "total_hours": 5.0,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 29.99,
-      "is_free": false,
-      "price_updated": 1794344896.9940658,
-      "cost_per_hour": 6.0,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null,
-      "achievements_complete": false
     },
     {
       "appid": "2622380",
@@ -26001,7 +26001,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-11-14T19:37:50+00:00",
+  "family_sync_checked": "2026-11-15T20:03:28+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 387
