@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-18T22:26:02.612883+00:00",
+  "generated": "2026-11-19T22:31:18.870019+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 802,
-  "total_hours": 5215.6,
+  "total_hours": 5216.5,
   "games": [
     {
       "appid": "570",
@@ -237,11 +237,11 @@
       "appid": "264710",
       "name": "Subnautica",
       "accounts": {
-        "y.roulin.tk": 85.9
+        "y.roulin.tk": 86.4
       },
       "last_played": 0,
       "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 85.9,
+      "total_hours": 86.4,
       "owned_count": 1,
       "owned_accounts": [
         "y.roulin.tk"
@@ -418,11 +418,11 @@
       "name": "MECCHA CHAMELEON",
       "accounts": {
         "y.roulin.tk": 14.4,
-        "alain.roulin - mx": 31.1
+        "alain.roulin - mx": 31.5
       },
       "last_played": 0,
       "img_icon_url": "fbef288370f6ae51cb0a5066d7fb13d26147c94a",
-      "total_hours": 45.5,
+      "total_hours": 45.9,
       "owned_count": 2,
       "owned_accounts": [
         "alain.roulin - mx",
@@ -26001,7 +26001,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-11-18T22:26:02+00:00",
+  "family_sync_checked": "2026-11-19T22:31:19+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 387
