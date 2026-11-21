@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-20T22:03:39.507286+00:00",
+  "generated": "2026-11-21T20:43:15.614473+00:00",
   "source": "api",
   "accounts": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "total_unique_games": 802,
-  "total_hours": 5217.6,
+  "total_hours": 5223.2,
   "games": [
     {
       "appid": "570",
@@ -202,6 +202,33 @@
       "achievements_complete": false
     },
     {
+      "appid": "264710",
+      "name": "Subnautica",
+      "accounts": {
+        "y.roulin.tk": 93.1
+      },
+      "last_played": 0,
+      "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
+      "total_hours": 93.1,
+      "owned_count": 1,
+      "owned_accounts": [
+        "y.roulin.tk"
+      ],
+      "family": false,
+      "hours_source": "accounts",
+      "last_played_iso": null,
+      "first_seen": "2026-10-04",
+      "price_usd": 29.99,
+      "is_free": false,
+      "price_updated": 1794955472.3617818,
+      "cost_per_hour": 0.32,
+      "achieved_by": {},
+      "achievements_got": 0,
+      "achievements_total": 0,
+      "achievements_pct": null,
+      "achievements_complete": false
+    },
+    {
       "appid": "582010",
       "name": "Monster Hunter: World",
       "accounts": {
@@ -232,33 +259,6 @@
       "achievements_total": 100,
       "achievements_pct": 30,
       "achievements_complete": true
-    },
-    {
-      "appid": "264710",
-      "name": "Subnautica",
-      "accounts": {
-        "y.roulin.tk": 87.5
-      },
-      "last_played": 0,
-      "img_icon_url": "8a14ceef6e230330a916d7a6324b8c52d464d569",
-      "total_hours": 87.5,
-      "owned_count": 1,
-      "owned_accounts": [
-        "y.roulin.tk"
-      ],
-      "family": false,
-      "hours_source": "accounts",
-      "last_played_iso": null,
-      "first_seen": "2026-10-04",
-      "price_usd": 29.99,
-      "is_free": false,
-      "price_updated": 1794955472.3617818,
-      "cost_per_hour": 0.34,
-      "achieved_by": {},
-      "achievements_got": 0,
-      "achievements_total": 0,
-      "achievements_pct": null,
-      "achievements_complete": false
     },
     {
       "appid": "2694490",
@@ -26001,7 +26001,7 @@
   ],
   "family_sync_status": "stale",
   "family_last_success": "2026-10-05T00:28:45.228923+00:00",
-  "family_sync_checked": "2026-11-20T22:03:39+00:00",
+  "family_sync_checked": "2026-11-21T20:43:15+00:00",
   "metadata_warnings": {
     "prices": 0,
     "achievements": 387
